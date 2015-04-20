@@ -19,6 +19,12 @@ var IndexView = React.createClass({
   }
 });
 
+var SrcView = React.createClass({
+  render: function() {
+    return <p>loading <tt>{this.props.path}</tt> ...</p>;
+  }
+});
+
 var repo = window.location.search.match(/[?&]repo=([^&\/]+\/[^&\/]+)\/?/)[1];
 var url = `https://api.github.com/repos/${repo}/git/trees/gh-pages?recursive=1`;
 
@@ -38,5 +44,8 @@ $.get(url, (resp) => {
 });
 
 function edit(path) {
-  console.log('editing', path);
+  React.render(
+    <SrcView path={path} />,
+    document.querySelector('#src')
+  );
 }
