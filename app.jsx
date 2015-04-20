@@ -2,7 +2,11 @@
 
 var IndexItem = React.createClass({
   render: function() {
-    return <li>{this.props.path}</li>;
+    return <li><a onClick={this.handleClick}>{this.props.path}</a></li>;
+  },
+  handleClick: function(evt) {
+    evt.preventDefault();
+    edit(this.props.path);
   }
 });
 
@@ -32,3 +36,7 @@ $.get(url, (resp) => {
     document.querySelector('#index')
   );
 });
+
+function edit(path) {
+  console.log('editing', path);
+}
