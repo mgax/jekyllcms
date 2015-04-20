@@ -25,16 +25,23 @@ var IndexView = React.createClass({
 
 var SrcView = React.createClass({
   render: function() {
+    var title = <h2><tt>{this.props.item.path}</tt></h2>;
     if(this.state) {
       return (
         <div>
+          {title}
           <pre><code>{this.state.frontMatter}</code></pre>
           <pre><code>{this.state.content}</code></pre>
         </div>
       );
     }
     else {
-      return <p>loading <tt>{this.props.item.path}</tt> ...</p>;
+      return (
+        <div>
+          {title}
+          <p>loading <tt>{this.props.item.path}</tt> ...</p>
+        </div>
+      );
     }
   },
   componentDidMount: function() {
