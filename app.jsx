@@ -6,6 +6,18 @@ function assert(cond) {
   }
 }
 
+function parse(src) {
+  var lines = src.split(/\n/);
+  assert(lines[0] == '---');
+  lines = lines.slice(1);
+  var frontMatterEnd = lines.indexOf('---');
+  assert(frontMatterEnd > -1);
+  return {
+    frontMatter: lines.slice(0, frontMatterEnd).join('\n') + '\n',
+    content: lines.slice(frontMatterEnd + 1).join('\n')
+  }
+}
+
 var IndexItem = React.createClass({
   render: function() {
     return <li><a onClick={this.handleClick}>{this.props.item.path}</a></li>;
@@ -70,16 +82,7 @@ var SrcView = React.createClass({
   },
   componentDidMount: function() {
     $.get(this.props.item.url, (resp) => {
-      var src = atob(resp.content);
-      var lines = src.split(/\n/);
-      assert(lines[0] == '---');
-      lines = lines.slice(1);
-      var frontMatterEnd = lines.indexOf('---');
-      assert(frontMatterEnd > -1);
-      this.setState({
-        frontMatter: lines.slice(0, frontMatterEnd).join('\n') + '\n',
-        content: lines.slice(frontMatterEnd + 1).join('\n')
-      });
+      this.setState(parse(atob(resp.content)));
     });
   },
   handleChange: function(content) {
