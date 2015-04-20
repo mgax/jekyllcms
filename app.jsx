@@ -19,7 +19,7 @@ var IndexItem = React.createClass({
 var IndexView = React.createClass({
   render: function() {
     var indexItemList = this.props.data.map((item) => <IndexItem item={item} />);
-    return <ul>{indexItemList}</ul>;
+    return <ul className="list-unstyled">{indexItemList}</ul>;
   }
 });
 
