@@ -79,8 +79,7 @@ $.get(url, (resp) => {
 });
 
 function edit(item) {
-  React.render(
-    <SrcView item={item} />,
-    document.querySelector('#src')
-  );
+  var srcNode = document.querySelector('#src')
+  React.unmountComponentAtNode(srcNode);
+  React.render(<SrcView item={item} />, srcNode);
 }
