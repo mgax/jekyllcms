@@ -23,6 +23,23 @@ var IndexView = React.createClass({
   }
 });
 
+var CodeEditor = React.createClass({
+  render: function() {
+    return <div ref="ace" className="codeEditor" />;
+  },
+  componentDidMount: function() {
+    this.ace = ace.edit(React.findDOMNode(this.refs.ace));
+    this.ace.getSession().setMode('ace/mode/markdown');
+    this.ace.setTheme('ace/theme/tomorrow_night_eighties');
+    this.ace.setShowInvisibles(true);
+    this.ace.setValue(this.props.initial);
+    this.ace.on('change', (e) => this.handleChange(e));
+  },
+  handleChange: function() {
+    this.props.onChange(this.ace.getValue());
+  }
+});
+
 var SrcView = React.createClass({
   render: function() {
     var title = <h2><tt>{this.props.item.path}</tt></h2>;
@@ -32,7 +49,12 @@ var SrcView = React.createClass({
         <div>
           {title}
           <pre><code>{this.state.frontMatter}</code></pre>
-          <textarea ref="content">{this.state.content}</textarea>
+          <div className="content">
+            <CodeEditor
+              initial={this.state.content}
+              onChange={this.handleChange}
+              />
+          </div>
           <div className="preview" dangerouslySetInnerHTML={{__html: html}} />
         </div>
       );
@@ -58,15 +80,10 @@ var SrcView = React.createClass({
         frontMatter: lines.slice(0, frontMatterEnd).join('\n') + '\n',
         content: lines.slice(frontMatterEnd + 1).join('\n')
       });
-      this.interval = setInterval(() => { this.checkForChange(); }, 500);
     });
   },
-  checkForChange: function() {
-    if(! this.isMounted()) { clearInterval(this.interval); return; }
-    var content = React.findDOMNode(this.refs.content).value;
-    if(content != this.state.content) {
-      this.setState({content: content});
-    }
+  handleChange: function(content) {
+    this.setState({content: content});
   }
 });
 
