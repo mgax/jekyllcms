@@ -1,5 +1,11 @@
 'use strict';
 
+function assert(cond) {
+  if(! cond) {
+    throw "assertion failed";
+  }
+}
+
 var IndexItem = React.createClass({
   render: function() {
     return <li><a onClick={this.handleClick}>{this.props.item.path}</a></li>;
@@ -20,7 +26,12 @@ var IndexView = React.createClass({
 var SrcView = React.createClass({
   render: function() {
     if(this.state) {
-      return <pre><code>{this.state.src}</code></pre>;
+      return (
+        <div>
+          <pre><code>{this.state.frontMatter}</code></pre>
+          <pre><code>{this.state.content}</code></pre>
+        </div>
+      );
     }
     else {
       return <p>loading <tt>{this.props.item.path}</tt> ...</p>;
@@ -28,7 +39,16 @@ var SrcView = React.createClass({
   },
   componentDidMount: function() {
     $.get(this.props.item.url, (resp) => {
-      this.setState({src: atob(resp.content)});
+      var src = atob(resp.content);
+      var lines = src.split(/\n/);
+      assert(lines[0] == '---');
+      lines = lines.slice(1);
+      var frontMatterEnd = lines.indexOf('---');
+      assert(frontMatterEnd > -1);
+      this.setState({
+        frontMatter: lines.slice(0, frontMatterEnd).join('\n') + '\n',
+        content: lines.slice(frontMatterEnd + 1).join('\n')
+      });
     });
   }
 });
