@@ -2,26 +2,24 @@
 
 var IndexItem = React.createClass({
   render: function() {
-    return <li><a onClick={this.handleClick}>{this.props.path}</a></li>;
+    return <li><a onClick={this.handleClick}>{this.props.item.path}</a></li>;
   },
   handleClick: function(evt) {
     evt.preventDefault();
-    edit(this.props.path);
+    edit(this.props.item);
   }
 });
 
 var IndexView = React.createClass({
   render: function() {
-    var indexItemList = this.props.data.map((item) =>
-      <IndexItem path={item.path} />
-    );
+    var indexItemList = this.props.data.map((item) => <IndexItem item={item} />);
     return <ul>{indexItemList}</ul>;
   }
 });
 
 var SrcView = React.createClass({
   render: function() {
-    return <p>loading <tt>{this.props.path}</tt> ...</p>;
+    return <p>loading <tt>{this.props.item.path}</tt> ...</p>;
   }
 });
 
@@ -43,9 +41,9 @@ $.get(url, (resp) => {
   );
 });
 
-function edit(path) {
+function edit(item) {
   React.render(
-    <SrcView path={path} />,
+    <SrcView item={item} />,
     document.querySelector('#src')
   );
 }
