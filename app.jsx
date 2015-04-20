@@ -68,6 +68,11 @@ var SrcView = React.createClass({
               />
           </div>
           <div className="preview" dangerouslySetInnerHTML={{__html: html}} />
+          <p>
+            <button className="btn btn-primary" onClick={this.handleSave}>
+              save
+            </button>
+          </p>
         </div>
       );
     }
@@ -87,6 +92,10 @@ var SrcView = React.createClass({
   },
   handleChange: function(content) {
     this.setState({content: content});
+  },
+  handleSave: function() {
+    var src = '---\n' + this.state.frontMatter + '---\n' + this.state.content;
+    console.log(src);
   }
 });
 
