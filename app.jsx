@@ -19,7 +19,17 @@ var IndexView = React.createClass({
 
 var SrcView = React.createClass({
   render: function() {
-    return <p>loading <tt>{this.props.item.path}</tt> ...</p>;
+    if(this.state) {
+      return <pre><code>{this.state.src}</code></pre>;
+    }
+    else {
+      return <p>loading <tt>{this.props.item.path}</tt> ...</p>;
+    }
+  },
+  componentDidMount: function() {
+    $.get(this.props.item.url, (resp) => {
+      this.setState({src: atob(resp.content)});
+    });
   }
 });
 
