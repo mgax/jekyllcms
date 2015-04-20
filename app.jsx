@@ -27,11 +27,13 @@ var SrcView = React.createClass({
   render: function() {
     var title = <h2><tt>{this.props.item.path}</tt></h2>;
     if(this.state) {
+      var html = marked(this.state.content, {sanitize: true});
       return (
         <div>
           {title}
           <pre><code>{this.state.frontMatter}</code></pre>
-          <pre><code>{this.state.content}</code></pre>
+          <textarea ref="content">{this.state.content}</textarea>
+          <div className="preview" dangerouslySetInnerHTML={{__html: html}} />
         </div>
       );
     }
@@ -56,7 +58,15 @@ var SrcView = React.createClass({
         frontMatter: lines.slice(0, frontMatterEnd).join('\n') + '\n',
         content: lines.slice(frontMatterEnd + 1).join('\n')
       });
+      this.interval = setInterval(() => { this.checkForChange(); }, 500);
     });
+  },
+  checkForChange: function() {
+    if(! this.isMounted()) { clearInterval(this.interval); return; }
+    var content = React.findDOMNode(this.refs.content).value;
+    if(content != this.state.content) {
+      this.setState({content: content});
+    }
   }
 });
 
