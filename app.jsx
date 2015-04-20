@@ -90,23 +90,26 @@ var SrcView = React.createClass({
   }
 });
 
-var repo = window.location.search.match(/[?&]repo=([^&\/]+\/[^&\/]+)\/?/)[1];
-var url = `https://api.github.com/repos/${repo}/git/trees/gh-pages?recursive=1`;
+var repoMatch = window.location.search.match(/[?&]repo=([^&\/]+\/[^&\/]+)\/?/);
+if(repoMatch) {
+  var repo = repoMatch[1];
+  var url = `https://api.github.com/repos/${repo}/git/trees/gh-pages?recursive=1`;
 
-$.get(url, (resp) => {
-  var fileList = resp.tree.filter((i) => {
-    if(i.type != 'blob') return false;
-    if(i.path == '.gitignore') return false;
-    if(i.path == '_config.yml') return false;
-    if(i.path.match(/^_layouts\//)) return false;
-    return true;
+  $.get(url, (resp) => {
+    var fileList = resp.tree.filter((i) => {
+      if(i.type != 'blob') return false;
+      if(i.path == '.gitignore') return false;
+      if(i.path == '_config.yml') return false;
+      if(i.path.match(/^_layouts\//)) return false;
+      return true;
+    });
+
+    React.render(
+      <IndexView data={fileList} />,
+      document.querySelector('#index')
+    );
   });
-
-  React.render(
-    <IndexView data={fileList} />,
-    document.querySelector('#index')
-  );
-});
+}
 
 function edit(item) {
   var srcNode = document.querySelector('#src')
