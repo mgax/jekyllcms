@@ -17,13 +17,7 @@ function initialize() {
   var fileList = [];
 
   repo.files().done((tree) => {
-    fileList = tree.filter((i) => {
-      if(i.path == '.gitignore') return false;
-      if(i.path == '_config.yml') return false;
-      if(i.path.match(/^_layouts\//)) return false;
-      return true;
-    });
-
+    fileList = tree.filter((i) => ! i.path.match(/^[_.]/));
     renderSidebar();
   });
 
