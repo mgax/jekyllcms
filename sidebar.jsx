@@ -15,6 +15,18 @@ var IndexView = React.createClass({
     var indexFileList = this.props.data.map((file) =>
       <IndexFile file={file} onEdit={this.props.onEdit} />
     );
-    return <ul className="list-unstyled">{indexFileList}</ul>;
+    return (
+      <div>
+        <ul className="list-unstyled">{indexFileList}</ul>
+        <button
+          className="btn btn-default btn-xs"
+          onClick={this.handleCreate}
+          >new</button>
+      </div>
+    );
+  },
+  handleCreate: function(evt) {
+    evt.preventDefault();
+    this.props.onCreate();
   }
 });

@@ -9,6 +9,7 @@ class GitHubFile {
   }
 
   content() {
+    if(! this.sha) { return Q(''); }
     return Q($.get(`${this.repo.api}/git/blobs/${this.sha}`))
       .then((resp) =>
         atob(resp.content));
@@ -47,6 +48,10 @@ class GitHubRepo {
         resp.tree
           .filter((i) => i.type == 'blob')
           .map((i) => new GitHubFile(this, i)));
+  }
+
+  newFile(path) {
+    return new GitHubFile(this, {path: path});
   }
 }
 
