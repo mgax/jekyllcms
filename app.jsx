@@ -89,9 +89,7 @@ var SrcView = React.createClass({
     }
   },
   componentDidMount: function() {
-    $.get(this.props.item.url, (resp) => {
-      this.setState(parse(atob(resp.content)));
-    });
+    this.props.item.content().done((content) => this.setState(parse(content)));
   },
   handleChange: function(content) {
     this.setState({content: content});
@@ -109,7 +107,6 @@ if(repoMatch) {
   var files = new GitHub().repo(repo).files();
   files.done((tree) => {
     var fileList = tree.filter((i) => {
-      if(i.type != 'blob') return false;
       if(i.path == '.gitignore') return false;
       if(i.path == '_config.yml') return false;
       if(i.path.match(/^_layouts\//)) return false;
