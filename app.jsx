@@ -20,20 +20,20 @@ function parse(src) {
   }
 }
 
-var IndexItem = React.createClass({
+var IndexFile = React.createClass({
   render: function() {
-    return <li><a onClick={this.handleClick}>{this.props.item.path}</a></li>;
+    return <li><a onClick={this.handleClick}>{this.props.file.path}</a></li>;
   },
   handleClick: function(evt) {
     evt.preventDefault();
-    edit(this.props.item);
+    edit(this.props.file);
   }
 });
 
 var IndexView = React.createClass({
   render: function() {
-    var indexItemList = this.props.data.map((item) => <IndexItem item={item} />);
-    return <ul className="list-unstyled">{indexItemList}</ul>;
+    var indexFileList = this.props.data.map((file) => <IndexFile file={file} />);
+    return <ul className="list-unstyled">{indexFileList}</ul>;
   }
 });
 
@@ -57,7 +57,7 @@ var CodeEditor = React.createClass({
 
 var SrcView = React.createClass({
   render: function() {
-    var title = <h2><tt>{this.props.item.path}</tt></h2>;
+    var title = <h2><tt>{this.props.file.path}</tt></h2>;
     if(this.state) {
       var html = marked(this.state.content, {sanitize: true});
       return (
@@ -83,13 +83,13 @@ var SrcView = React.createClass({
       return (
         <div>
           {title}
-          <p>loading <tt>{this.props.item.path}</tt> ...</p>
+          <p>loading <tt>{this.props.file.path}</tt> ...</p>
         </div>
       );
     }
   },
   componentDidMount: function() {
-    this.props.item.content().done((content) => this.setState(parse(content)));
+    this.props.file.content().done((content) => this.setState(parse(content)));
   },
   handleChange: function(content) {
     this.setState({content: content});
@@ -120,8 +120,8 @@ if(repoMatch) {
   });
 }
 
-function edit(item) {
+function edit(file) {
   var srcNode = document.querySelector('#src')
   React.unmountComponentAtNode(srcNode);
-  React.render(<SrcView item={item} />, srcNode);
+  React.render(<SrcView file={file} />, srcNode);
 }
