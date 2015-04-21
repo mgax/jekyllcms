@@ -17,8 +17,9 @@ class GitHubFile {
 
 
 class GitHubRepo {
-  constructor(repoName) {
+  constructor(repoName, token) {
     this.repoName = repoName;
+    this.token = token;
     this.api = `https://api.github.com/repos/${this.repoName}`;
   }
 
@@ -34,7 +35,11 @@ class GitHubRepo {
 
 
 class GitHub {
+  constructor(token) {
+    this.token = token;
+  }
+
   repo(repo) {
-    return new GitHubRepo(repo);
+    return new GitHubRepo(repo, this.token);
   }
 }

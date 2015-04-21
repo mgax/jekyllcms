@@ -104,7 +104,8 @@ var repoMatch = window.location.search.match(/[?&]repo=([^&\/]+\/[^&\/]+)\/?/);
 if(repoMatch) {
   var repo = repoMatch[1];
 
-  var files = new GitHub().repo(repo).files();
+  var token = localStorage.getItem('jekyllcms-github-token');
+  var files = new GitHub(token).repo(repo).files();
   files.done((tree) => {
     var fileList = tree.filter((i) => {
       if(i.path == '.gitignore') return false;
