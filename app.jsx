@@ -55,6 +55,31 @@ var CodeEditor = React.createClass({
   }
 });
 
+var SaveButton = React.createClass({
+  getInitialState: function() {
+    return {state: 'ready'};
+  },
+  render: function() {
+    var text = "save";
+    if(this.state.state == 'success') { text += " ✔"; }
+    if(this.state.state == 'saving') { text += " ..."; }
+    return (
+      <button
+        className="btn btn-primary"
+        disabled={this.state.state == 'saving'}
+        onClick={this.handleSave}
+        >{text}</button>
+    );
+  },
+  handleSave: function() {
+    this.setState({state: 'saving'});
+    this.props.onSave()
+      .done(() => {
+        this.setState({state: 'success'});
+      });
+  }
+});
+
 var SrcView = React.createClass({
   render: function() {
     var title = <h2><tt>{this.props.file.path}</tt></h2>;
@@ -72,9 +97,7 @@ var SrcView = React.createClass({
           </div>
           <div className="preview" dangerouslySetInnerHTML={{__html: html}} />
           <p>
-            <button className="btn btn-primary" onClick={this.handleSave}>
-              save
-            </button>
+            <SaveButton onSave={this.handleSave} />
           </p>
         </div>
       );
@@ -96,7 +119,7 @@ var SrcView = React.createClass({
   },
   handleSave: function() {
     var src = '---\n' + this.state.frontMatter + '---\n' + this.state.content;
-    this.props.file.save(src).done();
+    return this.props.file.save(src);
   }
 });
 
