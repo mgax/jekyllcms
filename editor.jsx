@@ -2,12 +2,19 @@
 
 function parse(src) {
   var lines = src.split(/\n/);
-  assert(lines[0] == '---');
-  lines = lines.slice(1);
-  var frontMatterEnd = lines.indexOf('---');
+  var frontMatterStart = lines.indexOf('---');
+  if(frontMatterStart < 0) {
+    return {
+      frontMatter: {},
+      content: src
+    }
+  }
+  var frontMatterEnd = lines.indexOf('---', frontMatterStart + 1);
   assert(frontMatterEnd > -1);
   return {
-    frontMatter: lines.slice(0, frontMatterEnd).join('\n') + '\n',
+    frontMatter: jsyaml.safeLoad(
+      lines.slice(frontMatterStart + 1, frontMatterEnd).join('\n') + '\n'
+    ),
     content: lines.slice(frontMatterEnd + 1).join('\n')
   }
 }
@@ -63,7 +70,7 @@ var Editor = React.createClass({
       return (
         <div>
           {title}
-          <pre><code>{this.state.frontMatter}</code></pre>
+          <pre><code>{JSON.stringify(this.state.frontMatter, null, 2)}</code></pre>
           <div className="content">
             <Ace initial={this.state.content} onChange={this.handleChange} />
           </div>
@@ -90,7 +97,7 @@ var Editor = React.createClass({
     this.setState({content: content});
   },
   handleSave: function() {
-    var src = '---\n' + this.state.frontMatter + '---\n' + this.state.content;
+    var src = '---\n' + jsyaml.safeDump(this.state.frontMatter) + '---\n' + this.state.content;
     return this.props.file.save(src);
   }
 });
