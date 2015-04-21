@@ -51,6 +51,7 @@ function initialize() {
       var file = repo.newFile(path);
       fileList.push(file);
       renderSidebar();
+      handleEdit(file);
     }
   }
 }
