@@ -3,12 +3,13 @@
 
 class GitHubFile {
   constructor(repo, item) {
-    this.item = item;
-    this.path = this.item.path;
+    this.repo = repo;
+    this.path = item.path;
+    this.sha = item.sha;
   }
 
   content() {
-    return Q($.get(this.item.url))
+    return Q($.get(`${this.repo.api}/git/blobs/${this.sha}`))
       .then((resp) =>
         atob(resp.content));
   }
@@ -16,12 +17,13 @@ class GitHubFile {
 
 
 class GitHubRepo {
-  constructor(repo) {
-    this.repo = repo;
+  constructor(repoName) {
+    this.repoName = repoName;
+    this.api = `https://api.github.com/repos/${this.repoName}`;
   }
 
   files() {
-    var url = `https://api.github.com/repos/${this.repo}/git/trees/gh-pages?recursive=1`;
+    var url = `${this.api}/git/trees/gh-pages?recursive=1`;
     return Q($.get(url))
       .then((resp) =>
         resp.tree
