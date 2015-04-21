@@ -42,11 +42,12 @@ var CodeEditor = React.createClass({
     return <div ref="ace" className="codeEditor" />;
   },
   componentDidMount: function() {
-    this.ace = ace.edit(React.findDOMNode(this.refs.ace));
+    var node = React.findDOMNode(this.refs.ace);
+    $(node).text(this.props.initial);
+    this.ace = ace.edit(node);
     this.ace.getSession().setMode('ace/mode/markdown');
     this.ace.setTheme('ace/theme/tomorrow_night_eighties');
     this.ace.setShowInvisibles(true);
-    this.ace.setValue(this.props.initial);
     this.ace.on('change', (e) => this.handleChange(e));
   },
   handleChange: function() {
