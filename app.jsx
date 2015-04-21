@@ -26,13 +26,15 @@ var IndexFile = React.createClass({
   },
   handleClick: function(evt) {
     evt.preventDefault();
-    edit(this.props.file);
+    this.props.onEdit(this.props.file);
   }
 });
 
 var IndexView = React.createClass({
   render: function() {
-    var indexFileList = this.props.data.map((file) => <IndexFile file={file} />);
+    var indexFileList = this.props.data.map((file) =>
+      <IndexFile file={file} onEdit={this.props.onEdit} />
+    );
     return <ul className="list-unstyled">{indexFileList}</ul>;
   }
 });
@@ -138,14 +140,14 @@ if(repoMatch) {
     });
 
     React.render(
-      <IndexView data={fileList} />,
+      <IndexView data={fileList} onEdit={handleEdit} />,
       document.querySelector('#index')
     );
   });
 }
 
-function edit(file) {
-  var srcNode = document.querySelector('#src')
+function handleEdit(file) {
+  var srcNode = document.querySelector('#src');
   React.unmountComponentAtNode(srcNode);
   React.render(<SrcView file={file} />, srcNode);
 }
