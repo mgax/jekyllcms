@@ -1,5 +1,7 @@
 'use strict';
 
+Q.longStackSupport = true;
+
 function assert(cond) {
   if(! cond) {
     throw "assertion failed";
@@ -102,10 +104,10 @@ var SrcView = React.createClass({
 var repoMatch = window.location.search.match(/[?&]repo=([^&\/]+\/[^&\/]+)\/?/);
 if(repoMatch) {
   var repo = repoMatch[1];
-  var url = `https://api.github.com/repos/${repo}/git/trees/gh-pages?recursive=1`;
 
-  $.get(url, (resp) => {
-    var fileList = resp.tree.filter((i) => {
+  var files = new GitHub().repo(repo).files();
+  files.done((tree) => {
+    var fileList = tree.filter((i) => {
       if(i.type != 'blob') return false;
       if(i.path == '.gitignore') return false;
       if(i.path == '_config.yml') return false;
