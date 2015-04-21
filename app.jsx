@@ -96,7 +96,7 @@ var SrcView = React.createClass({
   },
   handleSave: function() {
     var src = '---\n' + this.state.frontMatter + '---\n' + this.state.content;
-    console.log(src);
+    this.props.file.save(src).done();
   }
 });
 

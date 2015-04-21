@@ -13,6 +13,23 @@ class GitHubFile {
       .then((resp) =>
         atob(resp.content));
   }
+
+  save(newContent) {
+    return Q($.ajax({
+      url: `${this.repo.api}/contents/${this.path}?access_token=${this.repo.token}`,
+      method: 'PUT',
+      data: JSON.stringify({
+        branch: 'gh-pages',
+        message: "Edit from JekyllCMS",
+        path: this.path,
+        sha: this.sha,
+        content: btoa(newContent)
+      })
+    }))
+    .then((resp) => {
+      this.sha = resp.content.sha;
+    });
+  }
 }
 
 
