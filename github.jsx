@@ -10,15 +10,19 @@ class GitHubFile {
 
   content() {
     if(! this.sha) { return Q(''); }
-    return Q($.get(`${this.repo.api}/git/blobs/${this.sha}`))
-      .then((resp) =>
-        atob(resp.content));
+    return Q($.ajax({
+      url: `${this.repo.api}/git/blobs/${this.sha}`,
+      headers: {Authorization: 'token ' + this.repo.token},
+    }))
+    .then((resp) =>
+      atob(resp.content));
   }
 
   save(newContent) {
     return Q($.ajax({
-      url: `${this.repo.api}/contents/${this.path}?access_token=${this.repo.token}`,
+      url: `${this.repo.api}/contents/${this.path}`,
       method: 'PUT',
+      headers: {Authorization: 'token ' + this.repo.token},
       data: JSON.stringify({
         branch: 'gh-pages',
         message: "Edit from JekyllCMS",
@@ -34,8 +38,9 @@ class GitHubFile {
 
   delete() {
     return Q($.ajax({
-      url: `${this.repo.api}/contents/${this.path}?access_token=${this.repo.token}`,
+      url: `${this.repo.api}/contents/${this.path}`,
       method: 'DELETE',
+      headers: {Authorization: 'token ' + this.repo.token},
       data: JSON.stringify({
         branch: 'gh-pages',
         message: "Edit from JekyllCMS",
@@ -56,11 +61,14 @@ class GitHubRepo {
 
   files() {
     var url = `${this.api}/git/trees/gh-pages?recursive=1`;
-    return Q($.get(url))
-      .then((resp) =>
-        resp.tree
-          .filter((i) => i.type == 'blob')
-          .map((i) => new GitHubFile(this, i)));
+    return Q($.ajax({
+      url: url,
+      headers: {Authorization: 'token ' + this.token},
+    }))
+    .then((resp) =>
+      resp.tree
+        .filter((i) => i.type == 'blob')
+        .map((i) => new GitHubFile(this, i)));
   }
 
   newFile(path) {
