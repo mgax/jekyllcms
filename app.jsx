@@ -12,19 +12,20 @@ function initialize() {
   var repoMatch = window.location.search.match(/[?&]repo=([^&\/]+\/[^&\/]+)\/?/);
   if(! repoMatch) return;
 
-  var gitHub = new GitHub(localStorage.getItem('jekyllcms-github-token'));
-  var repo = gitHub.repo(repoMatch[1]);
-  var fileList = [];
+  var app = window.app = {};
+  app.gitHub = new GitHub(localStorage.getItem('jekyllcms-github-token'));
+  app.repo = app.gitHub.repo(repoMatch[1]);
+  app.fileList = [];
 
-  repo.files().done((tree) => {
-    fileList = tree.filter((i) => ! i.path.match(/^[_.]/));
+  app.repo.files().done((tree) => {
+    app.fileList = tree.filter((i) => ! i.path.match(/^[_.]/));
     renderSidebar();
   });
 
   function renderSidebar(f) {
     React.render(
       <IndexView
-        data={fileList}
+        data={app.fileList}
         onEdit={handleEdit}
         onCreate={handleCreate}
         />,
@@ -42,8 +43,8 @@ function initialize() {
     modal(<NewFileModal onCreate={handleFileCreated} />);
 
     function handleFileCreated(path) {
-      var file = repo.newFile(path);
-      fileList.push(file);
+      var file = app.repo.newFile(path);
+      app.fileList.push(file);
       renderSidebar();
       handleEdit(file);
     }
