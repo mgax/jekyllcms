@@ -31,6 +31,19 @@ class GitHubFile {
       this.sha = resp.content.sha;
     });
   }
+
+  delete() {
+    return Q($.ajax({
+      url: `${this.repo.api}/contents/${this.path}?access_token=${this.repo.token}`,
+      method: 'DELETE',
+      data: JSON.stringify({
+        branch: 'gh-pages',
+        message: "Edit from JekyllCMS",
+        path: this.path,
+        sha: this.sha,
+      })
+    }));
+  }
 }
 
 

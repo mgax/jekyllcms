@@ -102,6 +102,31 @@ var SaveButton = React.createClass({
   }
 });
 
+var DeleteButton = React.createClass({
+  render: function() {
+    return (
+      <button
+        className="btn btn-danger"
+        onClick={this.handleClick}
+        >delete</button>
+    )
+  },
+  handleClick: function() {
+    modal(
+      <DeleteFileModal
+        path={this.props.file.path}
+        onDelete={this.handleDelete}
+        />
+    );
+  },
+  handleDelete: function() {
+    this.props.file.delete()
+      .done(() => {
+        this.props.onDelete();
+      })
+  }
+});
+
 var Editor = React.createClass({
   render: function() {
     var title = <h2><tt>{this.props.file.path}</tt></h2>;
@@ -119,6 +144,8 @@ var Editor = React.createClass({
           <div className="preview" dangerouslySetInnerHTML={{__html: html}} />
           <p>
             <SaveButton onSave={this.handleSave} />
+            &nbsp;
+            <DeleteButton file={this.props.file} onDelete={this.handleDelete} />
           </p>
         </div>
       );
@@ -144,5 +171,8 @@ var Editor = React.createClass({
   handleSave: function() {
     var src = '---\n' + jsyaml.safeDump(this.state.frontMatter) + '---\n' + this.state.content;
     return this.props.file.save(src);
-  }
+  },
+  handleDelete: function() {
+    React.unmountComponentAtNode(React.findDOMNode(this).parentNode);
+  },
 });
