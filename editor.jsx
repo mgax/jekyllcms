@@ -23,23 +23,13 @@ var clone = (value) => JSON.parse(JSON.stringify(value));
 
 var FrontMatterField = React.createClass({
   render: function() {
-    var inputId = 'frontmatter-input-' + this.props.name;
     return (
-      <div className="form-horizontal">
-        <div className="form-group">
-          <label htmlFor={inputId} className="control-label col-sm-2">
-            {this.props.name}
-          </label>
-          <div className="col-sm-10">
-            <input
-              id={inputId}
-              className="form-control"
-              value={this.props.value}
-              onChange={this.handleChange}
-              />
-          </div>
-        </div>
-      </div>
+      <input
+        className="form-control"
+        value={this.props.value}
+        onChange={this.handleChange}
+        placeholder={this.props.name}
+        />
     );
   },
   handleChange: function(evt) {
