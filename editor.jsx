@@ -174,5 +174,6 @@ var Editor = React.createClass({
   },
   handleDelete: function() {
     React.unmountComponentAtNode(React.findDOMNode(this).parentNode);
+    this.props.onDelete();
   },
 });

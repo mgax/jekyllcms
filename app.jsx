@@ -17,10 +17,12 @@ function initialize() {
   app.repo = app.gitHub.repo(repoMatch[1]);
   app.fileList = [];
 
-  app.repo.files().done((tree) => {
-    app.fileList = tree.filter((i) => ! i.path.match(/^[_.]/));
-    renderSidebar();
-  });
+  function updateFileList() {
+    app.repo.files().done((tree) => {
+      app.fileList = tree.filter((i) => ! i.path.match(/^[_.]/));
+      renderSidebar();
+    });
+  }
 
   function renderSidebar(f) {
     React.render(
@@ -36,7 +38,7 @@ function initialize() {
   function handleEdit(file) {
     var srcNode = document.querySelector('#src');
     React.unmountComponentAtNode(srcNode);
-    React.render(<Editor file={file} />, srcNode);
+    React.render(<Editor file={file} onDelete={updateFileList} />, srcNode);
   }
 
   function handleCreate() {
@@ -49,6 +51,8 @@ function initialize() {
       handleEdit(file);
     }
   }
+
+  updateFileList();
 }
 
 
