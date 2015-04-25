@@ -122,20 +122,34 @@ var Editor = React.createClass({
     }
     else {
       var html = marked(this.state.content, {sanitize: true});
+      if(this.props.file.path.match(/\.html/)) {
+        var ui = [
+          <CKEditor
+            initial={this.state.content}
+            onChange={this.handleChange}
+            ref="contentEditor"
+            />
+        ];
+      }
+      else {
+        var ui = [
+          <div className="content">
+            <Ace
+              initial={this.state.content}
+              onChange={this.handleChange}
+              ref="contentEditor"
+              />
+          </div>,
+          <div className="preview" dangerouslySetInnerHTML={{__html: html}} />
+        ]
+      }
       return (
         <div>
           {title}
           <FrontMatter
             data={this.state.frontMatter}
             onChange={this.handleFrontMatterChange} />
-          <div className="content">
-            <Ace
-              initial={this.state.content}
-              onChange={this.handleChange}
-              ref="ace"
-              />
-          </div>
-          <div className="preview" dangerouslySetInnerHTML={{__html: html}} />
+          {ui}
           <p>
             <SaveButton onSave={this.handleSave} />
             &nbsp;
@@ -159,7 +173,7 @@ var Editor = React.createClass({
     file.content().done((content) => {
       var newState = parse(content);
       if(! this.state.loading) {
-        this.refs.ace.reset(newState.content);
+        this.refs.contentEditor.reset(newState.content);
       }
       newState.loading = false;
       this.replaceState(newState);
