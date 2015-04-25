@@ -1,5 +1,17 @@
 'use strict';
 
+var HomeRepo = React.createClass({
+  render: function() {
+    return <a onClick={this.handleClick}>
+      {this.props.repo.fullName}
+    </a>;
+  },
+  handleClick: function(evt) {
+    evt.preventDefault();
+    this.props.onOpen(this.props.repo);
+  }
+});
+
 var Home = React.createClass({
   render: function() {
     var user = this.props.user;
@@ -8,7 +20,11 @@ var Home = React.createClass({
       <div>
         <h1>Reposiories of {user.meta.login}</h1>
         <ul>
-          {repoList.map((repo) => <li>{repo.fullName}</li>)}
+          {repoList.map((repo) =>
+            <li className="homerepo">
+              <HomeRepo repo={repo} onOpen={this.handleOpen} />
+            </li>
+          )}
         </ul>
       </div>
     );
@@ -21,6 +37,9 @@ var Home = React.createClass({
       .done((repoList) => {
         this.setState({repoList: repoList});
       });
+  },
+  handleOpen: function(repo) {
+    window.location.href = '/?repo=' + repo.fullName;
   }
 });
 
