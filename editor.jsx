@@ -64,8 +64,12 @@ var Ace = React.createClass({
     return <div ref="ace" className="aceContainer" />;
   },
   componentDidMount: function() {
+    this.reset(this.props.initial);
+  },
+  reset: function(content) {
+    if(this.ace) { this.ace.destroy(); }
     var node = React.findDOMNode(this.refs.ace);
-    $(node).text(this.props.initial);
+    $(node).text(content);
     this.ace = ace.edit(node);
     this.ace.getSession().setMode('ace/mode/markdown');
     this.ace.setTheme('ace/theme/tomorrow_night_eighties');
@@ -130,7 +134,15 @@ var DeleteButton = React.createClass({
 var Editor = React.createClass({
   render: function() {
     var title = <h2><tt>{this.props.file.path}</tt></h2>;
-    if(this.state) {
+    if(this.state.loading) {
+      return (
+        <div>
+          {title}
+          <p>loading <tt>{this.props.file.path}</tt> ...</p>
+        </div>
+      );
+    }
+    else {
       var html = marked(this.state.content, {sanitize: true});
       return (
         <div>
@@ -139,7 +151,11 @@ var Editor = React.createClass({
             data={this.state.frontMatter}
             onChange={this.handleFrontMatterChange} />
           <div className="content">
-            <Ace initial={this.state.content} onChange={this.handleChange} />
+            <Ace
+              initial={this.state.content}
+              onChange={this.handleChange}
+              ref="ace"
+              />
           </div>
           <div className="preview" dangerouslySetInnerHTML={{__html: html}} />
           <p>
@@ -150,17 +166,26 @@ var Editor = React.createClass({
         </div>
       );
     }
-    else {
-      return (
-        <div>
-          {title}
-          <p>loading <tt>{this.props.file.path}</tt> ...</p>
-        </div>
-      );
-    }
+  },
+  getInitialState: function() {
+    return {loading: true};
   },
   componentDidMount: function() {
-    this.props.file.content().done((content) => this.setState(parse(content)));
+    this.loadFile(this.props.file);
+  },
+  componentWillReceiveProps: function(newProps) {
+    this.replaceState({loading: true});
+    this.loadFile(newProps.file);
+  },
+  loadFile: function(file) {
+    file.content().done((content) => {
+      var newState = parse(content);
+      if(! this.state.loading) {
+        this.refs.ace.reset(newState.content);
+      }
+      newState.loading = false;
+      this.replaceState(newState);
+    });
   },
   handleChange: function(content) {
     this.setState({content: content});
