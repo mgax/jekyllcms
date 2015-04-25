@@ -48,13 +48,14 @@ class GitHubFile {
 
 
 class GitHubRepo {
-  constructor(gh, repoName) {
+  constructor(gh, fullName, meta) {
     this.gh = gh;
-    this.repoName = repoName;
+    this.fullName = fullName;
+    this.meta = meta;
   }
 
   api(options) {
-    options.url = '/repos/' + this.repoName + options.url;
+    options.url = '/repos/' + this.fullName + options.url;
     return this.gh.api(options);
   }
 
@@ -77,6 +78,14 @@ class GitHubUser {
     this.gh = gh;
     this.meta = meta;
   }
+
+  repos() {
+    return this.gh.api({url: this.meta.repos_url + '?per_page=100'})
+      .then((resp) =>
+        resp.map((meta) =>
+          new GitHubRepo(this.gh, meta.full_name, meta))
+      );
+  }
 }
 
 
@@ -86,7 +95,10 @@ class GitHub {
   }
 
   api(options) {
-    options.url = 'https://api.github.com' + options.url;
+    var apiUrl = 'https://api.github.com';
+    if(options.url.indexOf(apiUrl) < 0) {
+      options.url = apiUrl + options.url;
+    }
     options.headers = {Authorization: 'token ' + this.token}
     return Q($.ajax(options));
   }
