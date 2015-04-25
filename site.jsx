@@ -43,7 +43,10 @@ var Site = React.createClass({
   handleCreate: function() {
     var handleFileCreated = (path) => {
       var newFile = this.props.repo.newFile(path);
-      var newFileList = [].concat(this.state.fileList, [newFile]);
+      this.setState({
+        file: newFile,
+        fileList: [].concat(this.state.fileList, [newFile]),
+      });
     };
 
     modal(<NewFileModal onCreate={handleFileCreated} />);
