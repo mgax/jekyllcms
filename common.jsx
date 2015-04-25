@@ -14,3 +14,11 @@ function modal(component) {
   React.render(component, node);
   $('.modal', node).modal();
 }
+
+function encode_utf8(s) {
+  return unescape(encodeURIComponent(s));
+}
+
+function decode_utf8(s) {
+  return decodeURIComponent(escape(s));
+}

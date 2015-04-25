@@ -171,7 +171,7 @@ var Editor = React.createClass({
   },
   loadFile: function(file) {
     file.content().done((content) => {
-      var newState = parse(content);
+      var newState = parse(decode_utf8(content));
       if(! this.state.loading) {
         this.refs.contentEditor.reset(newState.content);
       }
@@ -187,7 +187,7 @@ var Editor = React.createClass({
   },
   handleSave: function() {
     var src = '---\n' + jsyaml.safeDump(this.state.frontMatter) + '---\n' + this.state.content;
-    return this.props.file.save(src);
+    return this.props.file.save(encode_utf8(src));
   },
   handleDelete: function() {
     React.unmountComponentAtNode(React.findDOMNode(this).parentNode);
