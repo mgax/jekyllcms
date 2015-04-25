@@ -72,6 +72,14 @@ class GitHubRepo {
 }
 
 
+class GitHubUser {
+  constructor(gh, meta) {
+    this.gh = gh;
+    this.meta = meta;
+  }
+}
+
+
 class GitHub {
   constructor(token) {
     this.token = token;
@@ -85,5 +93,9 @@ class GitHub {
 
   repo(repo) {
     return new GitHubRepo(this, repo);
+  }
+
+  user() {
+    return this.api({url: '/user'}).then((meta) => new GitHubUser(this, meta));
   }
 }

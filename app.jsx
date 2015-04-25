@@ -22,4 +22,9 @@ $.get('config.json', (config) => {
   if(repoMatch) {
     initializeSite(gitHub.repo(repoMatch[1]));
   }
+  else {
+    gitHub.user().done((user) => {
+      initializeHomepage(user);
+    });
+  }
 });
