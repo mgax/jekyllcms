@@ -186,8 +186,13 @@ var Editor = React.createClass({
     this.setState({frontMatter: frontMatter});
   },
   handleSave: function() {
-    var src = '---\n' + jsyaml.safeDump(this.state.frontMatter) + '---\n' + this.state.content;
-    return this.props.file.save(encode_utf8(src));
+    var src = encode_utf8(
+      '---\n' +
+      jsyaml.safeDump(this.state.frontMatter) +
+      '---\n' +
+      this.state.content
+    );
+    return this.props.file.save(src);
   },
   handleDelete: function() {
     React.unmountComponentAtNode(React.findDOMNode(this).parentNode);
