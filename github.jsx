@@ -80,9 +80,18 @@ class GitHubUser {
   }
 
   repos() {
-    return this.gh.api({url: this.meta.repos_url + '?per_page=100'})
-      .then((resp) =>
-        resp.map((meta) =>
+    var size = 100;
+    var fetch = (n, rv) =>
+      this.gh.api({url: this.meta.repos_url + '?per_page='+size+'&page='+n})
+        .then((resp) => {
+          rv = rv.concat(resp);
+          if(resp.length < size) { return rv; }
+          else { return fetch(n+1, rv); }
+        });
+
+    return fetch(1, [])
+      .then((repos) =>
+        repos.map((meta) =>
           new GitHubRepo(this.gh, meta.full_name, meta))
       );
   }
