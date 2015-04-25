@@ -12,7 +12,6 @@ function renderAuthButton() {
 
 function initializeAuthCallback(code) {
   $.get(app.config.gatekeeper + '/authenticate/' + code, (resp) => {
-    console.log(resp);
     if(resp.token) {
       localStorage.setItem('jekyllcms-github-token', resp.token);
       window.location.href = '/';
