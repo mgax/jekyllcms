@@ -26,6 +26,7 @@ var Home = React.createClass({
             </li>
           )}
         </ul>
+        <p>{logoutButton()}</p>
       </div>
     );
   },
