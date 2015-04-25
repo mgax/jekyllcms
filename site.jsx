@@ -50,9 +50,9 @@ var Site = React.createClass({
   }
 });
 
-function initializeSite() {
-  var gitHub = new GitHub(localStorage.getItem('jekyllcms-github-token'));
-  var repo = gitHub.repo(repoMatch[1]);
+function initializeSite(repoName) {
+  var gitHub = new GitHub(app.authToken);
+  var repo = gitHub.repo(repoName);
 
   React.render(<Site repo={repo} />, document.querySelector('#top'));
 }
