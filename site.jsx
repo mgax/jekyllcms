@@ -50,9 +50,6 @@ var Site = React.createClass({
   }
 });
 
-function initializeSite(repoName) {
-  var gitHub = new GitHub(app.authToken);
-  var repo = gitHub.repo(repoName);
-
+function initializeSite(repo) {
   React.render(<Site repo={repo} />, document.querySelector('#top'));
 }

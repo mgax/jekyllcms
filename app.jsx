@@ -16,8 +16,10 @@ $.get('config.json', (config) => {
     return;
   }
 
+  var gitHub = new GitHub(app.authToken);
+
   var repoMatch = window.location.search.match(/[?&]repo=([^&\/]+\/[^&\/]+)\/?/);
   if(repoMatch) {
-    initializeSite(repoMatch[1]);
+    initializeSite(gitHub.repo(repoMatch[1]));
   }
 });
