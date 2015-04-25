@@ -48,15 +48,14 @@ class GitHubFile {
 
 
 class GitHubRepo {
-  constructor(repoName, token) {
+  constructor(gh, repoName) {
+    this.gh = gh;
     this.repoName = repoName;
-    this.token = token;
   }
 
   api(options) {
-    options.url = 'https://api.github.com/repos/' + this.repoName + options.url;
-    options.headers = {Authorization: 'token ' + this.token}
-    return Q($.ajax(options));
+    options.url = '/repos/' + this.repoName + options.url;
+    return this.gh.api(options);
   }
 
   files() {
@@ -78,7 +77,13 @@ class GitHub {
     this.token = token;
   }
 
+  api(options) {
+    options.url = 'https://api.github.com' + options.url;
+    options.headers = {Authorization: 'token ' + this.token}
+    return Q($.ajax(options));
+  }
+
   repo(repo) {
-    return new GitHubRepo(repo, this.token);
+    return new GitHubRepo(this, repo);
   }
 }
