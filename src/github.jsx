@@ -73,7 +73,7 @@ class GitHubRepo {
 }
 
 
-class GitHubUser {
+class GitHubAccount {
   constructor(gh, meta) {
     this.gh = gh;
     this.meta = meta;
@@ -94,6 +94,26 @@ class GitHubUser {
         repos.map((meta) =>
           new GitHubRepo(this.gh, meta.full_name, meta))
       );
+  }
+}
+
+
+class GitHubUser {
+  constructor(gh, meta) {
+    this.gh = gh;
+    this.meta = meta;
+    this.account = new GitHubAccount(this.gh, this.meta);
+  }
+
+  orgs() {
+    return this.gh.api({url: this.meta.organizations_url})
+      .then((resp) =>
+        resp.map((acc) =>
+          new GitHubAccount(this.gh, acc)));
+  }
+
+  repos() {
+    return this.account.repos();
   }
 }
 
