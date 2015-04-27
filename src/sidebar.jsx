@@ -13,7 +13,7 @@ var IndexFile = React.createClass({
 var IndexView = React.createClass({
   render: function() {
     var indexFileList = this.props.data.map((file) =>
-      <IndexFile file={file} onEdit={this.props.onEdit} />
+      <IndexFile key={file.path} file={file} onEdit={this.props.onEdit} />
     );
     return (
       <div>
