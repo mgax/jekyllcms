@@ -6,7 +6,7 @@ function renderAuthButton() {
     '&scope=public_repo' +
     '&redirect_uri=' + encodeURIComponent(app.config.url);
 
-  var view = <a className="btn btn-success" href={authUrl}>login</a>;
+  var view = <a className="btn btn-success" href={authUrl}>authorize</a>;
   React.render(view, document.querySelector('#top'));
 }
 
