@@ -129,25 +129,28 @@ var Editor = React.createClass({
     else {
       var html = marked(this.state.content, {sanitize: true});
       if(this.props.file.path.match(/\.html/)) {
-        var ui = [
+        var editor = (
           <CKEditor
             initial={this.state.content}
             onChange={this.handleChange}
             ref="contentEditor"
             />
-        ];
+        );
+        var preview = null;
       }
       else {
-        var ui = [
+        var editor = (
           <div className="content">
             <Ace
               initial={this.state.content}
               onChange={this.handleChange}
               ref="contentEditor"
               />
-          </div>,
+          </div>
+        );
+        var preview = (
           <div className="preview" dangerouslySetInnerHTML={{__html: html}} />
-        ]
+        );
       }
       return (
         <div>
@@ -156,7 +159,8 @@ var Editor = React.createClass({
           <FrontMatter
             data={this.state.frontMatter}
             onChange={this.handleFrontMatterChange} />
-          {ui}
+          {editor}
+          {preview}
           <p>
             <SaveButton onSave={this.handleSave} />
             &nbsp;
