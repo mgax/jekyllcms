@@ -5,7 +5,8 @@ var Repo = React.createClass({
     var repo = this.props.repo;
     return (
       <a className="buttonlink" href={'/?repo=' + repo.meta.full_name}>
-        {repo.meta.name}
+        <h3>{repo.meta.name}</h3>
+        <p>{repo.meta.description}</p>
       </a>
     );
   }
@@ -13,9 +14,16 @@ var Repo = React.createClass({
 
 var Account = React.createClass({
   render: function() {
+    var account = this.props.account;
+    var caret = null;
+    if(this.props.selected) {
+      caret = <div className="accountSelectedMarker">&raquo;</div>;
+    }
     return (
-      <a className="buttonlink" onClick={this.handleClick}>
-        {this.props.account.meta.login}
+      <a className='buttonlink' onClick={this.handleClick}>
+        <img src={account.meta.avatar_url} />
+        {caret}
+        <p>{account.meta.login}</p>
       </a>
     );
   },
@@ -28,7 +36,7 @@ var Account = React.createClass({
 var AccountRepos = React.createClass({
   render: function() {
     return (
-      <ul>
+      <ul className="accountRepoList">
         {this.state.repoList.map((repo) =>
           <li key={repo.meta.name}><Repo repo={repo} /></li>)}
       </ul>
@@ -61,14 +69,18 @@ var Home = React.createClass({
       <div>
         <h1>Jekyll CMS</h1>
         <div className="row">
-          <ul className="col-sm-6">
+          <ul className="accountList col-sm-4">
             {this.state.accountList.map((acc) =>
               <li key={acc.meta.login}>
-                <Account account={acc} onOpen={this.handleOpen} />
+                <Account
+                  account={acc}
+                  selected={acc == this.state.account}
+                  onOpen={this.handleOpen}
+                  />
               </li>
             )}
           </ul>
-          <div className="col-sm-6">
+          <div className="col-sm-8">
             <AccountRepos account={this.state.account} />
           </div>
         </div>

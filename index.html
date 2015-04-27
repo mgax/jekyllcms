@@ -2,6 +2,51 @@
 <meta charset="utf-8">
 <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.4/css/bootstrap.css">
 <style>
+  .accountList {
+    border-top: 1px solid #ddd;
+    padding: 0;
+  }
+  .accountList > li {
+    list-style: none;
+    border-bottom: 1px solid #eee;
+    padding: 10px 0;
+  }
+  .accountList > li > a.buttonlink {
+    display: block;
+    overflow: hidden;
+  }
+  .accountList > li > a.buttonlink > img {
+    display: block;
+    float: left;
+    width: 64px; height: 64px;
+    margin: 0 15px;
+  }
+  .accountList > li > a.buttonlink > p {
+    float: left;
+    font-size: 150%;
+    color: #555;
+  }
+  .accountList > li > a.buttonlink > .accountSelectedMarker {
+    float: right;
+    font-size: 300%;
+    color: #555;
+  }
+  .accountRepoList  {
+    border-top: 1px solid #ddd;
+  }
+  .accountRepoList > li {
+    border-bottom: 1px solid #eee;
+    list-style: none;
+    padding: 10px 0;
+  }
+  .accountRepoList > li > a.buttonlink {
+    display: block;
+    overflow: hidden;
+    text-decoration: none;
+  }
+  .accountRepoList > li > a.buttonlink > p {
+    color: #888;
+  }
   .aceContainer {
     height: 100%;
   }
