@@ -22,3 +22,22 @@ function encode_utf8(s) {
 function decode_utf8(s) {
   return decodeURIComponent(escape(s));
 }
+
+function errorHandler(action) {
+  return function(e) {
+    var message = "Error while " + action;
+
+    if(e.readyState !== null) { // ajax error
+      var cause = (e.responseJSON && e.responseJSON.message);
+      if(cause) {
+        message = message + ": " + cause;
+      }
+    }
+
+    reportError(message);
+  }
+}
+
+function reportError(message) {
+  app.errorBox.report(message);
+}

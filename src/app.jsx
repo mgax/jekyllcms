@@ -3,6 +3,8 @@
 var app = {};
 
 $.get('config.json', (config) => {
+  app.errorBox = React.render(<ErrorBox />, document.querySelector('#errors'));
+
   app.config = config;
   var authMatch = window.location.href.match(/\?code=(.*)/);
   if(authMatch) {
