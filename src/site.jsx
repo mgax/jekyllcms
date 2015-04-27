@@ -9,23 +9,25 @@ var Site = React.createClass({
   render: function() {
     var editor = null;
     if(this.state.file) {
-      editor = <Editor
-        file={this.state.file}
-        onDelete={this.updateFileList}
-        />;
+      editor = (
+        <div className="editor-container row">
+          <div className="editor col-sm-offset-2 col-sm-10">
+            <Editor
+              file={this.state.file}
+              onDelete={this.updateFileList}
+              />
+          </div>
+        </div>
+      );
     }
     return (
-      <div className="row">
-        <div id="index" className="col-sm-2">
-          <IndexView
-            data={this.state.fileList}
-            onEdit={this.handleEdit}
-            onCreate={this.handleCreate}
-            />
-        </div>
-        <div id="src" className="col-sm-10">
-          {editor}
-        </div>
+      <div className="site">
+        <IndexView
+          data={this.state.fileList}
+          onEdit={this.handleEdit}
+          onCreate={this.handleCreate}
+          />
+        {editor}
       </div>
     );
   },
