@@ -16,15 +16,15 @@ $.get('config.json', (config) => {
     return;
   }
 
-  var gitHub = new GitHub(app.authToken);
+  app.gitHub = new GitHub(app.authToken);
 
   var repoMatch = window.location.search.match(/[?&]repo=([^&\/]+\/[^&\/]+)\/?/);
   if(repoMatch) {
-    gitHub.repo(repoMatch[1]).then((repo) =>
+    app.gitHub.repo(repoMatch[1]).then((repo) =>
       initializeSite(repo));
   }
   else {
-    gitHub.user().done((user) => {
+    app.gitHub.user().done((user) => {
       initializeHomepage(user);
     });
   }
