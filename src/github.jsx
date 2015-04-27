@@ -48,14 +48,13 @@ class GitHubFile {
 
 
 class GitHubRepo {
-  constructor(gh, fullName, meta) {
+  constructor(gh, meta) {
     this.gh = gh;
-    this.fullName = fullName;
     this.meta = meta;
   }
 
   api(options) {
-    options.url = '/repos/' + this.fullName + options.url;
+    options.url = '/repos/' + this.meta.full_name + options.url;
     return this.gh.api(options);
   }
 
@@ -92,7 +91,7 @@ class GitHubAccount {
     return fetch(1, [])
       .then((repos) =>
         repos.map((meta) =>
-          new GitHubRepo(this.gh, meta.full_name, meta))
+          new GitHubRepo(this.gh, meta))
       );
   }
 }
@@ -135,7 +134,7 @@ class GitHub {
   repo(fullName) {
     return this.api({url: '/repos/' + fullName})
       .then((meta) =>
-        new GitHubRepo(this, meta.full_name, meta));
+        new GitHubRepo(this, meta));
   }
 
   user() {

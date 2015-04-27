@@ -2,9 +2,10 @@
 
 var Repo = React.createClass({
   render: function() {
+    var repo = this.props.repo;
     return (
-      <a className="buttonlink" href={'/?repo=' + this.props.repo.fullName}>
-        {this.props.repo.meta.name}
+      <a className="buttonlink" href={'/?repo=' + repo.meta.full_name}>
+        {repo.meta.name}
       </a>
     );
   }
