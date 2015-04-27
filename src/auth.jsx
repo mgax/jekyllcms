@@ -3,7 +3,7 @@
 function renderAuthButton() {
   var authUrl = 'https://github.com/login/oauth/authorize' +
     '?client_id=' + encodeURIComponent(app.config.clientId) +
-    '&scope=public_repo' +
+    '&scope=repo' +
     '&redirect_uri=' + encodeURIComponent(app.config.url);
 
   var view = <a className="btn btn-success" href={authUrl}>authorize</a>;
