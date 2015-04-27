@@ -46,11 +46,12 @@ var AccountRepos = React.createClass({
   },
   getRepos: function(account) {
     account.repos()
-      .done((repoList) => {
+      .then((repoList) => {
         repoList.sort((r1, r2) =>
           r1.meta.updated_at > r2.meta.updated_at ? -1 : 1);
         this.setState({repoList: repoList});
-      });
+      })
+      .catch(errorHandler("loading repository list"));
   }
 });
 
@@ -83,9 +84,10 @@ var Home = React.createClass({
   },
   componentDidMount: function() {
     this.props.user.orgs()
-      .done((accountList) => {
+      .then((accountList) => {
         this.setState({accountList: [this.props.user].concat(accountList)});
-      });
+      })
+      .catch(errorHandler("loading organization list"));
   },
   handleOpen: function(account) {
     this.setState({account: account});

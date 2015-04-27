@@ -22,12 +22,15 @@ $.get('config.json', (config) => {
 
   var repoMatch = window.location.search.match(/[?&]repo=([^&\/]+\/[^&\/]+)\/?/);
   if(repoMatch) {
-    app.gitHub.repo(repoMatch[1]).then((repo) =>
-      initializeSite(repo));
+    app.gitHub.repo(repoMatch[1])
+      .then((repo) =>
+        initializeSite(repo))
+      .catch(errorHandler("loading repository"));
   }
   else {
-    app.gitHub.user().done((user) => {
-      initializeHomepage(user);
-    });
+    app.gitHub.user()
+      .then((user) =>
+        initializeHomepage(user))
+      .catch(errorHandler("loading user information"));
   }
 });

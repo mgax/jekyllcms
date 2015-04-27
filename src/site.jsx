@@ -37,9 +37,10 @@ var Site = React.createClass({
     this.updateFileList();
   },
   updateFileList: function() {
-    this.props.repo.files().done((tree) => {
-      this.setState({fileList: tree.filter((i) => ! i.path.match(/^[_.]/))});
-    });
+    this.props.repo.files()
+      .then((tree) =>
+        this.setState({fileList: tree.filter((i) => ! i.path.match(/^[_.]/))}))
+      .catch(errorHandler("loading file list"));
   },
   handleEdit: function(file) {
     this.setState({file: file});

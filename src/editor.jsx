@@ -103,9 +103,10 @@ var DeleteButton = React.createClass({
   },
   handleDelete: function() {
     this.props.file.delete()
-      .done(() => {
+      .then(() => {
         this.props.onDelete();
       })
+      .catch(errorHandler("deleting file"));
   }
 });
 
@@ -181,14 +182,16 @@ var Editor = React.createClass({
     this.loadFile(newProps.file);
   },
   loadFile: function(file) {
-    file.content().done((content) => {
-      var newState = parse(decode_utf8(content));
-      if(! this.state.loading) {
-        this.refs.contentEditor.reset(newState.content);
-      }
-      newState.loading = false;
-      this.replaceState(newState);
-    });
+    file.content()
+      .then((content) => {
+        var newState = parse(decode_utf8(content));
+        if(! this.state.loading) {
+          this.refs.contentEditor.reset(newState.content);
+        }
+        newState.loading = false;
+        this.replaceState(newState);
+      })
+      .catch(errorHandler("loading file contents"));
   },
   handleChange: function(content) {
     this.setState({content: content});
@@ -203,7 +206,7 @@ var Editor = React.createClass({
       '---\n' +
       this.state.content
     );
-    return this.props.file.save(src);
+    return this.props.file.save(src).catch(errorHandler("saving file"));
   },
   handleDelete: function() {
     this.props.onDelete();
