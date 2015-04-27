@@ -14,7 +14,8 @@ var Site = React.createClass({
           <div className="editor col-sm-offset-2 col-sm-10">
             <Editor
               file={this.state.file}
-              onDelete={this.updateFileList}
+              onDelete={this.handleDelete}
+              onClose={this.handleClose}
               />
           </div>
         </div>
@@ -52,6 +53,13 @@ var Site = React.createClass({
     };
 
     modal(<NewFileModal onCreate={handleFileCreated} />);
+  },
+  handleDelete: function() {
+    this.setState({file: null});
+    this.updateFileList();
+  },
+  handleClose: function() {
+    this.setState({file: null});
   }
 });
 

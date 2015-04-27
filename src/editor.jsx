@@ -111,10 +111,16 @@ var DeleteButton = React.createClass({
 
 var Editor = React.createClass({
   render: function() {
+    var closebtn = (
+      <div className="closeButton pull-right">
+        <button className="close" onClick={this.handleClose}>&times;</button>
+      </div>
+    );
     var title = <h2><tt>{this.props.file.path}</tt></h2>;
     if(this.state.loading) {
       return (
         <div>
+          {closebtn}
           {title}
           <p>loading <tt>{this.props.file.path}</tt> ...</p>
         </div>
@@ -145,6 +151,7 @@ var Editor = React.createClass({
       }
       return (
         <div>
+          {closebtn}
           {title}
           <FrontMatter
             data={this.state.frontMatter}
@@ -195,7 +202,9 @@ var Editor = React.createClass({
     return this.props.file.save(src);
   },
   handleDelete: function() {
-    React.unmountComponentAtNode(React.findDOMNode(this).parentNode);
     this.props.onDelete();
+  },
+  handleClose: function() {
+    this.props.onClose();
   },
 });
