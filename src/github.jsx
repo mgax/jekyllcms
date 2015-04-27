@@ -59,7 +59,8 @@ class GitHubRepo {
   }
 
   files() {
-    return this.api({url: '/git/trees/gh-pages?recursive=1'})
+    var t = new Date().getTime();
+    return this.api({url: '/git/trees/gh-pages?recursive=1&t=' + t})
       .then((resp) =>
         resp.tree
           .filter((i) => i.type == 'blob')
