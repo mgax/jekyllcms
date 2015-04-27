@@ -2,13 +2,11 @@
 
 var HomeRepo = React.createClass({
   render: function() {
-    return <a onClick={this.handleClick}>
-      {this.props.repo.fullName}
-    </a>;
-  },
-  handleClick: function(evt) {
-    evt.preventDefault();
-    this.props.onOpen(this.props.repo);
+    return (
+      <a className="buttonlink" href={'/?repo=' + this.props.repo.fullName}>
+        {this.props.repo.fullName}
+      </a>
+    );
   }
 });
 

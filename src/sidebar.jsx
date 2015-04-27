@@ -2,7 +2,13 @@
 
 var IndexFile = React.createClass({
   render: function() {
-    return <li><a onClick={this.handleClick}>{this.props.file.path}</a></li>;
+    return (
+      <li>
+        <a onClick={this.handleClick} className="buttonlink">
+          {this.props.file.path}
+        </a>
+      </li>
+    );
   },
   handleClick: function(evt) {
     evt.preventDefault();
