@@ -23,6 +23,7 @@ var Site = React.createClass({
     }
     return (
       <div className="site">
+        <h1>{this.props.repo.meta.full_name}</h1>
         <IndexView
           data={this.state.fileList}
           onEdit={this.handleEdit}

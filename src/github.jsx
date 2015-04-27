@@ -132,8 +132,10 @@ class GitHub {
     return Q($.ajax(options));
   }
 
-  repo(repo) {
-    return new GitHubRepo(this, repo);
+  repo(fullName) {
+    return this.api({url: '/repos/' + fullName})
+      .then((meta) =>
+        new GitHubRepo(this, meta.full_name, meta));
   }
 
   user() {

@@ -20,7 +20,8 @@ $.get('config.json', (config) => {
 
   var repoMatch = window.location.search.match(/[?&]repo=([^&\/]+\/[^&\/]+)\/?/);
   if(repoMatch) {
-    initializeSite(gitHub.repo(repoMatch[1]));
+    gitHub.repo(repoMatch[1]).then((repo) =>
+      initializeSite(repo));
   }
   else {
     gitHub.user().done((user) => {
