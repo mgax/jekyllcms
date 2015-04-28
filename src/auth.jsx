@@ -4,7 +4,7 @@ class Authorize extends React.Component {
   render() {
     var authUrl = 'https://github.com/login/oauth/authorize' +
       '?client_id=' + encodeURIComponent(app.config.clientId) +
-      '&scope=repo' +
+      '&scope=user:email,repo' +
       '&redirect_uri=' + encodeURIComponent(app.config.url);
     return (
       <div className="row">

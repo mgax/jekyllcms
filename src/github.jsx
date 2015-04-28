@@ -180,4 +180,10 @@ class GitHub {
   user() {
     return this.api({url: '/user'}).then((meta) => new GitHubUser(this, meta));
   }
+
+  emailIsVerified() {
+    var t = new Date().getTime();
+    return this.api({url: '/user/emails?t=' + t}).then((resp) =>
+      resp.filter((i) => i.verified).length > 0);
+  }
 }
