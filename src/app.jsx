@@ -9,7 +9,7 @@ var App = React.createClass({
 
     this.authToken = localStorage.getItem('jekyllcms-github-token');
     if(! this.authToken) {
-      return Q(<AuthButton />);
+      return Q(<Authorize />);
     }
 
     this.gitHub = new GitHub(this.authToken);

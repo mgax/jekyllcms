@@ -1,12 +1,31 @@
 'use strict';
 
-var AuthButton = React.createClass({
+var Authorize = React.createClass({
   render: function() {
     var authUrl = 'https://github.com/login/oauth/authorize' +
       '?client_id=' + encodeURIComponent(app.config.clientId) +
       '&scope=repo' +
       '&redirect_uri=' + encodeURIComponent(app.config.url);
-    return <a className="btn btn-success" href={authUrl}>authorize</a>;
+    return (
+      <div className="row">
+        <div className="col-sm-4 col-sm-offset-4 well authbox">
+          <p>
+            JekyllCMS is a content editor
+            for <a href="https://pages.github.com/">GitHub Pages</a> websites.
+          </p>
+          <p>
+            <a href="https://github.com/mgax/jekyllcms#readme">
+              <strong>Learn more</strong>
+            </a>
+          </p>
+          <p>
+            <a className="btn btn-success" href={authUrl}>
+              Authorize on GitHub
+            </a>
+          </p>
+        </div>
+      </div>
+    );
   }
 });
 
