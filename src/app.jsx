@@ -18,13 +18,19 @@ var App = React.createClass({
     if(query['repo']) {
       return this.gitHub.repo(''+query['repo'])
         .then((repo) => {
-          var branch = repo.branch(
-            repo.meta.name == repo.meta.owner.login + '.github.com' ||
-            repo.meta.name == repo.meta.owner.login + '.github.io'
-              ? 'master'
-              : 'gh-pages'
-          );
-          return <Site repo={repo} branch={branch} />;
+          var branchName;
+          if(query['branch']) {
+            branchName = ''+query['branch'];
+          }
+          else {
+            branchName = (
+              repo.meta.name == repo.meta.owner.login + '.github.com' ||
+              repo.meta.name == repo.meta.owner.login + '.github.io'
+                ? 'master'
+                : 'gh-pages'
+            );
+          }
+          return <Site repo={repo} branch={repo.branch(branchName)} />;
         })
         .catch(errorHandler("loading repository"));
     }
