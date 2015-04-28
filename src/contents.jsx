@@ -19,7 +19,7 @@ var IndexFile = React.createClass({
 var IndexView = React.createClass({
   render: function() {
     var fileList = this.props.fileList
-      .filter((file) => file.path.match(/\.(md|html)$/))
+      .filter((file) => file.path.match(/\.(md|markdown|html)$/))
       .sort((a, b) => a.path < b.path ? -1 : 1)
       .map((file) =>
         <IndexFile key={file.path} file={file} onEdit={this.props.onEdit} />
