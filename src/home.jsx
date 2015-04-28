@@ -1,7 +1,7 @@
 'use strict';
 
-var Repo = React.createClass({
-  render: function() {
+class Repo extends React.Component {
+  render() {
     var repo = this.props.repo;
     return (
       <a className="buttonlink" href={'/?repo=' + repo.meta.full_name}>
@@ -10,10 +10,10 @@ var Repo = React.createClass({
       </a>
     );
   }
-});
+}
 
-var Account = React.createClass({
-  render: function() {
+class Account extends React.Component {
+  render() {
     var account = this.props.account;
     var caret = null;
     if(this.props.selected) {
@@ -26,15 +26,19 @@ var Account = React.createClass({
         <p>{account.meta.login}</p>
       </a>
     );
-  },
-  handleClick: function(evt) {
+  }
+  handleClick(evt) {
     evt.preventDefault();
     this.props.onOpen(this.props.account);
   }
-});
+}
 
-var AccountRepos = React.createClass({
-  render: function() {
+class AccountRepos extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {repoList: null};
+  }
+  render() {
     if(this.state.repoList) {
       return (
         <ul className="accountRepoList">
@@ -50,18 +54,15 @@ var AccountRepos = React.createClass({
         </p>
       );
     }
-  },
-  getInitialState: function() {
-    return {repoList: null};
-  },
-  componentDidMount: function() {
+  }
+  componentDidMount() {
     this.getRepos(this.props.account);
-  },
-  componentWillReceiveProps: function(newProps) {
+  }
+  componentWillReceiveProps(newProps) {
     this.setState({repoList: null});
     this.getRepos(newProps.account);
-  },
-  getRepos: function(account) {
+  }
+  getRepos(account) {
     account.repos()
       .then((repoList) => {
         repoList.sort((r1, r2) =>
@@ -70,10 +71,17 @@ var AccountRepos = React.createClass({
       })
       .catch(errorHandler("loading repository list"));
   }
-});
+}
 
-var Home = React.createClass({
-  render: function() {
+class Home extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      accountList: [],
+      account: this.props.user,
+    };
+  }
+  render() {
     return (
       <div>
         <div className="row">
@@ -94,21 +102,15 @@ var Home = React.createClass({
         </div>
       </div>
     );
-  },
-  getInitialState: function() {
-    return {
-      accountList: [],
-      account: this.props.user,
-    };
-  },
-  componentDidMount: function() {
+  }
+  componentDidMount() {
     this.props.user.orgs()
       .then((accountList) => {
         this.setState({accountList: [this.props.user].concat(accountList)});
       })
       .catch(errorHandler("loading organization list"));
-  },
-  handleOpen: function(account) {
+  }
+  handleOpen(account) {
     this.setState({account: account});
   }
-});
+}

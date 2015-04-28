@@ -1,7 +1,7 @@
 'use strict';
 
-var Navbar = React.createClass({
-  render: function() {
+class Navbar extends React.Component {
+  render() {
     return (
       <nav className="navbar navbar-default">
         <div className="container-fluid">
@@ -30,5 +30,5 @@ var Navbar = React.createClass({
         </div>
       </nav>
     )
-  },
-});
+  }
+}

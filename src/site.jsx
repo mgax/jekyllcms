@@ -1,10 +1,11 @@
 'use strict';
 
-var Site = React.createClass({
-  getInitialState: function() {
-    return {fileList: null};
-  },
-  render: function() {
+class Site extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {fileList: null};
+  }
+  render() {
     var editor = null;
     if(this.state.file) {
       editor = (
@@ -30,20 +31,20 @@ var Site = React.createClass({
         {editor}
       </div>
     );
-  },
-  componentDidMount: function() {
+  }
+  componentDidMount() {
     this.updateFileList();
-  },
-  updateFileList: function() {
+  }
+  updateFileList() {
     this.props.branch.files()
       .then((tree) =>
         this.setState({fileList: tree.filter((i) => ! i.path.match(/^[_.]/))}))
       .catch(errorHandler("loading file list"));
-  },
-  handleEdit: function(file) {
+  }
+  handleEdit(file) {
     this.setState({file: file});
-  },
-  handleCreate: function() {
+  }
+  handleCreate() {
     var handleFileCreated = (path) => {
       var newFile = this.props.branch.newFile(path);
       this.setState({
@@ -53,12 +54,12 @@ var Site = React.createClass({
     };
 
     app.modal(<NewFileModal onCreate={handleFileCreated} />);
-  },
-  handleDelete: function() {
+  }
+  handleDelete() {
     this.setState({file: null});
     this.updateFileList();
-  },
-  handleClose: function() {
+  }
+  handleClose() {
     this.setState({file: null});
   }
-});
+}

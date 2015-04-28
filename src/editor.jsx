@@ -21,8 +21,8 @@ function parse(src) {
 
 var clone = (value) => JSON.parse(JSON.stringify(value));
 
-var FrontMatterField = React.createClass({
-  render: function() {
+class FrontMatterField extends React.Component {
+  render() {
     return (
       <input
         className="form-control"
@@ -31,39 +31,41 @@ var FrontMatterField = React.createClass({
         placeholder={this.props.name}
         />
     );
-  },
-  handleChange: function(evt) {
+  }
+  handleChange(evt) {
     this.props.onChange(evt.target.value);
   }
-});
+}
 
-var FrontMatter = React.createClass({
-  getInitialState: function() {
-    return {data: clone(this.props.data)};
-  },
-  render: function() {
+class FrontMatter extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {data: clone(this.props.data)};
+  }
+  render() {
     return <FrontMatterField
         name="title"
         value={this.state.data.title}
         onChange={this.handleChange.bind(this, 'title')}
         />;
-  },
-  handleChange: function(name, value) {
+  }
+  handleChange(name, value) {
     var newData = clone(this.state.data);
     newData[name] = value;
     this.setState({data: newData});
     this.props.onChange(newData);
-  },
-  getData: function() {
+  }
+  getData() {
     return this.state.data;
   }
-});
+}
 
-var SaveButton = React.createClass({
-  getInitialState: function() {
-    return {state: 'ready'};
-  },
-  render: function() {
+class SaveButton extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {state: 'ready'};
+  }
+  render() {
     var text = "save";
     if(this.state.state == 'success') { text += " ✔"; }
     if(this.state.state == 'saving') { text += " ..."; }
@@ -74,44 +76,48 @@ var SaveButton = React.createClass({
         onClick={this.handleSave}
         >{text}</button>
     );
-  },
-  handleSave: function() {
+  }
+  handleSave() {
     this.setState({state: 'saving'});
     this.props.onSave()
       .done(() => {
         this.setState({state: 'success'});
       });
   }
-});
+}
 
-var DeleteButton = React.createClass({
-  render: function() {
+class DeleteButton extends React.Component {
+  render() {
     return (
       <button
         className="btn btn-danger"
         onClick={this.handleClick}
         >delete</button>
     )
-  },
-  handleClick: function() {
+  }
+  handleClick() {
     app.modal(
       <DeleteFileModal
         path={this.props.file.path}
         onDelete={this.handleDelete}
         />
     );
-  },
-  handleDelete: function() {
+  }
+  handleDelete() {
     this.props.file.delete()
       .then(() => {
         this.props.onDelete();
       })
       .catch(errorHandler("deleting file"));
   }
-});
+}
 
-var Editor = React.createClass({
-  render: function() {
+class Editor extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {loading: true};
+  }
+  render() {
     var closebtn = (
       <div className="closeButton pull-right">
         <button className="close" onClick={this.handleClose}>&times;</button>
@@ -175,18 +181,15 @@ var Editor = React.createClass({
         </div>
       );
     }
-  },
-  getInitialState: function() {
-    return {loading: true};
-  },
-  componentDidMount: function() {
+  }
+  componentDidMount() {
     this.loadFile(this.props.file);
-  },
-  componentWillReceiveProps: function(newProps) {
+  }
+  componentWillReceiveProps(newProps) {
     this.replaceState({loading: true});
     this.loadFile(newProps.file);
-  },
-  loadFile: function(file) {
+  }
+  loadFile(file) {
     file.content()
       .then((content) => {
         var newState = parse(decode_utf8(content));
@@ -197,14 +200,14 @@ var Editor = React.createClass({
         this.replaceState(newState);
       })
       .catch(errorHandler("loading file contents"));
-  },
-  handleChange: function(content) {
+  }
+  handleChange(content) {
     this.setState({content: content});
-  },
-  handleFrontMatterChange: function(frontMatter) {
+  }
+  handleFrontMatterChange(frontMatter) {
     this.setState({frontMatter: frontMatter});
-  },
-  handleSave: function() {
+  }
+  handleSave() {
     var src = encode_utf8(
       '---\n' +
       jsyaml.safeDump(this.state.frontMatter) +
@@ -212,11 +215,11 @@ var Editor = React.createClass({
       this.state.content
     );
     return this.props.file.save(src).catch(errorHandler("saving file"));
-  },
-  handleDelete: function() {
+  }
+  handleDelete() {
     this.props.onDelete();
-  },
-  handleClose: function() {
+  }
+  handleClose() {
     this.props.onClose();
-  },
-});
+  }
+}

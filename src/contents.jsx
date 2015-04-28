@@ -1,7 +1,7 @@
 'use strict';
 
-var IndexFile = React.createClass({
-  render: function() {
+class IndexFile extends React.Component {
+  render() {
     return (
       <li>
         <a onClick={this.handleClick} className="buttonlink">
@@ -9,15 +9,15 @@ var IndexFile = React.createClass({
         </a>
       </li>
     );
-  },
-  handleClick: function(evt) {
+  }
+  handleClick(evt) {
     evt.preventDefault();
     this.props.onEdit(this.props.file);
   }
-});
+}
 
-var IndexView = React.createClass({
-  render: function() {
+class IndexView extends React.Component {
+  render() {
     if(! this.props.fileList) {
       return (
         <p className="loading">
@@ -41,9 +41,9 @@ var IndexView = React.createClass({
           >new</button>
       </div>
     );
-  },
-  handleCreate: function(evt) {
+  }
+  handleCreate(evt) {
     evt.preventDefault();
     this.props.onCreate();
   }
-});
+}

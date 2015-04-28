@@ -1,7 +1,11 @@
 'use strict';
 
-var App = React.createClass({
-  route: function() {
+class App extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {view: null};
+  }
+  route() {
     var query = parseQuery(window.location.search);
 
     if(query['code']) {
@@ -39,16 +43,13 @@ var App = React.createClass({
         .then((user) => <Home user={user} />)
         .catch(errorHandler("loading user information"));
     }
-  },
-  componentWillMount: function() {
+  }
+  componentWillMount() {
     this.config = this.props.config;
     this.route().then((view) =>
       this.setState({view: view}));
-  },
-  getInitialState: function() {
-    return {view: null};
-  },
-  render: function() {
+  }
+  render() {
     return (
       <div>
         <Navbar auth={!! this.authToken} />
@@ -59,17 +60,17 @@ var App = React.createClass({
         <ErrorBox ref="errorBox" />
       </div>
     );
-  },
-  modal: function(component) {
+  }
+  modal(component) {
     var node = React.findDOMNode(this.refs.modal);
     React.unmountComponentAtNode(node);
     React.render(component, node);
     $('.modal', node).modal();
-  },
-  reportError: function(message) {
+  }
+  reportError(message) {
     this.refs.errorBox.report(message);
-  },
-});
+  }
+}
 
 $.get('config.json', (config) => {
   window.app = React.render(

@@ -1,7 +1,7 @@
 'use strict';
 
-var DeleteFileModal = React.createClass({
-  render: function() {
+class DeleteFileModal extends React.Component {
+  render() {
     return (
       <div className="modal fade">
         <div className="modal-dialog">
@@ -27,9 +27,9 @@ var DeleteFileModal = React.createClass({
         </div>
       </div>
     );
-  },
-  handleDelete: function() {
+  }
+  handleDelete() {
     $(React.findDOMNode(this)).modal('hide');
     this.props.onDelete();
   }
-});
+}

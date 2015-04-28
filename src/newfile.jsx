@@ -1,7 +1,7 @@
 'use strict';
 
-var NewFileModal = React.createClass({
-  render: function() {
+class NewFileModal extends React.Component {
+  render() {
     return (
       <div className="modal fade">
         <div className="modal-dialog">
@@ -27,10 +27,10 @@ var NewFileModal = React.createClass({
         </div>
       </div>
     );
-  },
-  handleCreate: function() {
+  }
+  handleCreate() {
     var path = React.findDOMNode(this.refs.path).value.trim();
     $(React.findDOMNode(this)).modal('hide');
     this.props.onCreate(path);
   }
-});
+}

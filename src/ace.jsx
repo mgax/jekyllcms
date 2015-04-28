@@ -1,13 +1,13 @@
 'use strict';
 
-var Ace = React.createClass({
-  render: function() {
+class Ace extends React.Component {
+  render() {
     return <div ref="ace" className="aceContainer" />;
-  },
-  componentDidMount: function() {
+  }
+  componentDidMount() {
     this.reset(this.props.initial);
-  },
-  reset: function(content) {
+  }
+  reset(content) {
     if(this.ace) { this.ace.destroy(); }
     var node = React.findDOMNode(this.refs.ace);
     $(node).text(content);
@@ -17,8 +17,8 @@ var Ace = React.createClass({
     this.ace.setShowPrintMargin(false);
     this.ace.setHighlightActiveLine(false);
     this.ace.on('change', (e) => this.handleChange(e));
-  },
-  handleChange: function() {
+  }
+  handleChange() {
     this.props.onChange(this.ace.getValue());
   }
-});
+}

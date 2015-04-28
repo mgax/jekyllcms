@@ -1,7 +1,7 @@
 'use strict';
 
-var Authorize = React.createClass({
-  render: function() {
+class Authorize extends React.Component {
+  render() {
     var authUrl = 'https://github.com/login/oauth/authorize' +
       '?client_id=' + encodeURIComponent(app.config.clientId) +
       '&scope=repo' +
@@ -27,13 +27,13 @@ var Authorize = React.createClass({
       </div>
     );
   }
-});
+}
 
-var AuthCallback = React.createClass({
-  render: function() {
+class AuthCallback extends React.Component {
+  render() {
     return <p>Saving authorization token...</p>;
-  },
-  componentDidMount: function() {
+  }
+  componentDidMount() {
     $.get(app.config.gatekeeper + '/authenticate/' + this.props.code, (resp) => {
       if(resp.token) {
         localStorage.setItem('jekyllcms-github-token', resp.token);
@@ -41,19 +41,19 @@ var AuthCallback = React.createClass({
       }
     });
   }
-});
+}
 
-var LogoutButton = React.createClass({
-  render: function() {
+class LogoutButton extends React.Component {
+  render() {
     return (
       <button
         className="btn btn-default navbar-btn"
         onClick={this.handleClick}
         >logout</button>
     );
-  },
-  handleClick: function() {
+  }
+  handleClick() {
     localStorage.removeItem('jekyllcms-github-token');
     window.location.href = '/';
   }
-});
+}

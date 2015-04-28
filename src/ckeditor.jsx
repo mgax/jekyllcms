@@ -1,16 +1,16 @@
 'use strict';
 
-var CKEditor = React.createClass({
-  render: function() {
+class CKEditor extends React.Component {
+  render() {
     return <textarea ref="ck" className="ckeditorContainer" />;
-  },
-  componentDidMount: function() {
+  }
+  componentDidMount() {
     this.reset(this.props.initial);
-  },
-  componentWillUnmount: function() {
+  }
+  componentWillUnmount() {
     if(this.ck) { this.ck.destroy(); }
-  },
-  reset: function(content) {
+  }
+  reset(content) {
     if(this.ck) { this.ck.destroy(); }
     var node = React.findDOMNode(this.refs.ck);
     $(node).text(content);
@@ -30,8 +30,8 @@ var CKEditor = React.createClass({
     };
     this.ck = CKEDITOR.replace(node, options);
     this.ck.on('change', () => this.handleChange());
-  },
-  handleChange: function() {
+  }
+  handleChange() {
     this.props.onChange(this.ck.getData());
   }
-});
+}
