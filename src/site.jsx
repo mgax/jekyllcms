@@ -25,7 +25,7 @@ var Site = React.createClass({
       <div className="site">
         <h1>{this.props.repo.meta.full_name}</h1>
         <IndexView
-          data={this.state.fileList}
+          fileList={this.state.fileList}
           onEdit={this.handleEdit}
           onCreate={this.handleCreate}
           />

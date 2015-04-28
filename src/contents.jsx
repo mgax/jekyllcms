@@ -18,14 +18,15 @@ var IndexFile = React.createClass({
 
 var IndexView = React.createClass({
   render: function() {
-    var indexFileList = this.props.data
+    var fileList = this.props.fileList
       .filter((file) => file.path.match(/\.(md|html)$/))
+      .sort((a, b) => a.path < b.path ? -1 : 1)
       .map((file) =>
         <IndexFile key={file.path} file={file} onEdit={this.props.onEdit} />
       );
     return (
       <div>
-        <ul className="list-unstyled">{indexFileList}</ul>
+        <ul className="list-unstyled">{fileList}</ul>
         <button
           className="btn btn-default btn-xs"
           onClick={this.handleCreate}
