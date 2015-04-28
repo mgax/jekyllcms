@@ -13,8 +13,9 @@ class NewSiteModal extends React.Component {
         </div>
         <div className="modal-body">
           <p>
-            There seems to be no GitHub Pages website in this repository. Let's
-            create one! Pick a title.
+            There seems to be no GitHub Pages website in
+            the <code>{this.props.fullName}</code> repository. Let's create
+            one! Pick a title.
           </p>
           <div className="form-group">
             <input

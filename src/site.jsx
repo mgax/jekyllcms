@@ -140,6 +140,7 @@ class Site extends React.Component {
 
     app.modal(
       <NewSiteModal
+        fullName={this.props.repo.meta.full_name}
         branchName={this.props.branchName}
         onCreate={handleSiteCreate}
         />
