@@ -18,7 +18,12 @@ class NewFileModal extends React.Component {
         </div>
         <div className="modal-body">
           <div className={'form-group' + (this.state.error ? ' has-error' : '' )}>
-            <input className="form-control" placeholder="path" ref="path" />
+            <input
+              className="form-control"
+              placeholder="path"
+              ref="path"
+              defaultValue="new-page.md"
+              />
             <span className="help-block">
               Filename must end with <code>.md</code> or <code>.html</code> (
               <a className="buttonlink"
@@ -55,7 +60,7 @@ class NewFileModal extends React.Component {
     );
   }
   componentDidMount() {
-    setTimeout(() => React.findDOMNode(this.refs.path).focus(), 500);
+    setTimeout(() => React.findDOMNode(this.refs.path).select(), 500);
   }
   handleSubmit(evt) {
     evt.preventDefault();
