@@ -56,16 +56,25 @@ class App extends React.Component {
         <div className="container">
           {this.state.view}
         </div>
-        <div ref="modal" />
+        <div className="modal fade" ref="modal">
+          <div className="modal-dialog" ref="modalDialog">
+          </div>
+        </div>
         <ErrorBox ref="errorBox" />
       </div>
     );
   }
+  componentDidMount() {
+    $(React.findDOMNode(this.refs.modal)).on('hidden.bs.modal', () => {
+      React.unmountComponentAtNode(React.findDOMNode(this.refs.modalDialog));
+    });
+  }
   modal(component) {
-    var node = React.findDOMNode(this.refs.modal);
-    React.unmountComponentAtNode(node);
-    React.render(component, node);
-    $('.modal', node).modal();
+    React.render(component, React.findDOMNode(this.refs.modalDialog));
+    $(React.findDOMNode(this.refs.modal)).modal();
+  }
+  hideModal() {
+    $(React.findDOMNode(this.refs.modal)).modal('hide');
   }
   reportError(message) {
     this.refs.errorBox.report(message);
