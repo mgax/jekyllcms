@@ -8,10 +8,6 @@ function assert(cond) {
   }
 }
 
-function modal(component) {
-  app.modal(component);
-}
-
 function encode_utf8(s) {
   return unescape(encodeURIComponent(s));
 }
@@ -32,10 +28,6 @@ function errorHandler(action) {
     }
 
     console.error(message, e);
-    reportError(message);
+    app.reportError(message);
   }
-}
-
-function reportError(message) {
-  app.reportError(message);
 }

@@ -54,7 +54,7 @@ var Site = React.createClass({
       });
     };
 
-    modal(<NewFileModal onCreate={handleFileCreated} />);
+    app.modal(<NewFileModal onCreate={handleFileCreated} />);
   },
   handleDelete: function() {
     this.setState({file: null});

@@ -94,7 +94,7 @@ var DeleteButton = React.createClass({
     )
   },
   handleClick: function() {
-    modal(
+    app.modal(
       <DeleteFileModal
         path={this.props.file.path}
         onDelete={this.handleDelete}
