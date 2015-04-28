@@ -84,7 +84,9 @@ var Home = React.createClass({
             <AccountRepos account={this.state.account} />
           </div>
         </div>
-        <p>{logoutButton()}</p>
+        <p>
+          <LogoutButton />
+        </p>
       </div>
     );
   },
@@ -105,7 +107,3 @@ var Home = React.createClass({
     this.setState({account: account});
   }
 });
-
-function initializeHomepage(user) {
-  React.render(<Home user={user} />, document.querySelector('#top'));
-}

@@ -64,7 +64,3 @@ var Site = React.createClass({
     this.setState({file: null});
   }
 });
-
-function initializeSite(repo) {
-  React.render(<Site repo={repo} />, document.querySelector('#top'));
-}

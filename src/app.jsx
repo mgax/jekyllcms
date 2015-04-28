@@ -5,16 +5,17 @@ var app = {};
 $.get('config.json', (config) => {
   app.errorBox = React.render(<ErrorBox />, document.querySelector('#errors'));
 
+  var topNode = document.querySelector('#top');
   app.config = config;
   var authMatch = window.location.href.match(/\?code=(.*)/);
   if(authMatch) {
-    initializeAuthCallback(authMatch[1]);
+    React.render(<AuthCallback code={authMatch[1]} />, topNode);
     return;
   }
 
   app.authToken = localStorage.getItem('jekyllcms-github-token');
   if(! app.authToken) {
-    renderAuthButton();
+    React.render(<AuthButton />, topNode);
     return;
   }
 
@@ -24,13 +25,13 @@ $.get('config.json', (config) => {
   if(repoMatch) {
     app.gitHub.repo(repoMatch[1])
       .then((repo) =>
-        initializeSite(repo))
+        React.render(<Site repo={repo} />, topNode))
       .catch(errorHandler("loading repository"));
   }
   else {
     app.gitHub.user()
       .then((user) =>
-        initializeHomepage(user))
+        React.render(<Home user={user} />, topNode))
       .catch(errorHandler("loading user information"));
   }
 });

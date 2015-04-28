@@ -1,28 +1,39 @@
 'use strict';
 
-function renderAuthButton() {
-  var authUrl = 'https://github.com/login/oauth/authorize' +
-    '?client_id=' + encodeURIComponent(app.config.clientId) +
-    '&scope=repo' +
-    '&redirect_uri=' + encodeURIComponent(app.config.url);
+var AuthButton = React.createClass({
+  render: function() {
+    var authUrl = 'https://github.com/login/oauth/authorize' +
+      '?client_id=' + encodeURIComponent(app.config.clientId) +
+      '&scope=repo' +
+      '&redirect_uri=' + encodeURIComponent(app.config.url);
+    return <a className="btn btn-success" href={authUrl}>authorize</a>;
+  }
+});
 
-  var view = <a className="btn btn-success" href={authUrl}>authorize</a>;
-  React.render(view, document.querySelector('#top'));
-}
+var AuthCallback = React.createClass({
+  render: function() {
+    return <p>Saving authorization token...</p>;
+  },
+  componentDidMount: function() {
+    $.get(app.config.gatekeeper + '/authenticate/' + this.props.code, (resp) => {
+      if(resp.token) {
+        localStorage.setItem('jekyllcms-github-token', resp.token);
+        window.location.href = '/';
+      }
+    });
+  }
+});
 
-function initializeAuthCallback(code) {
-  $.get(app.config.gatekeeper + '/authenticate/' + code, (resp) => {
-    if(resp.token) {
-      localStorage.setItem('jekyllcms-github-token', resp.token);
-      window.location.href = '/';
-    }
-  });
-}
-
-function logoutButton() {
-  var logout = function() {
+var LogoutButton = React.createClass({
+  render: function() {
+    return (
+      <a className="btn btn-default" onClick={this.handleClick}>
+        logout
+      </a>
+    );
+  },
+  handleClick: function() {
     localStorage.removeItem('jekyllcms-github-token');
     window.location.href = '/';
-  };
-  return <a className="btn btn-default" onClick={logout}>logout</a>;
-}
+  }
+});
