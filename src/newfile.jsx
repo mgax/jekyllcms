@@ -25,6 +25,9 @@ class NewFileModal extends React.Component {
       </div>
     );
   }
+  componentDidMount() {
+    setTimeout(() => React.findDOMNode(this.refs.path).focus(), 500);
+  }
   handleCreate() {
     var path = React.findDOMNode(this.refs.path).value.trim();
     app.hideModal();
