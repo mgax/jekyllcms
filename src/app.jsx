@@ -37,6 +37,7 @@ var App = React.createClass({
   render: function() {
     return (
       <div>
+        <Navbar auth={!! this.authToken} />
         <div className="container">
           {this.state.view}
         </div>

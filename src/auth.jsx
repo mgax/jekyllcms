@@ -27,9 +27,10 @@ var AuthCallback = React.createClass({
 var LogoutButton = React.createClass({
   render: function() {
     return (
-      <a className="btn btn-default" onClick={this.handleClick}>
-        logout
-      </a>
+      <button
+        className="btn btn-default navbar-btn"
+        onClick={this.handleClick}
+        >logout</button>
     );
   },
   handleClick: function() {

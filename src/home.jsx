@@ -67,7 +67,6 @@ var Home = React.createClass({
   render: function() {
     return (
       <div>
-        <h1>Jekyll CMS</h1>
         <div className="row">
           <ul className="accountList col-sm-4">
             {this.state.accountList.map((acc) =>
@@ -84,9 +83,6 @@ var Home = React.createClass({
             <AccountRepos account={this.state.account} />
           </div>
         </div>
-        <p>
-          <LogoutButton />
-        </p>
       </div>
     );
   },

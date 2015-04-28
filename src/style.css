@@ -1,5 +1,4 @@
 .accountList {
-  border-top: 1px solid #ddd;
   padding: 0;
 }
 
@@ -31,10 +30,6 @@
   float: right;
   font-size: 300%;
   color: #555;
-}
-
-.accountRepoList  {
-  border-top: 1px solid #ddd;
 }
 
 .accountRepoList > li {
