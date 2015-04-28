@@ -9,10 +9,7 @@ function assert(cond) {
 }
 
 function modal(component) {
-  var node = document.querySelector('#modal');
-  React.unmountComponentAtNode(node);
-  React.render(component, node);
-  $('.modal', node).modal();
+  app.modal(component);
 }
 
 function encode_utf8(s) {
@@ -40,5 +37,5 @@ function errorHandler(action) {
 }
 
 function reportError(message) {
-  app.errorBox.report(message);
+  app.reportError(message);
 }

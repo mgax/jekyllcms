@@ -18,7 +18,7 @@ var ErrorMessage = React.createClass({
 var ErrorBox = React.createClass({
   render: function() {
     return (
-      <div>
+      <div id="errors">
         {this.state.messageList.map((msg) =>
           <ErrorMessage
             key={msg.id}
