@@ -11,8 +11,8 @@ yourself, but you do need to configure a few things.
 2. [Create][create] a repository for your website.
 
 3. Go to [jekyllcms.grep.ro]() and authorize your GitHub account. You should
-   then see a list of your repositories, including the new site. Click on it,
-   create a page, and start editing!
+   then see a list of your repositories, including the new site. Click on it
+   and start editing!
 
 [gh-pages]: https://pages.github.com/
 [join]: https://github.com/join
