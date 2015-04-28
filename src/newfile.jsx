@@ -3,7 +3,7 @@
 class NewFileModal extends React.Component {
   constructor (props) {
     super(props);
-    this.state = {error: false, help: false};
+    this.state = {error: null, help: false};
   }
   render() {
     var mdUrl = 'https://help.github.com/articles/markdown-basics/';
@@ -25,6 +25,9 @@ class NewFileModal extends React.Component {
                   onClick={() => this.setState({help: true})}
                   >why?</a>)
             </span>
+            {this.state.error ?
+              <span className="help-block">Error: {this.state.error}</span>
+            : null}
           </div>
           {this.state.help ?
             <div>
@@ -57,12 +60,18 @@ class NewFileModal extends React.Component {
   handleSubmit(evt) {
     evt.preventDefault();
     var path = React.findDOMNode(this.refs.path).value.trim();
-    if(path.match(/\.(md|markdown|html)$/)) {
-      app.hideModal();
-      this.props.onCreate(path);
+
+    if(! path.match(/\.(md|markdown|html)$/)) {
+      this.setState({error: "invalid file name"});
+      return;
     }
-    else {
-      this.setState({error: true});
+
+    if(this.props.pathExists(path)) {
+      this.setState({error: "file already exists"});
+      return;
     }
+
+    app.hideModal();
+    this.props.onCreate(path);
   }
 }

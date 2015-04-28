@@ -54,7 +54,17 @@ class Site extends React.Component {
       });
     };
 
-    app.modal(<NewFileModal onCreate={handleFileCreated} />);
+    var pathExists = (path) => {
+      var matching = this.state.fileList.filter((f) => f.path == path);
+      return matching.length > 0;
+    };
+
+    app.modal(
+      <NewFileModal
+        onCreate={handleFileCreated}
+        pathExists={pathExists}
+        />
+    );
   }
   handleDelete() {
     this.setState({file: null});
