@@ -8,7 +8,17 @@ class Site extends React.Component {
       siteUrl: '',
       branch: this.props.repo.branch(this.props.branchName),
     };
-    this.updateFileList();
+    this.props.repo.branches()
+      .then((branchList) => {
+        var match = branchList.filter((b) =>
+          b.name == this.props.branchName);
+        if(match.length) {
+          this.updateFileList();
+        }
+        else {
+          this.createNewSite();
+        }
+      });
   }
   render() {
     var editor = null;
@@ -95,5 +105,17 @@ class Site extends React.Component {
     var filename = (m[2] == 'index') ? '' : m[2] + '.html';
     var folder = m[1] || '';
     return this.state.siteUrl + '/' + folder + filename;
+  }
+  createNewSite() {
+    var handleSiteCreate = (options) => {
+      console.log('new site', options);
+    };
+
+    app.modal(
+      <NewSiteModal
+        branchName={this.props.branchName}
+        onCreate={handleSiteCreate}
+        />
+    );
   }
 }

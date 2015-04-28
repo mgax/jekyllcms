@@ -84,6 +84,12 @@ class GitHubRepo {
     return this.gh.api(options);
   }
 
+  branches() {
+    return this.api({url: '/branches'}).then((resp) =>
+      resp.map((b) =>
+        new GitHubBranch(this, b.name)));
+  }
+
   branch(name) {
     return new GitHubBranch(this, name);
   }
