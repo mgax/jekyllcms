@@ -52,6 +52,22 @@
   color: #888;
 }
 
+.fileList {
+  padding: 0;
+}
+
+.fileList > li {
+  list-style: none;
+}
+
+.fileList > li > a {
+  display: block;
+}
+
+.fileList > li.current {
+  background: #d9edf7;
+}
+
 .contentEditor {
   margin: 10px 0;
   position: relative;

@@ -25,6 +25,7 @@ class Site extends React.Component {
         <h1>{this.props.repo.meta.full_name}</h1>
         <IndexView
           fileList={this.state.fileList}
+          current={this.state.file}
           onEdit={this.handleEdit.bind(this)}
           onCreate={this.handleCreate.bind(this)}
           />

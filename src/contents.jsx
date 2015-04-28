@@ -3,7 +3,7 @@
 class IndexFile extends React.Component {
   render() {
     return (
-      <li>
+      <li className={this.props.current ? 'current' : null}>
         <a onClick={this.handleClick.bind(this)} className="buttonlink">
           {this.props.file.path}
         </a>
@@ -34,11 +34,12 @@ class IndexView extends React.Component {
           key={file.path}
           file={file}
           onEdit={this.props.onEdit.bind(this)}
+          current={file === this.props.current}
           />
       );
     return (
       <div>
-        <ul className="list-unstyled">{fileList}</ul>
+        <ul className="fileList">{fileList}</ul>
         <button
           className="btn btn-default btn-xs"
           onClick={this.handleCreate.bind(this)}
