@@ -23,6 +23,7 @@ class NewFileModal extends React.Component {
               placeholder="path"
               ref="path"
               defaultValue="new-page.md"
+              onChange={this.updateUrl.bind(this)}
               />
             <span className="help-block">
               Filename must end with <code>.md</code> or <code>.html</code> (
@@ -46,6 +47,9 @@ class NewFileModal extends React.Component {
               </p>
             </div>
           : null}
+          <p>
+            Url: <code>{this.state.url}</code>
+          </p>
         </div>
         <div className="modal-footer">
           <button type="button" className="btn btn-default"
@@ -61,6 +65,11 @@ class NewFileModal extends React.Component {
   }
   componentDidMount() {
     setTimeout(() => React.findDOMNode(this.refs.path).select(), 500);
+    this.updateUrl();
+  }
+  updateUrl() {
+    var path = React.findDOMNode(this.refs.path).value.trim();
+    this.setState({url: this.props.getUrl(path)});
   }
   handleSubmit(evt) {
     evt.preventDefault();

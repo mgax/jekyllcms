@@ -63,6 +63,7 @@ class Site extends React.Component {
       <NewFileModal
         onCreate={handleFileCreated}
         pathExists={pathExists}
+        getUrl={this.getUrl.bind(this)}
         />
     );
   }
@@ -72,5 +73,11 @@ class Site extends React.Component {
   }
   handleClose() {
     this.setState({file: null});
+  }
+  getUrl(path) {
+    var m = path.match(/^(.*\/)?([^\/]*)\.[^\.]+$/);
+    var filename = (m[2] == 'index') ? '' : m[2] + '.html';
+    var folder = m[1] || '';
+    return '/' + folder + filename;
   }
 }
