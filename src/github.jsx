@@ -2,25 +2,29 @@
 
 
 class GitHubFile {
-  constructor(repo, item) {
-    this.repo = repo;
+  constructor(branch, item) {
+    this.branch = branch;
     this.path = item.path;
     this.sha = item.sha;
   }
 
+  api(options) {
+    return this.branch.repo.api(options);
+  }
+
   content() {
     if(! this.sha) { return Q(''); }
-    return this.repo.api({url: '/git/blobs/' + this.sha})
+    return this.api({url: '/git/blobs/' + this.sha})
       .then((resp) =>
         atob(resp.content));
   }
 
   save(newContent) {
-    return this.repo.api({
+    return this.api({
       url: '/contents/' + this.path,
       method: 'PUT',
       data: JSON.stringify({
-        branch: 'gh-pages',
+        branch: this.branch.name,
         message: "Edit from JekyllCMS",
         path: this.path,
         sha: this.sha,
@@ -33,16 +37,38 @@ class GitHubFile {
   }
 
   delete() {
-    return this.repo.api({
+    return this.api({
       url: '/contents/' + this.path,
       method: 'DELETE',
       data: JSON.stringify({
-        branch: 'gh-pages',
+        branch: this.branch.name,
         message: "Edit from JekyllCMS",
         path: this.path,
         sha: this.sha,
       })
     });
+  }
+}
+
+
+class GitHubBranch {
+  constructor(repo, name) {
+    this.repo = repo;
+    this.name = name;
+  }
+
+  files() {
+    var t = new Date().getTime();
+    var url = '/git/trees/' + this.name + '?recursive=1&t=' + t;
+    return this.repo.api({url: url})
+      .then((resp) =>
+        resp.tree
+          .filter((i) => i.type == 'blob')
+          .map((i) => new GitHubFile(this, i)));
+  }
+
+  newFile(path) {
+    return new GitHubFile(this, {path: path});
   }
 }
 
@@ -58,17 +84,8 @@ class GitHubRepo {
     return this.gh.api(options);
   }
 
-  files() {
-    var t = new Date().getTime();
-    return this.api({url: '/git/trees/gh-pages?recursive=1&t=' + t})
-      .then((resp) =>
-        resp.tree
-          .filter((i) => i.type == 'blob')
-          .map((i) => new GitHubFile(this, i)));
-  }
-
-  newFile(path) {
-    return new GitHubFile(this, {path: path});
+  branch(name) {
+    return new GitHubBranch(this, name);
   }
 }
 

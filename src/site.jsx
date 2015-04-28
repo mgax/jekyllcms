@@ -37,7 +37,7 @@ var Site = React.createClass({
     this.updateFileList();
   },
   updateFileList: function() {
-    this.props.repo.files()
+    this.props.branch.files()
       .then((tree) =>
         this.setState({fileList: tree.filter((i) => ! i.path.match(/^[_.]/))}))
       .catch(errorHandler("loading file list"));
@@ -47,7 +47,7 @@ var Site = React.createClass({
   },
   handleCreate: function() {
     var handleFileCreated = (path) => {
-      var newFile = this.props.repo.newFile(path);
+      var newFile = this.props.branch.newFile(path);
       this.setState({
         file: newFile,
         fileList: [].concat(this.state.fileList, [newFile]),

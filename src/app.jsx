@@ -17,7 +17,15 @@ var App = React.createClass({
     var repoMatch = window.location.search.match(/[?&]repo=([^&\/]+\/[^&\/]+)\/?/);
     if(repoMatch) {
       return this.gitHub.repo(repoMatch[1])
-        .then((repo) => <Site repo={repo} />)
+        .then((repo) => {
+          var branch = repo.branch(
+            repo.meta.name == repo.meta.owner.login + '.github.com' ||
+            repo.meta.name == repo.meta.owner.login + '.github.io'
+              ? 'master'
+              : 'gh-pages'
+          );
+          return <Site repo={repo} branch={branch} />;
+        })
         .catch(errorHandler("loading repository"));
     }
     else {
