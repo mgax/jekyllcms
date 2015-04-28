@@ -3,7 +3,7 @@
 class Site extends React.Component {
   constructor(props) {
     super(props);
-    this.state = {fileList: null};
+    this.state = {fileList: null, siteUrl: ''};
   }
   render() {
     var editor = null;
@@ -38,8 +38,22 @@ class Site extends React.Component {
   }
   updateFileList() {
     this.props.branch.files()
-      .then((tree) =>
-        this.setState({fileList: tree.filter((i) => ! i.path.match(/^[_.]/))}))
+      .then((tree) => {
+        var fileList = tree.filter((i) => ! i.path.match(/^[_.]/));
+        this.setState({fileList: fileList});
+        var cname = fileList.filter((f) => f.path == 'CNAME')[0];
+        if(cname) {
+          return cname.content()
+            .then((cnameValue) =>
+              this.setState({siteUrl: cnameValue.trim()}));
+        }
+        else {
+          var repo = this.props.repo;
+          var name = repo.meta.name;
+          var ownerLogin = repo.meta.owner.login;
+          this.setState({siteUrl: ownerLogin + '.github.io/' + name});
+        }
+      })
       .catch(errorHandler("loading file list"));
   }
   handleEdit(file) {
@@ -78,6 +92,6 @@ class Site extends React.Component {
     var m = path.match(/^(.*\/)?([^\/]*)\.[^\.]+$/);
     var filename = (m[2] == 'index') ? '' : m[2] + '.html';
     var folder = m[1] || '';
-    return '/' + folder + filename;
+    return this.state.siteUrl + '/' + folder + filename;
   }
 }
