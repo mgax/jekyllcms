@@ -52,13 +52,13 @@
   color: #888;
 }
 
-.aceContainer {
-  height: 100%;
+.contentEditor {
+  margin: 10px 0;
+  position: relative;
 }
 
-.content {
+.aceContainer {
   height: 200px;
-  position: relative;
 }
 
 a.buttonlink {

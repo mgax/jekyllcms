@@ -13,8 +13,9 @@ var Ace = React.createClass({
     $(node).text(content);
     this.ace = ace.edit(node);
     this.ace.getSession().setMode('ace/mode/markdown');
-    this.ace.setTheme('ace/theme/tomorrow_night_eighties');
-    this.ace.setShowInvisibles(true);
+    this.ace.setTheme('ace/theme/github');
+    this.ace.setShowPrintMargin(false);
+    this.ace.setHighlightActiveLine(false);
     this.ace.on('change', (e) => this.handleChange(e));
   },
   handleChange: function() {

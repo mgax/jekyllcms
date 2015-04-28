@@ -131,17 +131,19 @@ var Editor = React.createClass({
       var html = marked(this.state.content, {sanitize: true});
       if(this.props.file.path.match(/\.html/)) {
         var editor = (
-          <CKEditor
-            initial={this.state.content}
-            onChange={this.handleChange}
-            ref="contentEditor"
-            />
+          <div className="contentEditor">
+            <CKEditor
+              initial={this.state.content}
+              onChange={this.handleChange}
+              ref="contentEditor"
+              />
+          </div>
         );
         var preview = null;
       }
       else {
         var editor = (
-          <div className="content">
+          <div className="contentEditor">
             <Ace
               initial={this.state.content}
               onChange={this.handleChange}
@@ -150,7 +152,10 @@ var Editor = React.createClass({
           </div>
         );
         var preview = (
-          <div className="preview" dangerouslySetInnerHTML={{__html: html}} />
+          <div
+            className="preview well"
+            dangerouslySetInnerHTML={{__html: html}}
+            />
         );
       }
       return (
