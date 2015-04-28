@@ -34,6 +34,7 @@ function errorHandler(action) {
       }
     }
 
+    console.error(message, e);
     reportError(message);
   }
 }
