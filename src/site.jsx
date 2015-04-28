@@ -108,7 +108,17 @@ class Site extends React.Component {
   }
   createNewSite() {
     var handleSiteCreate = (options) => {
-      console.log('new site', options);
+      var index_md =
+        "---\n" +
+        "title: Homepage\n" +
+        "---\n" +
+        "# " + options.title + "\n\n" +
+        "Welcome to your new JekyllCMS website!\n";
+      var fileList = [
+        {path: '_config.yml', content: jsyaml.safeDump({title: options.title})},
+        {path: 'index.md', content: index_md},
+      ];
+      this.props.repo.createBranch(this.props.branchName, fileList);
     };
 
     app.modal(

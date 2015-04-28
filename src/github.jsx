@@ -93,6 +93,10 @@ class GitHubRepo {
   branch(name) {
     return new GitHubBranch(this, name);
   }
+
+  createBranch(name, fileList) {
+    console.log('creating branch', name, fileList);
+  }
 }
 
 
