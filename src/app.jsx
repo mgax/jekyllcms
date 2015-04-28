@@ -34,7 +34,7 @@ class App extends React.Component {
                 : 'gh-pages'
             );
           }
-          return <Site repo={repo} branch={repo.branch(branchName)} />;
+          return <Site repo={repo} branchName={branchName} />;
         })
         .catch(errorHandler("loading repository"));
     }

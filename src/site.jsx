@@ -3,7 +3,12 @@
 class Site extends React.Component {
   constructor(props) {
     super(props);
-    this.state = {fileList: null, siteUrl: ''};
+    this.state = {
+      fileList: null,
+      siteUrl: '',
+      branch: this.props.repo.branch(this.props.branchName),
+    };
+    this.updateFileList();
   }
   render() {
     var editor = null;
@@ -33,11 +38,8 @@ class Site extends React.Component {
       </div>
     );
   }
-  componentDidMount() {
-    this.updateFileList();
-  }
   updateFileList() {
-    this.props.branch.files()
+    this.state.branch.files()
       .then((tree) => {
         var fileList = tree.filter((i) => ! i.path.match(/^[_.]/));
         this.setState({fileList: fileList});
@@ -61,7 +63,7 @@ class Site extends React.Component {
   }
   handleCreate() {
     var handleFileCreated = (path) => {
-      var newFile = this.props.branch.newFile(path);
+      var newFile = this.state.branch.newFile(path);
       this.setState({
         file: newFile,
         fileList: [].concat(this.state.fileList, [newFile]),
