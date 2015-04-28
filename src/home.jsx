@@ -35,21 +35,30 @@ var Account = React.createClass({
 
 var AccountRepos = React.createClass({
   render: function() {
-    return (
-      <ul className="accountRepoList">
-        {this.state.repoList.map((repo) =>
-          <li key={repo.meta.name}><Repo repo={repo} /></li>)}
-      </ul>
-    );
+    if(this.state.repoList) {
+      return (
+        <ul className="accountRepoList">
+          {this.state.repoList.map((repo) =>
+            <li key={repo.meta.name}><Repo repo={repo} /></li>)}
+        </ul>
+      );
+    }
+    else {
+      return (
+        <p className="loading">
+          Loading <i className="fa fa-cog fa-spin" />
+        </p>
+      );
+    }
   },
   getInitialState: function() {
-    return {repoList: []};
+    return {repoList: null};
   },
   componentDidMount: function() {
     this.getRepos(this.props.account);
   },
   componentWillReceiveProps: function(newProps) {
-    this.setState({repoList: []});
+    this.setState({repoList: null});
     this.getRepos(newProps.account);
   },
   getRepos: function(account) {

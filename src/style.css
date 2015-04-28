@@ -84,3 +84,10 @@ a.buttonlink {
   right: 5px;
   z-index: 10;
 }
+
+.loading {
+  font-size: 24px;
+  color: #888;
+  text-align: center;
+  padding-top: 50px;
+}
