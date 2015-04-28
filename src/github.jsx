@@ -95,7 +95,19 @@ class GitHubRepo {
   }
 
   createBranch(name, fileList) {
-    console.log('creating branch', name, fileList);
+    var branch = this.branch(name);
+
+    var putFiles = (remaining) => {
+      var file = remaining[0];
+      if(! file) { return; }
+
+      var githubFile = (new GitHubFile(branch, {path: file.path}));
+      return githubFile.save(file.content)
+        .then(() =>
+          putFiles(remaining.slice(1)))
+    };
+
+    return putFiles(fileList);
   }
 }
 

@@ -118,7 +118,10 @@ class Site extends React.Component {
         {path: '_config.yml', content: jsyaml.safeDump({title: options.title})},
         {path: 'index.md', content: index_md},
       ];
-      this.props.repo.createBranch(this.props.branchName, fileList);
+      this.props.repo.createBranch(this.props.branchName, fileList)
+        .then(() => {
+          this.updateFileList();
+        });
     };
 
     app.modal(
