@@ -1,9 +1,9 @@
-JekyllCMS is a content editor for GitHub Pages. It's the missing link for
-non-programmers to use Jekyll: a friendly backend.
+JekyllCMS is a content editor for [GitHub Pages][gh-pages]. It's the missing
+link for non-programmers to use Jekyll: a friendly backend.
 
 ## Getting started
-In the spirit of [GitHub Pages][gh-pages], you don't need to host anything
-yourself, but you do need to configure a few things.
+In the spirit of GitHub Pages, you don't need to host anything yourself, but
+you do need to configure a few things.
 
 1. First you need [a GitHub account][join]. Don't forget to [verify your email
    address][verify], otherwise GitHub won't update your public website.
