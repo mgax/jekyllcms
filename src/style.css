@@ -68,6 +68,10 @@
   background: #d9edf7;
 }
 
+.fileList > li.new {
+  font-style: italic;
+}
+
 .contentEditor {
   margin: 10px 0;
   position: relative;
