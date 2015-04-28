@@ -2,9 +2,7 @@
 
 var Site = React.createClass({
   getInitialState: function() {
-    return {
-      fileList: []
-    };
+    return {fileList: null};
   },
   render: function() {
     var editor = null;

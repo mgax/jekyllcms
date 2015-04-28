@@ -18,6 +18,14 @@ var IndexFile = React.createClass({
 
 var IndexView = React.createClass({
   render: function() {
+    if(! this.props.fileList) {
+      return (
+        <p className="loading">
+          Loading <i className="fa fa-cog fa-spin" />
+        </p>
+      );
+    }
+
     var fileList = this.props.fileList
       .filter((file) => file.path.match(/\.(md|markdown|html)$/))
       .sort((a, b) => a.path < b.path ? -1 : 1)
