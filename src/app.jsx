@@ -2,9 +2,10 @@
 
 var App = React.createClass({
   route: function() {
-    var authMatch = window.location.href.match(/\?code=(.*)/);
-    if(authMatch) {
-      return Q(<AuthCallback code={authMatch[1]} />);
+    var query = parseQuery(window.location.search);
+
+    if(query['code']) {
+      return Q(<AuthCallback code={''+query['code']} />);
     }
 
     this.authToken = localStorage.getItem('jekyllcms-github-token');
@@ -14,9 +15,8 @@ var App = React.createClass({
 
     this.gitHub = new GitHub(this.authToken);
 
-    var repoMatch = window.location.search.match(/[?&]repo=([^&\/]+\/[^&\/]+)\/?/);
-    if(repoMatch) {
-      return this.gitHub.repo(repoMatch[1])
+    if(query['repo']) {
+      return this.gitHub.repo(''+query['repo'])
         .then((repo) => {
           var branch = repo.branch(
             repo.meta.name == repo.meta.owner.login + '.github.com' ||
