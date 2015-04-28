@@ -8,6 +8,20 @@ class Site extends React.Component {
       siteUrl: '',
       branch: this.props.repo.branch(this.props.branchName),
     };
+    this.ensureEmailIsVerified();
+  }
+  ensureEmailIsVerified() {
+    this.props.repo.gh.emailIsVerified()
+      .then((isVerified) => {
+        if(isVerified) {
+          this.loadInitialFileList();
+        }
+        else {
+          this.warnEmailNotVerified();
+        }
+      });
+  }
+  loadInitialFileList() {
     this.props.repo.branches()
       .then((branchList) => {
         var match = branchList.filter((b) =>
@@ -128,6 +142,13 @@ class Site extends React.Component {
       <NewSiteModal
         branchName={this.props.branchName}
         onCreate={handleSiteCreate}
+        />
+    );
+  }
+  warnEmailNotVerified() {
+    app.modal(
+      <EmailNotVerified
+        onRetry={this.ensureEmailIsVerified.bind(this)}
         />
     );
   }
