@@ -13,8 +13,8 @@ class Site extends React.Component {
           <div className="editor col-sm-offset-2 col-sm-10">
             <Editor
               file={this.state.file}
-              onDelete={this.handleDelete}
-              onClose={this.handleClose}
+              onDelete={this.handleDelete.bind(this)}
+              onClose={this.handleClose.bind(this)}
               />
           </div>
         </div>
@@ -25,8 +25,8 @@ class Site extends React.Component {
         <h1>{this.props.repo.meta.full_name}</h1>
         <IndexView
           fileList={this.state.fileList}
-          onEdit={this.handleEdit}
-          onCreate={this.handleCreate}
+          onEdit={this.handleEdit.bind(this)}
+          onCreate={this.handleCreate.bind(this)}
           />
         {editor}
       </div>

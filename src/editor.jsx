@@ -27,7 +27,7 @@ class FrontMatterField extends React.Component {
       <input
         className="form-control"
         value={this.props.value}
-        onChange={this.handleChange}
+        onChange={this.handleChange.bind(this)}
         placeholder={this.props.name}
         />
     );
@@ -73,7 +73,7 @@ class SaveButton extends React.Component {
       <button
         className="btn btn-primary"
         disabled={this.state.state == 'saving'}
-        onClick={this.handleSave}
+        onClick={this.handleSave.bind(this)}
         >{text}</button>
     );
   }
@@ -91,7 +91,7 @@ class DeleteButton extends React.Component {
     return (
       <button
         className="btn btn-danger"
-        onClick={this.handleClick}
+        onClick={this.handleClick.bind(this)}
         >delete</button>
     )
   }
@@ -99,7 +99,7 @@ class DeleteButton extends React.Component {
     app.modal(
       <DeleteFileModal
         path={this.props.file.path}
-        onDelete={this.handleDelete}
+        onDelete={this.handleDelete.bind(this)}
         />
     );
   }
@@ -120,7 +120,10 @@ class Editor extends React.Component {
   render() {
     var closebtn = (
       <div className="closeButton pull-right">
-        <button className="close" onClick={this.handleClose}>&times;</button>
+        <button
+          className="close"
+          onClick={this.handleClose.bind(this)}
+          >&times;</button>
       </div>
     );
     var title = <h2><tt>{this.props.file.path}</tt></h2>;
@@ -140,7 +143,7 @@ class Editor extends React.Component {
           <div className="contentEditor">
             <CKEditor
               initial={this.state.content}
-              onChange={this.handleChange}
+              onChange={this.handleChange.bind(this)}
               ref="contentEditor"
               />
           </div>
@@ -152,7 +155,7 @@ class Editor extends React.Component {
           <div className="contentEditor">
             <Ace
               initial={this.state.content}
-              onChange={this.handleChange}
+              onChange={this.handleChange.bind(this)}
               ref="contentEditor"
               />
           </div>
@@ -170,13 +173,16 @@ class Editor extends React.Component {
           {title}
           <FrontMatter
             data={this.state.frontMatter}
-            onChange={this.handleFrontMatterChange} />
+            onChange={this.handleFrontMatterChange.bind(this)} />
           {editor}
           {preview}
           <p>
-            <SaveButton onSave={this.handleSave} />
+            <SaveButton onSave={this.handleSave.bind(this)} />
             &nbsp;
-            <DeleteButton file={this.props.file} onDelete={this.handleDelete} />
+            <DeleteButton
+              file={this.props.file}
+              onDelete={this.handleDelete.bind(this)}
+              />
           </p>
         </div>
       );
@@ -186,18 +192,25 @@ class Editor extends React.Component {
     this.loadFile(this.props.file);
   }
   componentWillReceiveProps(newProps) {
-    this.replaceState({loading: true});
+    this.setState({
+      loading: true,
+      frontMatter: null,
+      content: null,
+    });
     this.loadFile(newProps.file);
   }
   loadFile(file) {
     file.content()
       .then((content) => {
-        var newState = parse(decode_utf8(content));
+        var data = parse(decode_utf8(content));
         if(! this.state.loading) {
-          this.refs.contentEditor.reset(newState.content);
+          this.refs.contentEditor.reset(data.content);
         }
-        newState.loading = false;
-        this.replaceState(newState);
+        this.setState({
+          loading: false,
+          frontMatter: data.frontMatter,
+          content: data.content,
+        });
       })
       .catch(errorHandler("loading file contents"));
   }

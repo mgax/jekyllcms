@@ -91,7 +91,7 @@ class Home extends React.Component {
                 <Account
                   account={acc}
                   selected={acc == this.state.account}
-                  onOpen={this.handleOpen}
+                  onOpen={this.handleOpen.bind(this)}
                   />
               </li>
             )}

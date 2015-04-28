@@ -19,9 +19,10 @@ class DeleteFileModal extends React.Component {
               <button className="btn btn-default" data-dismiss="modal">
                 Cancel
               </button>
-              <button className="btn btn-danger" onClick={this.handleDelete}>
-                Delete
-              </button>
+              <button
+                className="btn btn-danger"
+                onClick={this.handleDelete.bind(this)}
+                >Delete</button>
             </div>
           </div>
         </div>

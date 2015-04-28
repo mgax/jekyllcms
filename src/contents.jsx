@@ -4,7 +4,7 @@ class IndexFile extends React.Component {
   render() {
     return (
       <li>
-        <a onClick={this.handleClick} className="buttonlink">
+        <a onClick={this.handleClick.bind(this)} className="buttonlink">
           {this.props.file.path}
         </a>
       </li>
@@ -30,14 +30,18 @@ class IndexView extends React.Component {
       .filter((file) => file.path.match(/\.(md|markdown|html)$/))
       .sort((a, b) => a.path < b.path ? -1 : 1)
       .map((file) =>
-        <IndexFile key={file.path} file={file} onEdit={this.props.onEdit} />
+        <IndexFile
+          key={file.path}
+          file={file}
+          onEdit={this.props.onEdit.bind(this)}
+          />
       );
     return (
       <div>
         <ul className="list-unstyled">{fileList}</ul>
         <button
           className="btn btn-default btn-xs"
-          onClick={this.handleCreate}
+          onClick={this.handleCreate.bind(this)}
           >new</button>
       </div>
     );

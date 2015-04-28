@@ -19,9 +19,10 @@ class NewFileModal extends React.Component {
               <button className="btn btn-default" data-dismiss="modal">
                 Cancel
               </button>
-              <button className="btn btn-primary" onClick={this.handleCreate}>
-                Create
-              </button>
+              <button
+                className="btn btn-primary"
+                onClick={this.handleCreate.bind(this)}
+                >Create</button>
             </div>
           </div>
         </div>
