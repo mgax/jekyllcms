@@ -16,7 +16,7 @@ class GitHubFile {
     if(! this.sha) { return Q(''); }
     return this.api({url: '/git/blobs/' + this.sha})
       .then((resp) =>
-        atob(resp.content));
+        atob(resp.content.replace(/\s/g, '')));
   }
 
   save(newContent) {
