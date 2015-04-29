@@ -48,7 +48,7 @@ class LogoutButton extends React.Component {
     return (
       <button
         className="btn btn-default navbar-btn"
-        onClick={this.handleClick}
+        onClick={this.handleClick.bind(this)}
         >logout</button>
     );
   }

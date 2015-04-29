@@ -20,7 +20,7 @@ class Account extends React.Component {
       caret = <div className="accountSelectedMarker">&raquo;</div>;
     }
     return (
-      <a className='buttonlink' onClick={this.handleClick}>
+      <a className='buttonlink' onClick={this.handleClick.bind(this)}>
         <img src={account.meta.avatar_url} />
         {caret}
         <p>{account.meta.login}</p>
