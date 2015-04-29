@@ -67,21 +67,27 @@ class NewFileModal extends React.Component {
     setTimeout(() => React.findDOMNode(this.refs.path).select(), 500);
     this.updateUrl();
   }
+  pathHasError(path) {
+    if(! path.match(/\.(md|markdown|html)$/)) {
+      return "invalid file name";
+    }
+
+    if(this.props.pathExists(path)) {
+      return "file already exists";
+    }
+  }
   updateUrl() {
     var path = React.findDOMNode(this.refs.path).value.trim();
-    this.setState({url: this.props.getUrl(path)});
+    var url = this.pathHasError(path) ? '-' : this.props.getUrl(path);
+    this.setState({url: url});
   }
   handleSubmit(evt) {
     evt.preventDefault();
     var path = React.findDOMNode(this.refs.path).value.trim();
 
-    if(! path.match(/\.(md|markdown|html)$/)) {
-      this.setState({error: "invalid file name"});
-      return;
-    }
-
-    if(this.props.pathExists(path)) {
-      this.setState({error: "file already exists"});
+    var error = this.pathHasError(path);
+    if(error) {
+      this.setState({error: error});
       return;
     }
 
