@@ -9,7 +9,7 @@ In the spirit of GitHub Pages, you don't need to host anything yourself!
 
 2. [Create][create] a repository for your website.
 
-3. Go to [jekyllcms.grep.ro]() and authorize your GitHub account. You should
+3. Go to [jekyllcms.grep.ro](http://jekyllcms.grep.ro) and authorize your GitHub account. You should
    then see a list of your repositories, including the new site. Click on it
    and start editing!
 
