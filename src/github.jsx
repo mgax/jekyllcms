@@ -85,7 +85,8 @@ class GitHubRepo {
   }
 
   branches() {
-    return this.api({url: '/branches'}).then((resp) =>
+    var t = new Date().getTime();
+    return this.api({url: '/branches?t=' + t}).then((resp) =>
       resp.map((b) =>
         new GitHubBranch(this, b.name)));
   }
@@ -172,13 +173,17 @@ class GitHub {
   }
 
   repo(fullName) {
-    return this.api({url: '/repos/' + fullName})
+    var t = new Date().getTime();
+    return this.api({url: '/repos/' + fullName + '?t=' + t})
       .then((meta) =>
         new GitHubRepo(this, meta));
   }
 
   user() {
-    return this.api({url: '/user'}).then((meta) => new GitHubUser(this, meta));
+    var t = new Date().getTime();
+    return this.api({url: '/user?t=' + t})
+      .then((meta) =>
+        new GitHubUser(this, meta));
   }
 
   emailIsVerified() {
