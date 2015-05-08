@@ -44,6 +44,7 @@ class Site extends React.Component {
               file={this.state.file}
               onDelete={this.handleDelete.bind(this)}
               onClose={this.handleClose.bind(this)}
+              getUrl={this.getUrl.bind(this)}
               />
           </div>
         </div>

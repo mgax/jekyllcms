@@ -98,6 +98,10 @@ a.buttonlink {
   box-shadow: -4px 1px 3px rgba(0, 0, 0, 0.2);
 }
 
+.inline-fa {
+  font-size: .6em;
+}
+
 #errors {
   position: absolute;
   top: 5px;

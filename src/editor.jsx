@@ -131,7 +131,15 @@ class Editor extends React.Component {
           >&times;</button>
       </div>
     );
-    var title = <h2><tt>{this.props.file.path}</tt></h2>;
+    var publicUrl = 'http://' + this.props.getUrl(this.props.file.path);
+    var title = (
+      <h2>
+        <tt>{this.props.file.path}</tt>{' '}
+        <a href={publicUrl} target="_blank">
+          <i className="fa fa-external-link inline-fa"></i>
+        </a>
+      </h2>
+    );
     if(this.state.loading) {
       return (
         <div>
