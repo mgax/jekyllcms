@@ -1,0 +1,11 @@
+{
+  "name": "jekyllcms",
+  "private": true,
+  "devDependencies": {
+    "gulp": "^3.8.11",
+    "gulp-babel": "^5.1.0",
+    "gulp-concat": "^2.5.2",
+    "gulp-sourcemaps": "^1.5.2",
+    "handlebars": "^3.0.3"
+  }
+}
