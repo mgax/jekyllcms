@@ -50,9 +50,15 @@ class Site extends React.Component {
         </div>
       );
     }
+    var publicUrl = 'http://' + this.state.siteUrl + '/';
     return (
       <div className="site">
-        <h1>{this.props.repo.meta.full_name}</h1>
+        <h1>
+          {this.props.repo.meta.full_name}{' '}
+          <a href={publicUrl} target="_blank">
+            <i className="fa fa-external-link inline-fa"></i>
+          </a>
+        </h1>
         <IndexView
           fileList={this.state.fileList}
           current={this.state.file}
