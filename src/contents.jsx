@@ -19,6 +19,28 @@ class IndexFile extends React.Component {
   }
 }
 
+class IndexCollection extends React.Component {
+  render() {
+    var fileList = this.props.fileList
+      .filter((file) => file.path.match(/\.(md|markdown|html)$/))
+      .sort((a, b) => a.path < b.path ? -1 : 1)
+      .map((file) =>
+        <IndexFile
+          key={file.path}
+          file={file}
+          onEdit={this.props.onEdit}
+          current={file === this.props.current}
+          />
+      );
+    return (
+      <div>
+        <h3>{this.props.name}</h3>
+        <ul className="fileList">{fileList}</ul>
+      </div>
+    );
+  }
+}
+
 class IndexView extends React.Component {
   render() {
     if(! this.props.fileList) {
@@ -29,20 +51,13 @@ class IndexView extends React.Component {
       );
     }
 
-    var fileList = this.props.fileList
-      .filter((file) => file.path.match(/\.(md|markdown|html)$/))
-      .sort((a, b) => a.path < b.path ? -1 : 1)
-      .map((file) =>
-        <IndexFile
-          key={file.path}
-          file={file}
-          onEdit={this.props.onEdit.bind(this)}
-          current={file === this.props.current}
-          />
-      );
     return (
       <div>
-        <ul className="fileList">{fileList}</ul>
+        <IndexCollection
+          name="pages"
+          fileList={this.props.fileList}
+          onEdit={this.props.onEdit}
+          />
         <button
           className="btn btn-default btn-xs"
           onClick={this.handleCreate.bind(this)}
