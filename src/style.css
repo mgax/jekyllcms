@@ -56,19 +56,20 @@
   padding: 0;
 }
 
-.fileList > li {
+.file {
   list-style: none;
 }
 
-.fileList > li > a {
+.file > a {
   display: block;
+  font-family: Menlo, Monaco, Consolas, "Courier New", monospace;
 }
 
-.fileList > li.current {
+.file.current {
   background: #d9edf7;
 }
 
-.fileList > li.new {
+.file.new {
   font-style: italic;
 }
 

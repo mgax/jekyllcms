@@ -45,6 +45,7 @@ class Site extends React.Component {
               onDelete={this.handleDelete.bind(this)}
               onClose={this.handleClose.bind(this)}
               getUrl={this.getUrl.bind(this)}
+              getSlug={this.getSlug.bind(this)}
               />
           </div>
         </div>
@@ -64,6 +65,7 @@ class Site extends React.Component {
           current={this.state.file}
           onEdit={this.handleEdit.bind(this)}
           onCreate={this.handleCreate.bind(this)}
+          getSlug={this.getSlug.bind(this)}
           />
         {editor}
       </div>
@@ -120,11 +122,14 @@ class Site extends React.Component {
   handleClose() {
     this.setState({file: null});
   }
-  getUrl(path) {
+  getSlug(path) {
     var m = path.match(/^(.*\/)?([^\/]*)\.[^\.]+$/);
     var filename = (m[2] == 'index') ? '' : m[2];
     var folder = m[1] || '';
-    return this.state.siteUrl + '/' + folder + filename;
+    return folder + filename;
+  }
+  getUrl(path) {
+    return this.state.siteUrl + '/' + this.getSlug(path);
   }
   createNewSite() {
     var handleSiteCreate = (options) => {

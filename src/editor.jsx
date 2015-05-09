@@ -134,7 +134,7 @@ class Editor extends React.Component {
     var publicUrl = 'http://' + this.props.getUrl(this.props.file.path);
     var title = (
       <h2>
-        <tt>{this.props.file.path}</tt>{' '}
+        <tt>{this.props.getSlug(this.props.file.path)}</tt>{' '}
         <a href={publicUrl} target="_blank">
           <i className="fa fa-external-link inline-fa"></i>
         </a>
