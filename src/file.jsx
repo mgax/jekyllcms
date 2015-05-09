@@ -10,12 +10,38 @@ class File {
     return !! this.ghFile.sha;
   }
 
-  content() {
-    return this.ghFile.content();
+  load() {
+    function parse(src) {
+      var lines = src.split(/\n/);
+      var frontMatterStart = lines.indexOf('---');
+      if(frontMatterStart != 0) {
+        return {
+          frontMatter: {},
+          content: src
+        }
+      }
+      var frontMatterEnd = lines.indexOf('---', frontMatterStart + 1);
+      assert(frontMatterEnd > -1);
+      return {
+        frontMatter: jsyaml.safeLoad(
+          lines.slice(frontMatterStart + 1, frontMatterEnd).join('\n') + '\n'
+        ),
+        content: lines.slice(frontMatterEnd + 1).join('\n')
+      }
+    }
+
+    return this.ghFile.getContent()
+      .then((content) => parse(decode_utf8(content)));
   }
 
-  save(newContent) {
-    return this.ghFile.save(newContent);
+  save(data) {
+    var content = encode_utf8(
+      '---\n' +
+      jsyaml.safeDump(data.frontMatter) +
+      '---\n' +
+      data.content
+    );
+    return this.ghFile.putContent(content);
   }
 
   delete() {

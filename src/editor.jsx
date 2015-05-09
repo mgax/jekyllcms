@@ -1,26 +1,5 @@
 'use strict';
 
-function parse(src) {
-  var lines = src.split(/\n/);
-  var frontMatterStart = lines.indexOf('---');
-  if(frontMatterStart != 0) {
-    return {
-      frontMatter: {},
-      content: src
-    }
-  }
-  var frontMatterEnd = lines.indexOf('---', frontMatterStart + 1);
-  assert(frontMatterEnd > -1);
-  return {
-    frontMatter: jsyaml.safeLoad(
-      lines.slice(frontMatterStart + 1, frontMatterEnd).join('\n') + '\n'
-    ),
-    content: lines.slice(frontMatterEnd + 1).join('\n')
-  }
-}
-
-var clone = (value) => JSON.parse(JSON.stringify(value));
-
 class FrontMatterField extends React.Component {
   render() {
     return (
@@ -214,9 +193,8 @@ class Editor extends React.Component {
     this.loadFile(newProps.file);
   }
   loadFile(file) {
-    file.content()
-      .then((content) => {
-        var data = parse(decode_utf8(content));
+    file.load()
+      .then((data) => {
         if(! this.state.loading) {
           this.refs.contentEditor.reset(data.content);
         }
@@ -235,13 +213,12 @@ class Editor extends React.Component {
     this.setState({frontMatter: frontMatter});
   }
   handleSave() {
-    var src = encode_utf8(
-      '---\n' +
-      jsyaml.safeDump(this.state.frontMatter) +
-      '---\n' +
-      this.state.content
-    );
-    return this.props.file.save(src).catch(errorHandler("saving file"));
+    return this.props.file
+      .save({
+        frontMatter: this.state.frontMatter,
+        content: this.state.content,
+      })
+      .catch(errorHandler("saving file"));
   }
   handleDelete() {
     this.props.onDelete();

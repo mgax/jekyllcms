@@ -43,3 +43,7 @@ function parseQuery(url) {
   }
   return rv;
 }
+
+function clone(value) {
+  return JSON.parse(JSON.stringify(value));
+}

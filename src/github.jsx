@@ -12,14 +12,14 @@ class GitHubFile {
     return this.branch.repo.api(options);
   }
 
-  content() {
+  getContent() {
     if(! this.sha) { return Q(''); }
     return this.api({url: '/git/blobs/' + this.sha})
       .then((resp) =>
         atob(resp.content.replace(/\s/g, '')));
   }
 
-  save(newContent) {
+  putContent(newContent) {
     return this.api({
       url: '/contents/' + this.path,
       method: 'PUT',
