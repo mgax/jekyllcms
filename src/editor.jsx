@@ -111,10 +111,11 @@ class Editor extends React.Component {
           >&times;</button>
       </div>
     );
-    var publicUrl = 'http://' + this.props.getUrl(path);
+    var slug = this.props.file.slug();
+    var publicUrl = 'http://' + this.props.siteUrl + '/' + slug;
     var title = (
       <h2>
-        <tt title={path}>{this.props.getSlug(path)}</tt>{' '}
+        <tt title={path}>{slug}</tt>{' '}
         <a href={publicUrl} target="_blank">
           <i className="fa fa-external-link inline-fa"></i>
         </a>

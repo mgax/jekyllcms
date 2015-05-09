@@ -1,5 +1,12 @@
 'use strict';
 
+function slugForPath(path) {
+  var m = path.match(/^(.*\/)?([^\/]*)\.[^\.]+$/);
+  var filename = (m[2] == 'index') ? '' : m[2];
+  var folder = m[1] || '';
+  return folder + filename;
+}
+
 class File {
   constructor(ghFile) {
     this.ghFile = ghFile;
@@ -46,5 +53,13 @@ class File {
 
   delete() {
     return this.ghFile.delete();
+  }
+
+  slug() {
+    return slugForPath(this.path);
+  }
+
+  url() {
+    return this.state.siteUrl + '/' + this.url();
   }
 }

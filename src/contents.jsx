@@ -2,7 +2,6 @@
 
 class IndexFile extends React.Component {
   render() {
-    var path = this.props.file.path;
     var cls = ['file'];
     if(this.props.current) { cls.push('current'); }
     if(! this.props.file.isSaved()) { cls.push('new'); }
@@ -11,8 +10,8 @@ class IndexFile extends React.Component {
         <a
           onClick={this.handleClick.bind(this)}
           className="buttonlink"
-          title={path}
-          >{this.props.getSlug(path)}</a>
+          title={this.props.file.path}
+          >{this.props.file.slug()}</a>
       </li>
     );
   }
@@ -33,7 +32,6 @@ class IndexCollection extends React.Component {
           file={file}
           onEdit={this.props.onEdit}
           current={file === this.props.current}
-          getSlug={this.props.getSlug}
           />
       );
     return (
@@ -74,7 +72,6 @@ class IndexView extends React.Component {
           name={name}
           fileList={collections[name]}
           onEdit={this.props.onEdit}
-          getSlug={this.props.getSlug}
           />
       );
 
