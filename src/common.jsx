@@ -27,7 +27,7 @@ function errorHandler(action) {
       }
     }
 
-    console.error(message, e);
+    console.error(message, e, e.stack);
     app.reportError(message);
   }
 }
