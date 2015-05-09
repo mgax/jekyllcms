@@ -5,7 +5,7 @@ class IndexFile extends React.Component {
     var path = this.props.file.path;
     var cls = ['file'];
     if(this.props.current) { cls.push('current'); }
-    if(! this.props.file.sha) { cls.push('new'); }
+    if(! this.props.file.isSaved()) { cls.push('new'); }
     return (
       <li className={cls.join(' ')}>
         <a

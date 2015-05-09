@@ -73,7 +73,8 @@ class Site extends React.Component {
   }
   updateFileList() {
     this.state.branch.files()
-      .then((fileList) => {
+      .then((tree) => {
+        var fileList = tree.map((ghFile) => new File(ghFile));
         this.setState({fileList: fileList});
         var cname = fileList.filter((f) => f.path == 'CNAME')[0];
         if(cname) {
