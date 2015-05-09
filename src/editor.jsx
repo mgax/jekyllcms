@@ -3,7 +3,7 @@
 function parse(src) {
   var lines = src.split(/\n/);
   var frontMatterStart = lines.indexOf('---');
-  if(frontMatterStart < 0) {
+  if(frontMatterStart != 0) {
     return {
       frontMatter: {},
       content: src
