@@ -122,7 +122,7 @@ class Site extends React.Component {
   }
   getUrl(path) {
     var m = path.match(/^(.*\/)?([^\/]*)\.[^\.]+$/);
-    var filename = (m[2] == 'index') ? '' : m[2] + '.html';
+    var filename = (m[2] == 'index') ? '' : m[2];
     var folder = m[1] || '';
     return this.state.siteUrl + '/' + folder + filename;
   }
