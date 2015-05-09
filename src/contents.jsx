@@ -51,13 +51,31 @@ class IndexView extends React.Component {
       );
     }
 
-    return (
-      <div>
+    var collections = {pages: [], posts: []};
+    this.props.fileList.forEach((file) => {
+      if(file.path.match(/^_posts\//)) {
+        collections.posts.push(file);
+        return;
+      }
+      if(file.path.match(/^[^_.]/)) {
+        collections.pages.push(file);
+        return;
+      }
+    });
+
+    var collectionViews = Object.keys(collections)
+      .sort()
+      .map((name) =>
         <IndexCollection
-          name="pages"
-          fileList={this.props.fileList}
+          name={name}
+          fileList={collections[name]}
           onEdit={this.props.onEdit}
           />
+      );
+
+    return (
+      <div>
+        {collectionViews}
         <button
           className="btn btn-default btn-xs"
           onClick={this.handleCreate.bind(this)}

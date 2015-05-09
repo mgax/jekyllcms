@@ -71,8 +71,7 @@ class Site extends React.Component {
   }
   updateFileList() {
     this.state.branch.files()
-      .then((tree) => {
-        var fileList = tree.filter((i) => ! i.path.match(/^[_.]/));
+      .then((fileList) => {
         this.setState({fileList: fileList});
         var cname = fileList.filter((f) => f.path == 'CNAME')[0];
         if(cname) {
