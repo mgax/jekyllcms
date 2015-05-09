@@ -2,14 +2,17 @@
 
 class IndexFile extends React.Component {
   render() {
+    var path = this.props.file.path;
     var cls = ['file'];
     if(this.props.current) { cls.push('current'); }
     if(! this.props.file.sha) { cls.push('new'); }
     return (
       <li className={cls.join(' ')}>
-        <a onClick={this.handleClick.bind(this)} className="buttonlink">
-          {this.props.getSlug(this.props.file.path)}
-        </a>
+        <a
+          onClick={this.handleClick.bind(this)}
+          className="buttonlink"
+          title={path}
+          >{this.props.getSlug(path)}</a>
       </li>
     );
   }

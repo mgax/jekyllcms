@@ -123,6 +123,7 @@ class Editor extends React.Component {
     this.state = {loading: true};
   }
   render() {
+    var path = this.props.file.path;
     var closebtn = (
       <div className="closeButton pull-right">
         <button
@@ -131,10 +132,10 @@ class Editor extends React.Component {
           >&times;</button>
       </div>
     );
-    var publicUrl = 'http://' + this.props.getUrl(this.props.file.path);
+    var publicUrl = 'http://' + this.props.getUrl(path);
     var title = (
       <h2>
-        <tt>{this.props.getSlug(this.props.file.path)}</tt>{' '}
+        <tt title={path}>{this.props.getSlug(path)}</tt>{' '}
         <a href={publicUrl} target="_blank">
           <i className="fa fa-external-link inline-fa"></i>
         </a>
@@ -145,13 +146,13 @@ class Editor extends React.Component {
         <div>
           {closebtn}
           {title}
-          <p>loading <tt>{this.props.file.path}</tt> ...</p>
+          <p>loading <tt>{path}</tt> ...</p>
         </div>
       );
     }
     else {
       var html = marked(this.state.content, {sanitize: true});
-      if(this.props.file.path.match(/\.html/)) {
+      if(path.match(/\.html/)) {
         var editor = (
           <div className="contentEditor">
             <CKEditor
