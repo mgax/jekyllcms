@@ -31,7 +31,7 @@ class CollectionView extends React.Component {
           key={file.path}
           file={file}
           onEdit={this.props.onEdit}
-          current={file === this.props.current}
+          current={file === this.props.currentFile}
           />
       );
     return (
@@ -79,16 +79,17 @@ class SiteContents extends React.Component {
           name={name}
           fileList={this.state.collections[name].files}
           onEdit={this.handleEdit.bind(this)}
+          currentFile={this.state.currentFile}
           />
       );
 
     var editor = null;
-    if(this.state.file) {
+    if(this.state.currentFile) {
       editor = (
         <div className="editor-container row">
           <div className="editor col-sm-offset-2 col-sm-10">
             <Editor
-              file={this.state.file}
+              file={this.state.currentFile}
               onDelete={this.handleDelete.bind(this)}
               onClose={this.handleClose.bind(this)}
               siteUrl={this.props.siteUrl}
@@ -110,14 +111,14 @@ class SiteContents extends React.Component {
     );
   }
   handleEdit(file) {
-    this.setState({file: file});
+    this.setState({currentFile: file});
   }
   handleCreate() {
     console.error('FIXME fileList -> collections'); return;
     var handleFileCreated = (path) => {
       var file = new File(this.state.branch.newFile(path));
       this.setState({
-        file: file,
+        currentFile: file,
         fileList: [].concat(this.state.fileList, [file]),
       });
     };
@@ -136,10 +137,10 @@ class SiteContents extends React.Component {
     );
   }
   handleDelete() {
-    this.setState({file: null});
+    this.setState({currentFile: null});
     this.props.onTreeChange();
   }
   handleClose() {
-    this.setState({file: null});
+    this.setState({currentFile: null});
   }
 }
