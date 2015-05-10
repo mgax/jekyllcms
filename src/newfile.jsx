@@ -7,7 +7,7 @@ class NewFileModal extends React.Component {
       error: null,
       title: "New page",
       slug: '',
-      ext: '.md',
+      ext: '.html',
       date: moment(),
       dirtyForm: true,
     };
@@ -44,16 +44,28 @@ class NewFileModal extends React.Component {
         </div>
         <div className="modal-body">
           {datePicker}
-          <div className={'form-group' + (this.state.error ? ' has-error' : '' )}>
-            <input
-              className="form-control"
-              value={this.state.title}
-              onChange={this.handleTitleChange.bind(this)}
-              ref="title"
-              />
-            {this.state.error ?
-              <span className="help-block">Error: {this.state.error}</span>
-            : null}
+          <div className="row">
+            <div className={'col-xs-10 form-group' + (this.state.error ? ' has-error' : '' )}>
+              <input
+                className="form-control"
+                value={this.state.title}
+                onChange={this.handleTitleChange.bind(this)}
+                ref="title"
+                />
+              {this.state.error ?
+                <span className="help-block">Error: {this.state.error}</span>
+              : null}
+            </div>
+            <div className="col-xs-2">
+              <select
+                  className="form-control"
+                  value={this.state.ext}
+                  onChange={this.handleExtChange.bind(this)}
+                  >
+                <option value=".html">HTML</option>
+                <option value=".md">Markdown</option>
+              </select>
+            </div>
           </div>
           <p>
             File:
@@ -97,6 +109,9 @@ class NewFileModal extends React.Component {
   }
   handleTitleChange(e) {
     this.setState({title: e.target.value.trim(), dirtyForm: true, slug: ''});
+  }
+  handleExtChange(e) {
+    this.setState({ext: e.target.value, dirtyForm: true});
   }
   handleSlugChange(e) {
     this.setState({slug: e.target.value, dirtyForm: true});
