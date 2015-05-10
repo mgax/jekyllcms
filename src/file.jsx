@@ -64,7 +64,7 @@ class File {
       var frontMatterStart = lines.indexOf('---');
       if(frontMatterStart != 0) {
         return {
-          frontMatter: {},
+          frontMatter: null,
           content: src
         }
       }

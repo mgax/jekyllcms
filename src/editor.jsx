@@ -132,9 +132,29 @@ class Editor extends React.Component {
     }
     else {
       var html = marked(this.state.content, {sanitize: true});
-      if(path.match(/\.html/)) {
+      if(! this.state.frontMatter) {
+        editor = (
+          <div className="contentEditor">
+            <p className="editorHelp">
+              This file has no{' '}
+              <a href="http://jekyllrb.com/docs/frontmatter/" target="_blank">
+                front matter
+              </a>, showing raw content.
+            </p>
+            <pre>
+              <code>
+                {this.state.content}
+              </code>
+            </pre>
+          </div>
+        );
+      }
+      else if(path.match(/\.html/)) {
         var editor = (
           <div className="contentEditor">
+            <FrontMatter
+              data={this.state.frontMatter}
+              onChange={this.handleFrontMatterChange.bind(this)} />
             <CKEditor
               initial={this.state.content}
               onChange={this.handleChange.bind(this)}
@@ -148,7 +168,10 @@ class Editor extends React.Component {
         var markdownUrl = 'https://help.github.com/articles/markdown-basics/';
         var editor = (
           <div className="contentEditor">
-            <p className="markdownHelp">
+            <FrontMatter
+              data={this.state.frontMatter}
+              onChange={this.handleFrontMatterChange.bind(this)} />
+            <p className="editorHelp">
               This page is written using{' '}
               <a href={markdownUrl} target="_blank">Markdown</a>.
               As you type, a preview is shown below.
@@ -171,9 +194,6 @@ class Editor extends React.Component {
         <div>
           {closebtn}
           {title}
-          <FrontMatter
-            data={this.state.frontMatter}
-            onChange={this.handleFrontMatterChange.bind(this)} />
           {editor}
           {preview}
           <p>
