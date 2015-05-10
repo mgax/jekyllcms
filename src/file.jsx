@@ -4,7 +4,7 @@ function slugForPath(path) {
   var m = path.match(/^(.*\/)?([^\/]*)\.[^\.]+$/);
   var filename = (m[2] == 'index') ? '' : m[2];
   var folder = m[1] || '';
-  return folder + filename;
+  return '/' + folder + filename;
 }
 
 class File {

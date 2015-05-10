@@ -112,7 +112,7 @@ class Editor extends React.Component {
       </div>
     );
     var slug = this.props.file.slug();
-    var publicUrl = 'http://' + this.props.siteUrl + '/' + slug;
+    var publicUrl = 'http://' + this.props.siteUrl + slug;
     var title = (
       <h2>
         <tt title={path}>{slug}</tt>{' '}
