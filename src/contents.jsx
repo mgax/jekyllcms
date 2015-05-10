@@ -1,6 +1,6 @@
 'use strict';
 
-class IndexFile extends React.Component {
+class FileView extends React.Component {
   render() {
     var cls = ['file'];
     if(this.props.current) { cls.push('current'); }
@@ -21,13 +21,13 @@ class IndexFile extends React.Component {
   }
 }
 
-class IndexCollection extends React.Component {
+class CollectionView extends React.Component {
   render() {
     var fileList = this.props.fileList
       .filter((file) => file.path.match(/\.(md|markdown|html)$/))
       .sort((a, b) => a.path < b.path ? -1 : 1)
       .map((file) =>
-        <IndexFile
+        <FileView
           key={file.path}
           file={file}
           onEdit={this.props.onEdit}
@@ -75,7 +75,7 @@ class SiteContents extends React.Component {
     var collectionViews = Object.keys(this.state.collections)
       .sort()
       .map((name) =>
-        <IndexCollection
+        <CollectionView
           name={name}
           fileList={this.state.collections[name].files}
           onEdit={this.handleEdit.bind(this)}
