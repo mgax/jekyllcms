@@ -111,7 +111,7 @@ class Editor extends React.Component {
           >&times;</button>
       </div>
     );
-    var permalink = this.props.file.permalink();
+    var permalink = this.props.file.permalink(true);
     var publicUrl = 'http://' + this.props.config.siteUrl + permalink;
     var title = (
       <h2>

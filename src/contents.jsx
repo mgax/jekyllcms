@@ -11,7 +11,7 @@ class FileView extends React.Component {
           onClick={this.handleClick.bind(this)}
           className="buttonlink"
           title={this.props.file.path}
-          >{this.props.file.permalink()}</a>
+          >{this.props.file.permalink(true)}</a>
       </li>
     );
   }

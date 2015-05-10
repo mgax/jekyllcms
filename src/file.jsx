@@ -96,8 +96,12 @@ class File {
     return this.ghFile.delete();
   }
 
-  permalink() {
-    return this.collection.permalink(this);
+  permalink(extensionless) {
+    var rv = this.collection.permalink(this);
+    if(extensionless) {
+      rv = rv.replace(/\.html$/, '');
+    }
+    return rv;
   }
 
   url() {
