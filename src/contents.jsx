@@ -92,7 +92,7 @@ class SiteContents extends React.Component {
               file={this.state.currentFile}
               onDelete={this.handleDelete.bind(this)}
               onClose={this.handleClose.bind(this)}
-              siteUrl={this.props.siteUrl}
+              config={this.props.config}
               />
           </div>
         </div>
@@ -132,7 +132,7 @@ class SiteContents extends React.Component {
       <NewFileModal
         onCreate={handleFileCreated}
         pathExists={pathExists}
-        siteUrl={this.props.siteUrl}
+        config={this.props.config}
         />
     );
   }

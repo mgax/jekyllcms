@@ -1,11 +1,17 @@
 'use strict';
 
+class Configuration {
+  constructor(options) {
+    this.siteUrl = options.siteUrl;
+  }
+}
+
 class Site extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
       tree: null,
-      siteUrl: '',
+      config: null,
       branch: this.props.repo.branch(this.props.branchName),
     };
     this.ensureEmailIsVerified();
@@ -35,14 +41,22 @@ class Site extends React.Component {
       });
   }
   render() {
-    var publicUrl = 'http://' + this.state.siteUrl + '/';
+    var publicLink = null;
+    if(this.state.config) {
+      publicLink = (
+        <a href={'http://' + this.state.config.siteUrl + '/'} target="_blank">
+          <i className="fa fa-external-link inline-fa"></i>
+        </a>
+      );
+    }
+
     var siteContents;
-    if(this.state.tree) {
+    if(this.state.tree && this.state.config) {
       siteContents = (
         <SiteContents
           tree={this.state.tree}
           onTreeChange={this.updateFileList.bind(this)}
-          siteUrl={this.state.siteUrl}
+          config={this.state.config}
           />
       );
     }
@@ -53,13 +67,12 @@ class Site extends React.Component {
         </p>
       );
     }
+
     return (
       <div className="site">
         <h1>
           {this.props.repo.meta.full_name}{' '}
-          <a href={publicUrl} target="_blank">
-            <i className="fa fa-external-link inline-fa"></i>
-          </a>
+          {publicLink}
         </h1>
         {siteContents}
       </div>
@@ -73,13 +86,21 @@ class Site extends React.Component {
         if(cname) {
           return cname.getContent()
             .then((cnameValue) =>
-              this.setState({siteUrl: cnameValue.trim()}));
+              this.setState({
+                config: new Configuration({
+                  siteUrl: cnameValue.trim(),
+                })
+              }));
         }
         else {
           var repo = this.props.repo;
           var name = repo.meta.name;
           var ownerLogin = repo.meta.owner.login;
-          this.setState({siteUrl: ownerLogin + '.github.io/' + name});
+          this.setState({
+            config: new Configuration({
+              siteUrl: ownerLogin + '.github.io/' + name,
+            })
+          });
         }
       })
       .catch(errorHandler("loading file list"));
