@@ -1,97 +1,5 @@
 'use strict';
 
-function extractCollections(tree) {
-  var collections = {
-    posts: new Collection('posts'),
-    pages: new Collection('pages'),
-  };
-
-  tree.forEach((ghFile) => {
-    if(ghFile.path.match(/^_posts\//)) {
-      collections.posts.files.push(new File(ghFile));
-      return;
-    }
-    if(ghFile.path.match(/^[^_.]/)) {
-      collections.pages.files.push(new File(ghFile));
-      return;
-    }
-  });
-
-  return collections;
-}
-
-class Sitemap extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = {collections: extractCollections(props.tree)};
-  }
-  componentWillReceiveProps(props) {
-    this.setState({collections: extractCollections(props.tree)});
-  }
-  render() {
-    var editor = null;
-    if(this.state.file) {
-      editor = (
-        <div className="editor-container row">
-          <div className="editor col-sm-offset-2 col-sm-10">
-            <Editor
-              file={this.state.file}
-              onDelete={this.handleDelete.bind(this)}
-              onClose={this.handleClose.bind(this)}
-              siteUrl={this.props.siteUrl}
-              />
-          </div>
-        </div>
-      );
-    }
-
-    return (
-      <div>
-        <IndexView
-          collections={this.state.collections}
-          current={this.state.file}
-          onEdit={this.handleEdit.bind(this)}
-          onCreate={this.handleCreate.bind(this)}
-          />
-        {editor}
-      </div>
-    );
-  }
-  handleEdit(file) {
-    this.setState({file: file});
-  }
-  handleCreate() {
-    console.error('FIXME fileList -> collections'); return;
-    var handleFileCreated = (path) => {
-      var file = new File(this.state.branch.newFile(path));
-      this.setState({
-        file: file,
-        fileList: [].concat(this.state.fileList, [file]),
-      });
-    };
-
-    var pathExists = (path) => {
-      var matching = this.state.fileList.filter((f) => f.path == path);
-      return matching.length > 0;
-    };
-
-    app.modal(
-      <NewFileModal
-        onCreate={handleFileCreated}
-        pathExists={pathExists}
-        siteUrl={this.props.siteUrl}
-        />
-    );
-  }
-  handleDelete() {
-    this.setState({file: null});
-    this.props.onTreeChange();
-  }
-  handleClose() {
-    this.setState({file: null});
-  }
-}
-
 class Site extends React.Component {
   constructor(props) {
     super(props);
@@ -128,10 +36,10 @@ class Site extends React.Component {
   }
   render() {
     var publicUrl = 'http://' + this.state.siteUrl + '/';
-    var sitemap;
+    var siteContents;
     if(this.state.tree) {
-      sitemap = (
-        <Sitemap
+      siteContents = (
+        <SiteContents
           tree={this.state.tree}
           onTreeChange={this.updateFileList.bind(this)}
           siteUrl={this.state.siteUrl}
@@ -139,7 +47,7 @@ class Site extends React.Component {
       );
     }
     else {
-      sitemap = (
+      siteContents = (
         <p className="loading">
           Loading <i className="fa fa-cog fa-spin" />
         </p>
@@ -153,7 +61,7 @@ class Site extends React.Component {
             <i className="fa fa-external-link inline-fa"></i>
           </a>
         </h1>
-        {sitemap}
+        {siteContents}
       </div>
     );
   }
