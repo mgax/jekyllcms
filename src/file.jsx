@@ -103,4 +103,9 @@ class Collection {
       .replace(/\/{2,}/g, '/')
       .replace(/\/index.html$/, '/');
   }
+
+  permalinkForPath(path) {
+    var fakeFile = new File({path: path}, this);
+    return this.permalink(fakeFile);
+  }
 }

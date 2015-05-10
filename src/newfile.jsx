@@ -6,6 +6,7 @@ class NewFileModal extends React.Component {
     this.state = {error: null, help: false};
   }
   render() {
+    var collectionSingular = this.props.collection.name.replace(/s$/, '');
     var mdUrl = 'https://help.github.com/articles/markdown-basics/';
     return (
       <form className="modal-content" onSubmit={this.handleSubmit.bind(this)}>
@@ -14,7 +15,7 @@ class NewFileModal extends React.Component {
                   data-dismiss="modal" aria-label="Close">
             <span aria-hidden="true">&times;</span>
           </button>
-          <h4 className="modal-title">New file</h4>
+          <h4 className="modal-title">New {collectionSingular}</h4>
         </div>
         <div className="modal-body">
           <div className={'form-group' + (this.state.error ? ' has-error' : '' )}>
@@ -78,7 +79,7 @@ class NewFileModal extends React.Component {
   }
   updateUrl() {
     var path = React.findDOMNode(this.refs.path).value.trim();
-    var url = this.pathHasError(path) ? '-' : this.props.config.siteUrl + permalinkForPath(path);
+    var url = this.pathHasError(path) ? '-' : this.props.config.siteUrl + this.props.collection.permalinkForPath(path);
     this.setState({url: url});
   }
   handleSubmit(evt) {

@@ -23,7 +23,7 @@ class FileView extends React.Component {
 
 class CollectionView extends React.Component {
   render() {
-    var fileList = this.props.fileList
+    var fileViews = this.props.collection.files
       .filter((file) => file.path.match(/\.(md|markdown|html)$/))
       .sort((a, b) => a.path < b.path ? -1 : 1)
       .map((file) =>
@@ -36,9 +36,28 @@ class CollectionView extends React.Component {
       );
     return (
       <div>
-        <h3>{this.props.name}</h3>
-        <ul className="fileList">{fileList}</ul>
+        <h3>
+          {this.props.name}{' '}
+          <div className="btn-group btn-group-xs" role="group">
+            <button
+              type="button"
+              className="btn btn-default"
+              onClick={this.handleCreateDialog.bind(this)}
+              ><i className="fa fa-plus"></i></button>
+          </div>
+        </h3>
+        <ul className="fileList">{fileViews}</ul>
       </div>
+    );
+  }
+  handleCreateDialog() {
+    app.modal(
+      <NewFileModal
+        onCreate={(path) => this.props.onCreate(path, this.props.collection)}
+        pathExists={this.props.pathExists}
+        config={this.props.config}
+        collection={this.props.collection}
+        />
     );
   }
 }
@@ -80,9 +99,12 @@ class SiteContents extends React.Component {
       .map((name) =>
         <CollectionView
           name={name}
-          fileList={this.state.collections[name].files}
-          onEdit={this.handleEdit.bind(this)}
+          collection={this.state.collections[name]}
           currentFile={this.state.currentFile}
+          pathExists={this.pathExists.bind(this)}
+          onCreate={this.handleCreate.bind(this)}
+          onEdit={this.handleEdit.bind(this)}
+          config={this.props.config}
           />
       );
 
@@ -105,39 +127,20 @@ class SiteContents extends React.Component {
     return (
       <div>
         {collectionViews}
-        <button
-          className="btn btn-default btn-xs"
-          onClick={this.handleCreate.bind(this)}
-          >new</button>
         {editor}
       </div>
     );
   }
-  handleEdit(file) {
+  pathExists(path) {
+    var matching = this.props.tree.filter((f) => f.path == path);
+    return matching.length > 0;
+  }
+  handleCreate(path, collection) {
+    var file = new File(this.props.createFile(path), collection);
     this.setState({currentFile: file});
   }
-  handleCreate() {
-    console.error('FIXME fileList -> collections'); return;
-    var handleFileCreated = (path) => {
-      var file = new File(this.state.branch.newFile(path));
-      this.setState({
-        currentFile: file,
-        fileList: [].concat(this.state.fileList, [file]),
-      });
-    };
-
-    var pathExists = (path) => {
-      var matching = this.state.fileList.filter((f) => f.path == path);
-      return matching.length > 0;
-    };
-
-    app.modal(
-      <NewFileModal
-        onCreate={handleFileCreated}
-        pathExists={pathExists}
-        config={this.props.config}
-        />
-    );
+  handleEdit(file) {
+    this.setState({currentFile: file});
   }
   handleDelete() {
     this.setState({currentFile: null});

@@ -63,6 +63,7 @@ class Site extends React.Component {
       siteContents = (
         <SiteContents
           tree={this.state.tree}
+          createFile={this.createFile.bind(this)}
           onTreeChange={this.updateFileList.bind(this)}
           config={this.state.config}
           />
@@ -85,6 +86,9 @@ class Site extends React.Component {
         {siteContents}
       </div>
     );
+  }
+  createFile(path) {
+    return this.state.branch.newFile(path);
   }
   updateFileList() {
     this.state.branch.files()
