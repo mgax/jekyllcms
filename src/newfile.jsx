@@ -83,6 +83,10 @@ class NewFileModal extends React.Component {
     if(this.props.pathExists(path)) {
       return "File already exists";
     }
+
+    if(! this.props.collection.match({path: path})) {
+      return "Whoops, we have generated an invalid filename :(";
+    }
   }
   parseForm(customSlug) {
     var title = React.findDOMNode(this.refs.title).value.trim();

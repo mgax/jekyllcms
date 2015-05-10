@@ -65,12 +65,11 @@ function slugify(text) {
     'ţ': 't',
     'Ţ': 'T',
   };
-  return text
+  return getSlug(
+    text
+    .replace(/_/g, ' ')
     .replace(/[șşțţăîâ]/ig, (ch) => romap[ch])
-    .replace(/[^\w\d]+/g, '-')
-    .replace(/^-/, '')
-    .replace(/-$/, '')
-    .toLocaleLowerCase();
+  );
 }
 
 function generateUnique(build, exists) {
