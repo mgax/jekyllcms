@@ -1,6 +1,6 @@
 'use strict';
 
-function slugForPath(path) {
+function permalinkForPath(path) {
   var m = path.match(/^(.*\/)?([^\/]*)\.[^\.]+$/);
   var filename = (m[2] == 'index') ? '' : m[2];
   var folder = m[1] || '';
@@ -55,8 +55,8 @@ class File {
     return this.ghFile.delete();
   }
 
-  slug() {
-    return slugForPath(this.path);
+  permalink() {
+    return permalinkForPath(this.path);
   }
 
   url() {

@@ -11,7 +11,7 @@ class IndexFile extends React.Component {
           onClick={this.handleClick.bind(this)}
           className="buttonlink"
           title={this.props.file.path}
-          >{this.props.file.slug()}</a>
+          >{this.props.file.permalink()}</a>
       </li>
     );
   }

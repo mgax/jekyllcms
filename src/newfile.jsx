@@ -78,7 +78,7 @@ class NewFileModal extends React.Component {
   }
   updateUrl() {
     var path = React.findDOMNode(this.refs.path).value.trim();
-    var url = this.pathHasError(path) ? '-' : this.props.siteUrl + slugForPath(path);
+    var url = this.pathHasError(path) ? '-' : this.props.siteUrl + permalinkForPath(path);
     this.setState({url: url});
   }
   handleSubmit(evt) {
