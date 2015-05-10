@@ -119,16 +119,8 @@ class Site extends React.Component {
   }
   createNewSite() {
     var handleSiteCreate = (options) => {
-      var index_md =
-        "---\n" +
-        "title: Homepage\n" +
-        "---\n" +
-        "# " + options.title + "\n\n" +
-        "Welcome to your new JekyllCMS website!\n";
-      var tree = [
-        {path: '_config.yml', content: jsyaml.safeDump({title: options.title})},
-        {path: 'index.md', content: index_md},
-      ];
+      options.repo = this.props.repo.meta.name;
+      var tree = initialContent(options);
       this.props.repo.createBranch(this.props.branchName, tree)
         .then(() => {
           this.updateFileList();
