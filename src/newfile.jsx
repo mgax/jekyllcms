@@ -3,13 +3,12 @@
 class NewFileModal extends React.Component {
   constructor (props) {
     super(props);
-    this.state = {error: null, help: false};
+    this.state = {error: null, prefix: '', slug: '', ext: '.md'};
   }
   render() {
     var collectionSingular = this.props.collection.name.replace(/s$/, '');
-    var mdUrl = 'https://help.github.com/articles/markdown-basics/';
     return (
-      <form className="modal-content" onSubmit={this.handleSubmit.bind(this)}>
+      <form className="modal-content newFile" onSubmit={this.handleSubmit.bind(this)}>
         <div className="modal-header">
           <button type="button" className="close"
                   data-dismiss="modal" aria-label="Close">
@@ -21,33 +20,29 @@ class NewFileModal extends React.Component {
           <div className={'form-group' + (this.state.error ? ' has-error' : '' )}>
             <input
               className="form-control"
-              placeholder="path"
-              ref="path"
-              defaultValue="new-page.md"
-              onChange={this.updateUrl.bind(this)}
+              placeholder="title"
+              ref="title"
+              defaultValue="New page"
+              onChange={() => this.parseForm()}
               />
-            <span className="help-block">
-              Filename must end with <code>.md</code> or <code>.html</code> (
-              <a className="buttonlink"
-                  onClick={() => this.setState({help: true})}
-                  >why?</a>)
-            </span>
             {this.state.error ?
               <span className="help-block">Error: {this.state.error}</span>
             : null}
           </div>
-          {this.state.help ?
-            <div>
-              <p>
-                <code>.md</code> is for <a href={mdUrl}
-                target="_blank">Markdown</a>, a powerful wiki-like format that
-                gets compiled to HTML. You can edit the source code and get a
-                preview underneath. <code>.html</code> is for plain HTML files.
-                You can edit the content in a friendly visual editor. Choose
-                whichever you like.
-              </p>
-            </div>
-          : null}
+          <p>
+            File:
+            <code>
+              {this.state.prefix}
+              <input
+                className="slug"
+                ref="slug"
+                value={this.state.slug}
+                onChange={this.handleSlugChange.bind(this)}
+                size={Math.min(this.state.slug.length, 50)}
+                />
+              {this.state.ext}
+            </code>
+          </p>
           <p>
             Url: <code>{this.state.url}</code>
           </p>
@@ -65,36 +60,50 @@ class NewFileModal extends React.Component {
     );
   }
   componentDidMount() {
-    setTimeout(() => React.findDOMNode(this.refs.path).select(), 500);
-    this.updateUrl();
+    setTimeout(() => React.findDOMNode(this.refs.title).select(), 500);
+    this.parseForm();
   }
-  pathHasError(path) {
+  handleSlugChange(e) {
+    var customSlug = e.target.value;
+    this.parseForm(customSlug);
+  }
+  hasError(slug, path) {
+    if(slug == '' || slug == '-') {
+      return "Title is too short";
+    }
+
+    if(slug.match(/\/$/)) {
+      return "Slug may not end with '/'";
+    }
+
     if(! path.match(/\.(md|markdown|html)$/)) {
-      return "invalid file name";
+      return "Invalid file name";
     }
 
     if(this.props.pathExists(path)) {
-      return "file already exists";
+      return "File already exists";
     }
   }
-  updateUrl() {
-    var path = React.findDOMNode(this.refs.path).value.trim();
-    var fakeFile = this.props.collection.match({path: path}, true);
-    var permalink = fakeFile.permalink(true);
-    var url = this.pathHasError(path) ? '-' : this.props.config.siteUrl + permalink;
-    this.setState({url: url});
+  parseForm(customSlug) {
+    var title = React.findDOMNode(this.refs.title).value.trim();
+    var slug = customSlug || slugify(title);
+    var path = this.state.prefix + slug + this.state.ext;
+    this.setState({slug: slug, path: path});
+
+    var error = this.hasError(slug, path);
+    if(error) {
+      this.setState({error: error, url: '-'});
+    }
+    else {
+      var fakeFile = this.props.collection.match({path: path}, true);
+      var url = this.props.config.siteUrl + fakeFile.permalink(true);
+      this.setState({error: null, url: url});
+    }
   }
   handleSubmit(evt) {
     evt.preventDefault();
-    var path = React.findDOMNode(this.refs.path).value.trim();
-
-    var error = this.pathHasError(path);
-    if(error) {
-      this.setState({error: error});
-      return;
-    }
-
+    if(this.state.error) { return; }
     app.hideModal();
-    this.props.onCreate(path);
+    this.props.onCreate(this.state.path);
   }
 }

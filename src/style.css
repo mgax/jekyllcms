@@ -116,3 +116,16 @@ a.buttonlink {
   text-align: center;
   padding-top: 50px;
 }
+
+.newFile code {
+  color: #4a5693;
+  background: #f1f6ff;
+}
+
+.newFile .slug {
+  font-family: Menlo, Monaco, Consolas, "Courier New", monospace;
+  padding: 0;
+  background: none;
+  border: none;
+  border-bottom: 1px dashed #456cb5;
+}

@@ -47,3 +47,11 @@ function parseQuery(url) {
 function clone(value) {
   return JSON.parse(JSON.stringify(value));
 }
+
+function slugify(text) {
+  return text
+    .replace(/[^\w\d]+/g, '-')
+    .replace(/^-/, '')
+    .replace(/-$/, '')
+    .toLocaleLowerCase();
+}
