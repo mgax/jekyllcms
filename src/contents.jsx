@@ -97,6 +97,7 @@ class SiteContents extends React.Component {
       .map((name) =>
         <CollectionView
           name={name}
+          key={name}
           collection={this.state.collections[name]}
           currentFile={this.state.currentFile}
           pathExists={this.pathExists.bind(this)}
