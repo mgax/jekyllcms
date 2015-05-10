@@ -49,7 +49,24 @@ function clone(value) {
 }
 
 function slugify(text) {
+  var romap = {
+    'ă': 'a',
+    'Ă': 'A',
+    'î': 'i',
+    'Î': 'I',
+    'â': 'a',
+    'Â': 'A',
+    'ș': 's',
+    'Ș': 'S',
+    'ş': 's',
+    'Ş': 'S',
+    'ț': 't',
+    'Ț': 'T',
+    'ţ': 't',
+    'Ţ': 'T',
+  };
   return text
+    .replace(/[șşțţăîâ]/ig, (ch) => romap[ch])
     .replace(/[^\w\d]+/g, '-')
     .replace(/^-/, '')
     .replace(/-$/, '')
