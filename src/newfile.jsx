@@ -3,7 +3,14 @@
 class NewFileModal extends React.Component {
   constructor (props) {
     super(props);
-    this.state = {error: null, slug: '', ext: '.md', date: moment()};
+    this.state = {
+      error: null,
+      title: "New page",
+      slug: '',
+      ext: '.md',
+      date: moment(),
+      dirtyForm: true,
+    };
   }
   prefix() {
     if(this.props.collection.name == 'posts') {
@@ -40,10 +47,9 @@ class NewFileModal extends React.Component {
           <div className={'form-group' + (this.state.error ? ' has-error' : '' )}>
             <input
               className="form-control"
-              placeholder="title"
+              value={this.state.title}
+              onChange={this.handleTitleChange.bind(this)}
               ref="title"
-              defaultValue="New page"
-              onChange={() => this.parseForm()}
               />
             {this.state.error ?
               <span className="help-block">Error: {this.state.error}</span>
@@ -80,16 +86,20 @@ class NewFileModal extends React.Component {
     );
   }
   componentDidMount() {
+    this.parseForm();
     setTimeout(() => React.findDOMNode(this.refs.title).select(), 500);
+  }
+  componentDidUpdate() {
     this.parseForm();
   }
   handleDateChange(date) {
-    this.setState({date: date});
-    setTimeout(() => this.parseForm(this.state.slug), 100);
+    this.setState({date: date, dirtyForm: true});
+  }
+  handleTitleChange(e) {
+    this.setState({title: e.target.value.trim(), dirtyForm: true, slug: ''});
   }
   handleSlugChange(e) {
-    var customSlug = e.target.value;
-    this.parseForm(customSlug);
+    this.setState({slug: e.target.value, dirtyForm: true});
   }
   hasError(slug, path) {
     if(slug == '' || slug == '-') {
@@ -112,14 +122,14 @@ class NewFileModal extends React.Component {
       return "Whoops, we have generated an invalid filename :(";
     }
   }
-  parseForm(customSlug) {
-    var title = React.findDOMNode(this.refs.title).value.trim();
-    var slug = customSlug || slugify(title);
+  parseForm() {
+    if(! this.state.dirtyForm) { return; }
+    var slug = this.state.slug || slugify(this.state.title);
     var path = generateUnique(
       (n) => this.prefix() + slug + n + this.state.ext,
       this.props.pathExists
     );
-    this.setState({slug: slug, path: path});
+    this.setState({slug: slug, path: path, dirtyForm: false});
 
     var error = this.hasError(slug, path);
     if(error) {
