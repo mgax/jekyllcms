@@ -45,7 +45,9 @@ class IndexCollection extends React.Component {
 
 class IndexView extends React.Component {
   render() {
-    if(! this.props.fileList) {
+    var collections = this.props.collections;
+
+    if(! collections) {
       return (
         <p className="loading">
           Loading <i className="fa fa-cog fa-spin" />
@@ -53,24 +55,12 @@ class IndexView extends React.Component {
       );
     }
 
-    var collections = {pages: [], posts: []};
-    this.props.fileList.forEach((file) => {
-      if(file.path.match(/^_posts\//)) {
-        collections.posts.push(file);
-        return;
-      }
-      if(file.path.match(/^[^_.]/)) {
-        collections.pages.push(file);
-        return;
-      }
-    });
-
     var collectionViews = Object.keys(collections)
       .sort()
       .map((name) =>
         <IndexCollection
           name={name}
-          fileList={collections[name]}
+          fileList={collections[name].files}
           onEdit={this.props.onEdit}
           />
       );

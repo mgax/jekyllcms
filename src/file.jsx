@@ -63,3 +63,10 @@ class File {
     return this.state.siteUrl + '/' + this.url();
   }
 }
+
+class Collection {
+  constructor(name) {
+    this.name = name;
+    this.files = [];
+  }
+}

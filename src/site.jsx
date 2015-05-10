@@ -4,7 +4,7 @@ class Site extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      fileList: null,
+      collections: null,
       siteUrl: '',
       branch: this.props.repo.branch(this.props.branchName),
     };
@@ -60,7 +60,7 @@ class Site extends React.Component {
           </a>
         </h1>
         <IndexView
-          fileList={this.state.fileList}
+          collections={this.state.collections}
           current={this.state.file}
           onEdit={this.handleEdit.bind(this)}
           onCreate={this.handleCreate.bind(this)}
@@ -72,11 +72,26 @@ class Site extends React.Component {
   updateFileList() {
     this.state.branch.files()
       .then((tree) => {
-        var fileList = tree.map((ghFile) => new File(ghFile));
-        this.setState({fileList: fileList});
-        var cname = fileList.filter((f) => f.path == 'CNAME')[0];
+        var collections = {
+          posts: new Collection('posts'),
+          pages: new Collection('pages'),
+        };
+
+        tree.forEach((ghFile) => {
+          if(ghFile.path.match(/^_posts\//)) {
+            collections.posts.files.push(new File(ghFile));
+            return;
+          }
+          if(ghFile.path.match(/^[^_.]/)) {
+            collections.pages.files.push(new File(ghFile));
+            return;
+          }
+        });
+
+        this.setState({collections: collections});
+        var cname = tree.filter((f) => f.path == 'CNAME')[0];
         if(cname) {
-          return cname.content()
+          return cname.getContent()
             .then((cnameValue) =>
               this.setState({siteUrl: cnameValue.trim()}));
         }
@@ -93,6 +108,7 @@ class Site extends React.Component {
     this.setState({file: file});
   }
   handleCreate() {
+    console.error('FIXME fileList -> collections'); return;
     var handleFileCreated = (path) => {
       var file = new File(this.state.branch.newFile(path));
       this.setState({
