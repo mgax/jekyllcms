@@ -87,7 +87,10 @@ class NewFileModal extends React.Component {
   parseForm(customSlug) {
     var title = React.findDOMNode(this.refs.title).value.trim();
     var slug = customSlug || slugify(title);
-    var path = this.state.prefix + slug + this.state.ext;
+    var path = generateUnique(
+      (n) => this.state.prefix + slug + n + this.state.ext,
+      this.props.pathExists
+    );
     this.setState({slug: slug, path: path});
 
     var error = this.hasError(slug, path);

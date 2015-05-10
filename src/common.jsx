@@ -55,3 +55,15 @@ function slugify(text) {
     .replace(/-$/, '')
     .toLocaleLowerCase();
 }
+
+function generateUnique(build, exists) {
+  var value = build('');
+  if(! exists(value)) { return value; }
+  var n = 0;
+  while(n < 100) {
+    n += 1;
+    value = build('-' + n);
+    if(! exists(value)) { return value; }
+  }
+  throw new Error("Counld not generate unique name, stopping at " + value);
+}
