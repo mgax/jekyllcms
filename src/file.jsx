@@ -1,6 +1,11 @@
 'use strict';
 
-function permalinkVars(path, colName) {
+function matchPath(path, colName) {
+    if(path.match(/\/[_.]/)) {
+      // ignore paths that contain a non-root item that start with [_.]
+      return;
+    }
+
     if(colName == 'posts') {
       var m = path.match(/^_posts\/(\d{4})-(\d{2})-(\d{2})-(.+)\.[^\.]+$/);
       if(m) {
@@ -20,23 +25,33 @@ function permalinkVars(path, colName) {
           output_ext: '.html',
         };
       }
+      return;
     }
-    else {
+
+    if(colName == 'pages') {
+      if(path.match(/^[_.]/)) {
+        // ignore paths whose root item starts with [_.]
+        return;
+      }
+
       var m = path.match(/^(.*\/)?([^\/]*)\.[^\.]+$/);
-      return {
-        path: m[1] || '',
-        basename: m[2],
-        output_ext: '.html',
-      };
+      if(m) {
+        return {
+          path: m[1] || '',
+          basename: m[2],
+          output_ext: '.html',
+        };
+      }
+      return;
     }
 }
 
 class File {
-  constructor(ghFile, collection) {
+  constructor(ghFile, collection, permalinkVars) {
     this.ghFile = ghFile;
     this.path = ghFile.path;
     this.collection = collection;
-    this.permalinkVars = permalinkVars(this.path, collection.name);
+    this.permalinkVars = permalinkVars;
   }
 
   isSaved() {
@@ -97,6 +112,16 @@ class Collection {
     this.files = [];
   }
 
+  match(ghFile, errorOnFailure) {
+    var permalinkVars = matchPath(ghFile.path, this.name);
+    if(permalinkVars) {
+      return new File(ghFile, this, permalinkVars);
+    }
+    else if(errorOnFailure) {
+      throw new Error("Invalid path for " + this.name + ": " + ghFile.path);
+    }
+  }
+
   permalink(file) {
     return this.permalinkTemplate
       .replace(/:(\w+)/g, (_, name) => file.permalinkVars[name] || '')
@@ -105,7 +130,7 @@ class Collection {
   }
 
   permalinkForPath(path) {
-    var fakeFile = new File({path: path}, this);
+    var fakeFile = this.match({path: path}, true);
     return this.permalink(fakeFile);
   }
 }

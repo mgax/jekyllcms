@@ -63,24 +63,22 @@ class CollectionView extends React.Component {
 }
 
 function extractCollections(tree, config) {
-  var collections = {
-    posts: new Collection('posts', config.permalinkTemplate('posts')),
-    pages: new Collection('pages', config.permalinkTemplate('pages')),
-  };
-
-  tree.forEach((ghFile) => {
-    var col = null;
-    if(ghFile.path.match(/^_posts\//)) {
-      col = collections.posts;
-    }
-    else if(ghFile.path.match(/^[^_.]/)) {
-      col = collections.pages;
-    }
-
-    if(col) {
-      col.files.push(new File(ghFile, col));
-    }
+  var collections = {};
+  var colList = ['posts', 'pages'].map((name) => {
+    var col = new Collection(name, config.permalinkTemplate(name));
+    collections[col.name] = col;
+    return col;
   });
+
+  for(let ghFile of tree) {
+    for(let col of colList) {
+      var file = col.match(ghFile);
+      if(file) {
+        col.files.push(file);
+        break;
+      }
+    }
+  }
 
   return collections;
 }
@@ -136,7 +134,7 @@ class SiteContents extends React.Component {
     return matching.length > 0;
   }
   handleCreate(path, collection) {
-    var file = new File(this.props.createFile(path), collection);
+    var file = collection.match(this.props.createFile(path), true);
     this.setState({currentFile: file});
   }
   handleEdit(file) {
