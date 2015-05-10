@@ -4,6 +4,14 @@ class Configuration {
   constructor(options) {
     this.siteUrl = options.siteUrl;
   }
+  permalinkTemplate(collection) {
+    if(collection == 'posts') {
+      return '/:categories/:year/:month/:day/:title:output_ext';
+    }
+    else {
+      return '/:path/:basename:output_ext';
+    }
+  }
 }
 
 class Site extends React.Component {

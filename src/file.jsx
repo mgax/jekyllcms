@@ -8,9 +8,16 @@ function permalinkForPath(path) {
 }
 
 class File {
-  constructor(ghFile) {
+  constructor(ghFile, collection) {
     this.ghFile = ghFile;
     this.path = ghFile.path;
+    this.collection = collection;
+
+    var m = this.path.match(/^(.*\/)?([^\/]*)\.[^\.]+$/);
+    this.permalinkVars = {
+      path: m[1] || '',
+      basename: m[2],
+    };
   }
 
   isSaved() {
@@ -56,7 +63,7 @@ class File {
   }
 
   permalink() {
-    return permalinkForPath(this.path);
+    return this.collection.permalink(this);
   }
 
   url() {
@@ -65,8 +72,17 @@ class File {
 }
 
 class Collection {
-  constructor(name) {
+  constructor(name, permalinkTemplate) {
     this.name = name;
+    this.permalinkTemplate = permalinkTemplate;
     this.files = [];
+  }
+
+  permalink(file) {
+    return this.permalinkTemplate
+      .replace(/:(\w+)/g, (_, name) => file.permalinkVars[name] || '')
+      .replace(/\/+/g, '/')
+      .replace(/\.html$/, '')
+      .replace(/\/index$/, '/');
   }
 }

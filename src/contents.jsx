@@ -43,20 +43,23 @@ class CollectionView extends React.Component {
   }
 }
 
-function extractCollections(tree) {
+function extractCollections(tree, config) {
   var collections = {
-    posts: new Collection('posts'),
-    pages: new Collection('pages'),
+    posts: new Collection('posts', config.permalinkTemplate('posts')),
+    pages: new Collection('pages', config.permalinkTemplate('pages')),
   };
 
   tree.forEach((ghFile) => {
+    var col = null;
     if(ghFile.path.match(/^_posts\//)) {
-      collections.posts.files.push(new File(ghFile));
-      return;
+      col = collections.posts;
     }
-    if(ghFile.path.match(/^[^_.]/)) {
-      collections.pages.files.push(new File(ghFile));
-      return;
+    else if(ghFile.path.match(/^[^_.]/)) {
+      col = collections.pages;
+    }
+
+    if(col) {
+      col.files.push(new File(ghFile, col));
     }
   });
 
@@ -66,10 +69,10 @@ function extractCollections(tree) {
 class SiteContents extends React.Component {
   constructor(props) {
     super(props);
-    this.state = {collections: extractCollections(props.tree)};
+    this.state = {collections: extractCollections(props.tree, props.config)};
   }
   componentWillReceiveProps(props) {
-    this.setState({collections: extractCollections(props.tree)});
+    this.setState({collections: extractCollections(props.tree, props.config)});
   }
   render() {
     var collectionViews = Object.keys(this.state.collections)
