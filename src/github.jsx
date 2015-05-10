@@ -103,7 +103,7 @@ class GitHubRepo {
       if(! file) { return; }
 
       var githubFile = (new GitHubFile(branch, {path: file.path}));
-      return githubFile.save(file.content)
+      return githubFile.putContent(file.content)
         .then(() =>
           putFiles(remaining.slice(1)))
     };
