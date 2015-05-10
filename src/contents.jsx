@@ -45,22 +45,12 @@ class IndexCollection extends React.Component {
 
 class IndexView extends React.Component {
   render() {
-    var collections = this.props.collections;
-
-    if(! collections) {
-      return (
-        <p className="loading">
-          Loading <i className="fa fa-cog fa-spin" />
-        </p>
-      );
-    }
-
-    var collectionViews = Object.keys(collections)
+    var collectionViews = Object.keys(this.props.collections)
       .sort()
       .map((name) =>
         <IndexCollection
           name={name}
-          fileList={collections[name].files}
+          fileList={this.props.collections[name].files}
           onEdit={this.props.onEdit}
           />
       );

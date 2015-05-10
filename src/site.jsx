@@ -139,7 +139,11 @@ class Site extends React.Component {
       );
     }
     else {
-      sitemap = 'loading ...';
+      sitemap = (
+        <p className="loading">
+          Loading <i className="fa fa-cog fa-spin" />
+        </p>
+      );
     }
     return (
       <div className="site">
