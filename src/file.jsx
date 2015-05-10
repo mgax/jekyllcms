@@ -54,8 +54,8 @@ class File {
     this.permalinkVars = permalinkVars;
   }
 
-  isSaved() {
-    return !! this.ghFile.sha;
+  isNew() {
+    return ! this.ghFile.sha;
   }
 
   load() {
@@ -78,7 +78,10 @@ class File {
       }
     }
 
-    return this.ghFile.getContent()
+    var getContent = (this.isNew()
+      ? Q(`---\ntitle: ${JSON.stringify(this.initialTitle)}\n---\n`)
+      : this.ghFile.getContent());
+    return getContent
       .then((content) => parse(decode_utf8(content)));
   }
 

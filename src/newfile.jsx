@@ -160,6 +160,9 @@ class NewFileModal extends React.Component {
     evt.preventDefault();
     if(this.state.error) { return; }
     app.hideModal();
-    this.props.onCreate(this.state.path);
+    this.props.onCreate({
+      path: this.state.path,
+      title: this.state.title,
+    });
   }
 }

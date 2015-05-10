@@ -83,7 +83,7 @@ class DeleteButton extends React.Component {
     );
   }
   handleDelete() {
-    if(this.props.file.isSaved()) {
+    if(! this.props.file.isNew()) {
       this.props.file.delete()
         .then(() => {
           this.props.onDelete();

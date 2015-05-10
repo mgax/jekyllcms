@@ -4,7 +4,7 @@ class FileView extends React.Component {
   render() {
     var cls = ['file'];
     if(this.props.current) { cls.push('current'); }
-    if(! this.props.file.isSaved()) { cls.push('new'); }
+    if(this.props.file.isNew()) { cls.push('new'); }
     return (
       <li className={cls.join(' ')}>
         <a
@@ -53,7 +53,7 @@ class CollectionView extends React.Component {
   handleCreateDialog() {
     app.modal(
       <NewFileModal
-        onCreate={(path) => this.props.onCreate(path, this.props.collection)}
+        onCreate={(options) => this.props.onCreate(options, this.props.collection)}
         pathExists={this.props.pathExists}
         config={this.props.config}
         collection={this.props.collection}
@@ -134,8 +134,9 @@ class SiteContents extends React.Component {
     var matching = this.props.tree.filter((f) => f.path == path);
     return matching.length > 0;
   }
-  handleCreate(path, collection) {
-    var file = collection.match(this.props.createFile(path), true);
+  handleCreate(options, collection) {
+    var file = collection.match(this.props.createFile(options.path), true);
+    file.initialTitle = options.title;
     this.setState({currentFile: file});
   }
   handleEdit(file) {
