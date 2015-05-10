@@ -94,10 +94,10 @@ class Site extends React.Component {
   }
   handleCreate() {
     var handleFileCreated = (path) => {
-      var newFile = this.state.branch.newFile(path);
+      var file = new File(this.state.branch.newFile(path));
       this.setState({
-        file: newFile,
-        fileList: [].concat(this.state.fileList, [newFile]),
+        file: file,
+        fileList: [].concat(this.state.fileList, [file]),
       });
     };
 
