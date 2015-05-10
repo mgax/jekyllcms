@@ -129,3 +129,8 @@ a.buttonlink {
   border: none;
   border-bottom: 1px dashed #456cb5;
 }
+
+.markdownHelp {
+  text-align: right;
+  color: #888;
+}

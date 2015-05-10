@@ -145,8 +145,14 @@ class Editor extends React.Component {
         var preview = null;
       }
       else {
+        var markdownUrl = 'https://help.github.com/articles/markdown-basics/';
         var editor = (
           <div className="contentEditor">
+            <p className="markdownHelp">
+              This page is written using{' '}
+              <a href={markdownUrl} target="_blank">Markdown</a>.
+              As you type, a preview is shown below.
+            </p>
             <Ace
               initial={this.state.content}
               onChange={this.handleChange.bind(this)}
