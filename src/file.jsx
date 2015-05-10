@@ -97,7 +97,10 @@ class File {
   }
 
   permalink(extensionless) {
-    var rv = this.collection.permalink(this);
+    var rv = this.collection.permalinkTemplate
+      .replace(/:(\w+)/g, (_, name) => this.permalinkVars[name] || '')
+      .replace(/\/{2,}/g, '/')
+      .replace(/\/index.html$/, '/');
     if(extensionless) {
       rv = rv.replace(/\.html$/, '');
     }
@@ -124,17 +127,5 @@ class Collection {
     else if(errorOnFailure) {
       throw new Error("Invalid path for " + this.name + ": " + ghFile.path);
     }
-  }
-
-  permalink(file) {
-    return this.permalinkTemplate
-      .replace(/:(\w+)/g, (_, name) => file.permalinkVars[name] || '')
-      .replace(/\/{2,}/g, '/')
-      .replace(/\/index.html$/, '/');
-  }
-
-  permalinkForPath(path) {
-    var fakeFile = this.match({path: path}, true);
-    return this.permalink(fakeFile);
   }
 }
