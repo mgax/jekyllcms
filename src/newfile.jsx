@@ -3,10 +3,29 @@
 class NewFileModal extends React.Component {
   constructor (props) {
     super(props);
-    this.state = {error: null, prefix: '', slug: '', ext: '.md'};
+    this.state = {error: null, slug: '', ext: '.md', date: moment()};
+  }
+  prefix() {
+    if(this.props.collection.name == 'posts') {
+      return '_posts/' + this.state.date.format('YYYY-MM-DD') + '-';
+    }
+    else {
+      return '';
+    }
   }
   render() {
     var collectionSingular = this.props.collection.name.replace(/s$/, '');
+    var datePicker = null;
+    if(this.props.collection.name == 'posts') {
+      datePicker = (
+        <DatePicker
+          dateFormat="YYYY-MM-DD"
+          selected={this.state.date}
+          onChange={this.handleDateChange.bind(this)}
+          />
+      );
+    }
+
     return (
       <form className="modal-content newFile" onSubmit={this.handleSubmit.bind(this)}>
         <div className="modal-header">
@@ -17,6 +36,7 @@ class NewFileModal extends React.Component {
           <h4 className="modal-title">New {collectionSingular}</h4>
         </div>
         <div className="modal-body">
+          {datePicker}
           <div className={'form-group' + (this.state.error ? ' has-error' : '' )}>
             <input
               className="form-control"
@@ -32,7 +52,7 @@ class NewFileModal extends React.Component {
           <p>
             File:
             <code>
-              {this.state.prefix}
+              {this.prefix()}
               <input
                 className="slug"
                 ref="slug"
@@ -63,6 +83,10 @@ class NewFileModal extends React.Component {
     setTimeout(() => React.findDOMNode(this.refs.title).select(), 500);
     this.parseForm();
   }
+  handleDateChange(date) {
+    this.setState({date: date});
+    setTimeout(() => this.parseForm(this.state.slug), 100);
+  }
   handleSlugChange(e) {
     var customSlug = e.target.value;
     this.parseForm(customSlug);
@@ -92,7 +116,7 @@ class NewFileModal extends React.Component {
     var title = React.findDOMNode(this.refs.title).value.trim();
     var slug = customSlug || slugify(title);
     var path = generateUnique(
-      (n) => this.state.prefix + slug + n + this.state.ext,
+      (n) => this.prefix() + slug + n + this.state.ext,
       this.props.pathExists
     );
     this.setState({slug: slug, path: path});
