@@ -1,10 +1,34 @@
 'use strict';
 
-function permalinkForPath(path) {
-  var m = path.match(/^(.*\/)?([^\/]*)\.[^\.]+$/);
-  var filename = (m[2] == 'index') ? '' : m[2];
-  var folder = m[1] || '';
-  return '/' + folder + filename;
+function permalinkVars(path, colName) {
+    if(colName == 'posts') {
+      var m = path.match(/^_posts\/(\d{4})-(\d{2})-(\d{2})-(.+)\.[^\.]+$/);
+      if(m) {
+        var year = m[1];
+        var month = m[2];
+        var day = m[3];
+        var title = m[4];
+        return {
+          year: year,
+          month: month,
+          i_month: +month,
+          day: day,
+          i_day: +day,
+          short_year: year.slice(2),
+          title: title,
+          categories: '',
+          output_ext: '.html',
+        };
+      }
+    }
+    else {
+      var m = path.match(/^(.*\/)?([^\/]*)\.[^\.]+$/);
+      return {
+        path: m[1] || '',
+        basename: m[2],
+        output_ext: '.html',
+      };
+    }
 }
 
 class File {
@@ -12,12 +36,7 @@ class File {
     this.ghFile = ghFile;
     this.path = ghFile.path;
     this.collection = collection;
-
-    var m = this.path.match(/^(.*\/)?([^\/]*)\.[^\.]+$/);
-    this.permalinkVars = {
-      path: m[1] || '',
-      basename: m[2],
-    };
+    this.permalinkVars = permalinkVars(this.path, collection.name);
   }
 
   isSaved() {
@@ -81,8 +100,7 @@ class Collection {
   permalink(file) {
     return this.permalinkTemplate
       .replace(/:(\w+)/g, (_, name) => file.permalinkVars[name] || '')
-      .replace(/\/+/g, '/')
-      .replace(/\.html$/, '')
-      .replace(/\/index$/, '/');
+      .replace(/\/{2,}/g, '/')
+      .replace(/\/index.html$/, '/');
   }
 }
