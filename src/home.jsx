@@ -41,10 +41,19 @@ class AccountRepos extends React.Component {
   render() {
     if(this.state.repoList) {
       return (
-        <ul className="accountRepoList">
-          {this.state.repoList.map((repo) =>
-            <li key={repo.meta.name}><Repo repo={repo} /></li>)}
-        </ul>
+        <div>
+          <p className="text-right">
+            <button
+              type="button"
+              className="btn btn-default"
+              onClick={this.handleNew.bind(this)}
+              >new</button>
+          </p>
+          <ul className="accountRepoList">
+            {this.state.repoList.map((repo) =>
+              <li key={repo.meta.name}><Repo repo={repo} /></li>)}
+          </ul>
+        </div>
       );
     }
     else {
@@ -70,6 +79,14 @@ class AccountRepos extends React.Component {
         this.setState({repoList: repoList});
       })
       .catch(errorHandler("loading repository list"));
+  }
+  handleNew(evt) {
+    app.modal(
+      <NewRepo
+        account={this.props.account}
+        onReload={() => window.location.reload()}
+        />
+    );
   }
 }
 
