@@ -82,6 +82,9 @@ class App extends React.Component {
 }
 
 $.get('config.json', (config) => {
+  if(config.piwik) {
+    trackPiwik(config.piwik);
+  }
   window.app = React.render(
     <App config={config} />,
     document.querySelector('body')
