@@ -70,15 +70,16 @@ function extractCollections(tree, config) {
     return col;
   });
 
-  for(let ghFile of tree) {
-    for(let col of colList) {
+  tree.forEach((ghFile) => {
+    for(var i = 0; i < colList.length; i ++) {
+      var col = colList[i];
       var file = col.match(ghFile);
       if(file) {
         col.files.push(file);
         break;
       }
     }
-  }
+  });
 
   return collections;
 }
