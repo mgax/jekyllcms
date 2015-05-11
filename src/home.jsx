@@ -40,6 +40,16 @@ class AccountRepos extends React.Component {
   }
   render() {
     if(this.state.repoList) {
+      var repoList = (this.state.repoList.length > 0
+          ? <ul className="accountRepoList">
+              {this.state.repoList.map((repo) =>
+                <li key={repo.meta.name}><Repo repo={repo} /></li>)}
+            </ul>
+          : <p className="loading">
+              No repositories under{' '}
+              <code>{this.props.account.meta.login}</code>
+            </p>
+      );
       return (
         <div>
           <p className="text-right">
@@ -49,10 +59,7 @@ class AccountRepos extends React.Component {
               onClick={this.handleNew.bind(this)}
               >new</button>
           </p>
-          <ul className="accountRepoList">
-            {this.state.repoList.map((repo) =>
-              <li key={repo.meta.name}><Repo repo={repo} /></li>)}
-          </ul>
+          {repoList}
         </div>
       );
     }
