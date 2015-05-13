@@ -108,9 +108,13 @@ class Site extends React.Component {
           var repo = this.props.repo;
           var name = repo.meta.name;
           var ownerLogin = repo.meta.owner.login;
+          var siteUrl = ownerLogin + '.github.io/' + name;
+          if(name == ownerLogin + '.github.io' || name == ownerLogin + '.github.com') {
+            siteUrl = ownerLogin + '.github.io';
+          }
           this.setState({
             config: new Configuration({
-              siteUrl: ownerLogin + '.github.io/' + name,
+              siteUrl: siteUrl,
             })
           });
         }
