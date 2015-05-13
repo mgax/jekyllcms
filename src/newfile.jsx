@@ -108,7 +108,7 @@ class NewFileModal extends React.Component {
     this.setState({date: date, dirtyForm: true});
   }
   handleTitleChange(e) {
-    this.setState({title: e.target.value.trim(), dirtyForm: true, slug: ''});
+    this.setState({title: e.target.value, dirtyForm: true, slug: ''});
   }
   handleExtChange(e) {
     this.setState({ext: e.target.value, dirtyForm: true});
@@ -139,7 +139,7 @@ class NewFileModal extends React.Component {
   }
   parseForm() {
     if(! this.state.dirtyForm) { return; }
-    var slug = this.state.slug || slugify(this.state.title);
+    var slug = this.state.slug || slugify(this.state.title.trim());
     var path = generateUnique(
       (n) => this.prefix() + slug + n + this.state.ext,
       this.props.pathExists
@@ -162,7 +162,7 @@ class NewFileModal extends React.Component {
     app.hideModal();
     this.props.onCreate({
       path: this.state.path,
-      title: this.state.title,
+      title: this.state.title.trim(),
     });
   }
 }
