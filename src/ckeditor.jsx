@@ -10,10 +10,22 @@ class CKEditor extends React.Component {
   componentWillUnmount() {
     if(this.ck) { this.ck.destroy(); }
   }
+  toHtml(source) {
+    return (source
+      .split(/{{\s*site\.base_url\s*}}/)
+      .join('http://' + this.props.config.siteUrl)
+    );
+  }
+  fromHtml(html) {
+    return (html
+      .split('http://' + this.props.config.siteUrl)
+      .join('{{ site.base_url }}')
+    );
+  }
   reset(content) {
     if(this.ck) { this.ck.destroy(); }
     var node = React.findDOMNode(this.refs.ck);
-    $(node).text(content);
+    $(node).text(this.toHtml(content));
 
     var options = {
       allowedContent: true,
@@ -32,6 +44,6 @@ class CKEditor extends React.Component {
     this.ck.on('change', () => this.handleChange());
   }
   handleChange() {
-    this.props.onChange(this.ck.getData());
+    this.props.onChange(this.fromHtml(this.ck.getData()));
   }
 }

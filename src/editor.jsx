@@ -158,6 +158,7 @@ class Editor extends React.Component {
             <CKEditor
               initial={this.state.content}
               onChange={this.handleChange.bind(this)}
+              config={this.props.config}
               ref="contentEditor"
               />
           </div>
