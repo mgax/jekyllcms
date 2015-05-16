@@ -14,6 +14,35 @@ class Configuration {
   }
 }
 
+var getConfig = (repo, tree) => {
+  var getSiteUrl = () => {
+    var cname = tree.filter((f) => f.path == 'CNAME')[0];
+    if(cname) {
+      return cname.getContent()
+        .then((cnameValue) =>
+          cnameValue.trim());
+    }
+    else {
+      var name = repo.meta.name;
+      var ownerLogin = repo.meta.owner.login;
+      var siteUrl = ownerLogin + '.github.io/' + name;
+      if(name == ownerLogin + '.github.io' || name == ownerLogin + '.github.com') {
+        siteUrl = ownerLogin + '.github.io';
+      }
+      return Q(siteUrl);
+    }
+  };
+
+  var siteUrl;
+  return getSiteUrl()
+    .then((value) => {
+      siteUrl = value;
+      return new Configuration({
+        siteUrl: siteUrl,
+      });
+    });
+};
+
 class Site extends React.Component {
   constructor(props) {
     super(props);
@@ -94,30 +123,10 @@ class Site extends React.Component {
     this.state.branch.files()
       .then((tree) => {
         this.setState({tree: tree});
-        var cname = tree.filter((f) => f.path == 'CNAME')[0];
-        if(cname) {
-          return cname.getContent()
-            .then((cnameValue) =>
-              this.setState({
-                config: new Configuration({
-                  siteUrl: cnameValue.trim(),
-                })
-              }));
-        }
-        else {
-          var repo = this.props.repo;
-          var name = repo.meta.name;
-          var ownerLogin = repo.meta.owner.login;
-          var siteUrl = ownerLogin + '.github.io/' + name;
-          if(name == ownerLogin + '.github.io' || name == ownerLogin + '.github.com') {
-            siteUrl = ownerLogin + '.github.io';
-          }
-          this.setState({
-            config: new Configuration({
-              siteUrl: siteUrl,
-            })
+        getConfig(this.props.repo, tree)
+          .then((config) => {
+            this.setState({config: config});
           });
-        }
       })
       .catch(errorHandler("loading file list"));
   }
