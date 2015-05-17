@@ -114,6 +114,7 @@ class SiteContents extends React.Component {
         <div className="editor-container row">
           <div className="editor col-sm-offset-2 col-sm-10">
             <Editor
+              ref="editor"
               file={this.state.currentFile}
               onDelete={this.handleDelete.bind(this)}
               onClose={this.handleClose.bind(this)}

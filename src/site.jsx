@@ -91,6 +91,7 @@ class Site extends React.Component {
     if(this.state.tree && this.state.config) {
       siteContents = (
         <SiteContents
+          ref="contents"
           tree={this.state.tree}
           createFile={this.createFile.bind(this)}
           onTreeChange={this.updateFileList.bind(this)}
