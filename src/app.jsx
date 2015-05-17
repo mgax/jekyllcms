@@ -6,7 +6,7 @@ class App extends React.Component {
     this.state = {view: null};
   }
   route() {
-    var query = parseQuery(window.location.search);
+    var query = this.props.query;
 
     if(query['code']) {
       return Q(<AuthCallback code={''+query['code']} />);
@@ -82,11 +82,12 @@ class App extends React.Component {
 }
 
 $.get('config.json', (config) => {
-  if(config.piwik) {
+  var query = parseQuery(window.location.search);
+  if(config.piwik && ! query['code']) {
     trackPiwik(config.piwik);
   }
   window.app = React.render(
-    <App config={config} />,
+    <App config={config} query={query} />,
     document.querySelector('body')
   );
 });
