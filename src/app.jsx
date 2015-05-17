@@ -9,12 +9,12 @@ class App extends React.Component {
     var query = this.props.query;
 
     if(query['code']) {
-      return Q(<AuthCallback code={''+query['code']} />);
+      return Q(()=><AuthCallback code={''+query['code']} />);
     }
 
     this.authToken = localStorage.getItem('jekyllcms-github-token');
     if(! this.authToken) {
-      return Q(<Authorize />);
+      return Q(()=><Authorize />);
     }
 
     this.gitHub = new GitHub(this.authToken);
@@ -34,13 +34,13 @@ class App extends React.Component {
                 : 'gh-pages'
             );
           }
-          return <Site repo={repo} branchName={branchName} />;
+          return ()=><Site ref="site" repo={repo} branchName={branchName} />;
         })
         .catch(errorHandler("loading repository"));
     }
     else {
       return this.gitHub.user()
-        .then((user) => <Home user={user} />)
+        .then((user) => ()=><Home user={user} />)
         .catch(errorHandler("loading user information"));
     }
   }
@@ -54,7 +54,7 @@ class App extends React.Component {
       <div>
         <Navbar auth={!! this.authToken} />
         <div className="container">
-          {this.state.view}
+          {(this.state.view || (()=>null))()}
         </div>
         <div className="modal fade" ref="modal">
           <div className="modal-dialog" ref="modalDialog">
