@@ -134,3 +134,9 @@ a.buttonlink {
   text-align: right;
   color: #888;
 }
+
+.ckMediaBrowser img {
+  max-width: 300px;
+  max-height: 300px;
+  border: 1px solid #aaa;
+}

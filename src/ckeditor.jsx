@@ -61,16 +61,23 @@ class CKImageBrowser extends React.Component {
     this.state = {};
   }
   render() {
-    if(this.state.media) {
-      return (
-        <ul className="list-unstyled">
-        {this.state.media.map((file) =>
+    var imageLi = (file) => {
+      if(file.path.match(/.+\.(jp[e]?g|png|gif)$/)) {
+        return (
           <li key={file.path}>
             <a onClick={this.handleClick.bind(this, file.path)}>
               {file.path}
+              <br/>
+              <img src={file.contentUrl()} />
             </a>
           </li>
-        )}
+        );
+      }
+    };
+    if(this.state.media) {
+      return (
+        <ul className="list-inline ckMediaBrowser">
+          {this.state.media.map(imageLi)}
         </ul>
       );
     }

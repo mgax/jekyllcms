@@ -48,6 +48,13 @@ class GitHubFile {
       })
     });
   }
+
+  contentUrl() {
+    return 'https://raw.githubusercontent.com/'
+      + this.branch.repo.meta.full_name
+      + '/' + this.branch.name
+      + '/' + this.path;
+  }
 }
 
 
