@@ -10,15 +10,18 @@ class CKEditor extends React.Component {
   componentWillUnmount() {
     if(this.ck) { this.ck.destroy(); }
   }
+  getSiteUrl() {
+    return 'http://' + this.props.config.siteUrl;
+  }
   toHtml(source) {
     return (source
       .split(/{{\s*site\.base_url\s*}}/)
-      .join('http://' + this.props.config.siteUrl)
+      .join(this.getSiteUrl())
     );
   }
   fromHtml(html) {
     return (html
-      .split('http://' + this.props.config.siteUrl)
+      .split(this.getSiteUrl())
       .join('{{ site.base_url }}')
     );
   }
