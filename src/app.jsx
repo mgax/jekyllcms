@@ -9,12 +9,18 @@ class App extends React.Component {
     var query = this.props.query;
 
     if(query['code']) {
-      return Q(()=><AuthCallback code={''+query['code']} />);
+      return Q({
+        frame: true,
+        view: ()=><AuthCallback code={''+query['code']} />,
+      });
     }
 
     this.authToken = localStorage.getItem('jekyllcms-github-token');
     if(! this.authToken) {
-      return Q(()=><Authorize />);
+      return Q({
+        frame: true,
+        view: ()=><Authorize />,
+      });
     }
 
     this.gitHub = new GitHub(this.authToken);
@@ -34,35 +40,45 @@ class App extends React.Component {
                 : 'gh-pages'
             );
           }
-          return ()=><Site ref="site" repo={repo} branchName={branchName} />;
+          return {
+            frame: true,
+            view: ()=><Site ref="site" repo={repo} branchName={branchName} />,
+          };
         })
         .catch(errorHandler("loading repository"));
     }
     else {
       return this.gitHub.user()
-        .then((user) => ()=><Home user={user} />)
+        .then((user) => {return {
+          frame: true,
+          view: ()=><Home user={user} />,
+        }})
         .catch(errorHandler("loading user information"));
     }
   }
   componentWillMount() {
     this.config = this.props.config;
-    this.route().then((view) =>
-      this.setState({view: view}));
+    this.route().then((state) =>
+      this.setState(state));
   }
   render() {
-    return (
-      <div>
-        <Navbar auth={!! this.authToken} />
-        <div className="container">
-          {(this.state.view || (()=>null))()}
-        </div>
-        <div className="modal fade" ref="modal">
-          <div className="modal-dialog" ref="modalDialog">
+    var view = (this.state.view || (()=>null))();
+    if(this.state.frame) {
+      view = (
+        <div>
+          <Navbar auth={!! this.authToken} />
+          <div className="container">
+            {view}
           </div>
+          <div className="modal fade" ref="modal">
+            <div className="modal-dialog" ref="modalDialog">
+            </div>
+          </div>
+          <ErrorBox ref="errorBox" />
         </div>
-        <ErrorBox ref="errorBox" />
-      </div>
-    );
+      )
+    }
+    return view;
   }
   componentDidMount() {
     $(React.findDOMNode(this.refs.modal)).on('hidden.bs.modal', () => {
