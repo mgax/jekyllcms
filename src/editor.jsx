@@ -113,6 +113,9 @@ class Editor extends React.Component {
     );
     var permalink = this.props.file.permalink(true);
     var publicUrl = 'http://' + this.props.config.siteUrl + permalink;
+    if(publicUrl.match(/[^\/]$/)) {
+      publicUrl += '.html';
+    }
     var title = (
       <h2>
         <tt title={path}>{permalink}</tt>{' '}
