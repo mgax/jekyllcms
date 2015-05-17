@@ -40,10 +40,24 @@ class App extends React.Component {
                 : 'gh-pages'
             );
           }
-          return {
-            frame: true,
-            view: ()=><Site ref="site" repo={repo} branchName={branchName} />,
-          };
+          if(query['ckImageBrowser']) {
+            return {
+              frame: false,
+              view: ()=>
+                <CKImageBrowser
+                  repo={repo}
+                  branchName={branchName}
+                  siteUrl={''+query['siteUrl']}
+                  funcNum={+query['CKEditorFuncNum']}
+                  />,
+            };
+          }
+          else {
+            return {
+              frame: true,
+              view: ()=><Site ref="site" repo={repo} branchName={branchName} />,
+            };
+          }
         })
         .catch(errorHandler("loading repository"));
     }

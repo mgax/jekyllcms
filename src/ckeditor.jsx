@@ -30,13 +30,17 @@ class CKEditor extends React.Component {
     var node = React.findDOMNode(this.refs.ck);
     $(node).text(this.toHtml(content));
 
+    var imageBrowserUrl = window.location.href
+      + '&ckImageBrowser=on'
+      + '&siteUrl=' + encodeURIComponent(this.getSiteUrl());
     var options = {
       allowedContent: true,
+      filebrowserImageBrowseUrl: imageBrowserUrl,
       toolbar: [
         {name: 'styles', items: ['Format']},
         {name: 'basicstyles', items: ['Bold', 'Italic', 'Underline', 'Strike']},
         {name: 'paragraph', items: ['NumberedList', 'BulletedList', 'Indent', 'Outdent', '-', 'Blockquote']},
-        {name: 'table', items: ['Table']},
+        {name: 'table', items: ['Table', 'Image']},
         {name: 'links', items: ['Link', 'Unlink', '-', 'Anchor']},
         {name: 'subsuper', items: ['Subscript', 'Superscript']},
         {name: 'colors', items: ['TextColor', 'BGColor']},
@@ -48,5 +52,46 @@ class CKEditor extends React.Component {
   }
   handleChange() {
     this.props.onChange(this.fromHtml(this.ck.getData()));
+  }
+}
+
+class CKImageBrowser extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {};
+  }
+  render() {
+    if(this.state.media) {
+      return (
+        <ul className="list-unstyled">
+        {this.state.media.map((file) =>
+          <li key={file.path}>
+            <a onClick={this.handleClick.bind(this, file.path)}>
+              {file.path}
+            </a>
+          </li>
+        )}
+        </ul>
+      );
+    }
+    else {
+      return <p>Loading files...</p>;
+    }
+  }
+  componentDidMount() {
+    var branch = this.props.repo.branch(this.props.branchName);
+    branch.files()
+      .then((tree) => {
+        var media = tree.filter((f) => f.path.startsWith('media/'));
+        this.setState({media: media});
+      })
+      .catch(errorHandler("loading file list"));
+  }
+  handleClick(path, evt) {
+    evt.preventDefault();
+    var site = window.opener.app.refs.site;
+    var url = this.props.siteUrl + '/' + path;
+    window.opener.CKEDITOR.tools.callFunction(this.props.funcNum, url);
+    window.close();
   }
 }
