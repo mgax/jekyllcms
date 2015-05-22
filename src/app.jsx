@@ -25,50 +25,59 @@ class App extends React.Component {
 
     this.gitHub = new GitHub(this.authToken);
 
-    if(query['repo']) {
-      return this.gitHub.repo(''+query['repo'])
-        .then((repo) => {
-          var branchName;
-          if(query['branch']) {
-            branchName = ''+query['branch'];
-          }
-          else {
-            branchName = (
-              repo.meta.name == repo.meta.owner.login + '.github.com' ||
-              repo.meta.name == repo.meta.owner.login + '.github.io'
-                ? 'master'
-                : 'gh-pages'
-            );
-          }
-          if(query['ckImageBrowser']) {
-            return {
-              frame: false,
-              view: ()=>
-                <CKImageBrowser
-                  repo={repo}
-                  branchName={branchName}
-                  siteUrl={''+query['siteUrl']}
-                  funcNum={+query['CKEditorFuncNum']}
-                  />,
-            };
-          }
-          else {
-            return {
-              frame: true,
-              view: ()=><Site ref="site" repo={repo} branchName={branchName} />,
-            };
-          }
-        })
-        .catch(errorHandler("loading repository"));
-    }
-    else {
-      return this.gitHub.user()
-        .then((user) => {return {
-          frame: true,
-          view: ()=><Home user={user} />,
-        }})
-        .catch(errorHandler("loading user information"));
-    }
+    return this.gitHub.user()
+      .catch((resp) => {
+        if(resp.status == 401) {
+          localStorage.removeItem('jekyllcms-github-token');
+          window.location.href = '/';
+          return Q();
+        }
+      })
+      .catch(errorHandler("loading user information"))
+      .then((user) => {
+        if(query['repo']) {
+          return this.gitHub.repo(''+query['repo'])
+            .then((repo) => {
+              var branchName;
+              if(query['branch']) {
+                branchName = ''+query['branch'];
+              }
+              else {
+                branchName = (
+                  repo.meta.name == repo.meta.owner.login + '.github.com' ||
+                  repo.meta.name == repo.meta.owner.login + '.github.io'
+                    ? 'master'
+                    : 'gh-pages'
+                );
+              }
+              if(query['ckImageBrowser']) {
+                return {
+                  frame: false,
+                  view: ()=>
+                    <CKImageBrowser
+                      repo={repo}
+                      branchName={branchName}
+                      siteUrl={''+query['siteUrl']}
+                      funcNum={+query['CKEditorFuncNum']}
+                      />,
+                };
+              }
+              else {
+                return {
+                  frame: true,
+                  view: ()=><Site ref="site" repo={repo} branchName={branchName} />,
+                };
+              }
+            })
+            .catch(errorHandler("loading repository"));
+        }
+        else {
+          return {
+            frame: true,
+            view: ()=><Home user={user} />,
+          };
+        }
+      });
   }
   componentWillMount() {
     this.config = this.props.config;
