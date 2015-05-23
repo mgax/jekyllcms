@@ -52,7 +52,8 @@ class Authorize extends React.Component {
   }
   handleBrowse(evt) {
     evt.preventDefault();
-    console.log(React.findDOMNode(this.refs.account).value);
+    var login = React.findDOMNode(this.refs.account).value;
+    window.location.href = '/?demo=' + encodeURIComponent(login);
   }
 }
 

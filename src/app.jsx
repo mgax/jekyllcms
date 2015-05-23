@@ -15,6 +15,17 @@ class App extends React.Component {
       });
     }
 
+    if(query['demo']) {
+      this.gitHub = new GitHub();
+      return this.gitHub.user(''+query['demo'])
+        .then((account) => {
+          return Q({
+            frame: true,
+            view: ()=><Demo account={account} />,
+          });
+        });
+    }
+
     this.authToken = localStorage.getItem('jekyllcms-github-token');
     if(! this.authToken) {
       return Q({

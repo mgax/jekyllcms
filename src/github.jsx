@@ -175,7 +175,9 @@ class GitHub {
     if(options.url.indexOf(apiUrl) < 0) {
       options.url = apiUrl + options.url;
     }
-    options.headers = {Authorization: 'token ' + this.token}
+    if(this.token) {
+      options.headers = {Authorization: 'token ' + this.token};
+    }
     return Q($.ajax(options));
   }
 
@@ -186,9 +188,10 @@ class GitHub {
         new GitHubRepo(this, meta));
   }
 
-  user() {
+  user(login) {
     var t = new Date().getTime();
-    return this.api({url: '/user?t=' + t})
+    var url = (login ? '/users/' + login : '/user') + '?t=' + t;
+    return this.api({url: url})
       .then((meta) =>
         new GitHubUser(this, meta));
   }
