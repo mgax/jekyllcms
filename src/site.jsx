@@ -54,15 +54,19 @@ class Site extends React.Component {
     this.ensureEmailIsVerified();
   }
   ensureEmailIsVerified() {
-    this.props.repo.gh.emailIsVerified()
-      .then((isVerified) => {
-        if(isVerified) {
-          this.loadInitialFileList();
-        }
-        else {
-          this.warnEmailNotVerified();
-        }
-      });
+    var shouldVerifyEmail = () => {
+      return this.props.repo.gh.emailIsVerified()
+        .then((isVerified) => ! isVerified);
+    }
+
+    shouldVerifyEmail().then((shouldVerify) => {
+      if(shouldVerify) {
+        this.warnEmailNotVerified();
+      }
+      else {
+        this.loadInitialFileList();
+      }
+    });
   }
   loadInitialFileList() {
     this.props.repo.branches()
