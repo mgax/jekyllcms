@@ -3,8 +3,10 @@
 class Repo extends React.Component {
   render() {
     var repo = this.props.repo;
+    var url = '/?' + (this.props.demo ? 'demo' : 'repo')
+            + '=' + repo.meta.full_name;
     return (
-      <a className="buttonlink" href={'/?repo=' + repo.meta.full_name}>
+      <a className="buttonlink" href={url}>
         <h3>{repo.meta.name}</h3>
         <p>{repo.meta.description}</p>
       </a>
@@ -43,7 +45,9 @@ class AccountRepos extends React.Component {
       var repoList = (this.state.repoList.length > 0
           ? <ul className="accountRepoList">
               {this.state.repoList.map((repo) =>
-                <li key={repo.meta.name}><Repo repo={repo} /></li>)}
+                <li key={repo.meta.name}>
+                  <Repo repo={repo} demo={this.props.demo} />
+                </li>)}
             </ul>
           : <p className="loading">
               No repositories under{' '}
