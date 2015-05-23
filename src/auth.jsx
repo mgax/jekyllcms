@@ -1,6 +1,10 @@
 'use strict';
 
 class Authorize extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {demo: false};
+  }
   render() {
     var authUrl = 'https://github.com/login/oauth/authorize' +
       '?client_id=' + encodeURIComponent(app.config.clientId) +
@@ -23,9 +27,32 @@ class Authorize extends React.Component {
               Authorize on GitHub
             </a>
           </p>
+          <p>
+            Or enter <a onClick={this.handleDemo.bind(this)} href="#">demo mode</a>,
+            which requires no authorization, but is read-only.
+          </p>
+          {this.state.demo ?
+            <form className="form-inline" onSubmit={this.handleBrowse.bind(this)}>
+              <input
+                placeholder="Account name ..." ref="account"
+                className="form-control"
+                autoFocus />
+              <button type="submit" className="btn btn-primary">
+                browse
+              </button>
+            </form>
+          : ''}
         </div>
       </div>
     );
+  }
+  handleDemo(evt) {
+    evt.preventDefault();
+    this.setState({demo: true});
+  }
+  handleBrowse(evt) {
+    evt.preventDefault();
+    console.log(React.findDOMNode(this.refs.account).value);
   }
 }
 
