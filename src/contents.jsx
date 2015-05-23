@@ -119,6 +119,7 @@ class SiteContents extends React.Component {
               onDelete={this.handleDelete.bind(this)}
               onClose={this.handleClose.bind(this)}
               config={this.props.config}
+              demo={this.props.demo}
               />
           </div>
         </div>

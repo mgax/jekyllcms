@@ -105,6 +105,7 @@ class Site extends React.Component {
           createFile={this.createFile.bind(this)}
           onTreeChange={this.updateFileList.bind(this)}
           config={this.state.config}
+          demo={this.props.demo}
           />
       );
     }

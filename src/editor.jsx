@@ -52,7 +52,7 @@ class SaveButton extends React.Component {
     return (
       <button
         className="btn btn-primary"
-        disabled={this.state.state == 'saving'}
+        disabled={this.props.disabled || this.state.state == 'saving'}
         onClick={this.handleSave.bind(this)}
         >{text}</button>
     );
@@ -76,6 +76,7 @@ class DeleteButton extends React.Component {
       <button
         className="btn btn-danger"
         onClick={this.handleClick.bind(this)}
+        disabled={this.props.disabled}
         >delete</button>
     )
   }
@@ -206,11 +207,15 @@ class Editor extends React.Component {
           {editor}
           {preview}
           <p>
-            <SaveButton onSave={this.handleSave.bind(this)} />
+            <SaveButton
+              onSave={this.handleSave.bind(this)}
+              disabled={!!this.props.demo}
+              />
             &nbsp;
             <DeleteButton
               file={this.props.file}
               onDelete={this.handleDelete.bind(this)}
+              disabled={!!this.props.demo}
               />
           </p>
         </div>
