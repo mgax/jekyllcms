@@ -47,6 +47,7 @@ class SaveButton extends React.Component {
   render() {
     var text = "save";
     if(this.state.state == 'success') { text += " ✔"; }
+    if(this.state.state == 'error') { text += " - error!"; }
     if(this.state.state == 'saving') { text += " ..."; }
     return (
       <button
@@ -59,8 +60,12 @@ class SaveButton extends React.Component {
   handleSave() {
     this.setState({state: 'saving'});
     this.props.onSave()
-      .done(() => {
+      .then(() => {
         this.setState({state: 'success'});
+      })
+      .catch((e) => {
+        this.setState({state: 'error'});
+        reportError(e, "saving file");
       });
   }
 }
@@ -248,8 +253,7 @@ class Editor extends React.Component {
       .save({
         frontMatter: this.state.frontMatter,
         content: this.state.content,
-      })
-      .catch(errorHandler("saving file"));
+      });
   }
   handleDelete() {
     this.props.onDelete();

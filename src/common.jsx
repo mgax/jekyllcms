@@ -16,19 +16,26 @@ function decode_utf8(s) {
   return decodeURIComponent(escape(s));
 }
 
+function reportError(e, action) {
+  var message = "Error";
+  if(action) {
+    message += " while " + action;
+  }
+
+  if(e.readyState !== null) { // ajax error
+    var cause = (e.responseJSON && e.responseJSON.message);
+    if(cause) {
+      message = message + ": " + cause;
+    }
+  }
+
+  console.error(message, e, e.stack);
+  app.reportError(message);
+}
+
 function errorHandler(action) {
   return function(e) {
-    var message = "Error while " + action;
-
-    if(e.readyState !== null) { // ajax error
-      var cause = (e.responseJSON && e.responseJSON.message);
-      if(cause) {
-        message = message + ": " + cause;
-      }
-    }
-
-    console.error(message, e, e.stack);
-    app.reportError(message);
+    reportError(e, action);
   }
 }
 
