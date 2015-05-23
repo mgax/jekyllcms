@@ -6,7 +6,7 @@ class Demo extends React.Component {
     return (
       <div>
         <h1>{account.meta.login} repositories</h1>
-        <AccountRepos account={account} demo={true} />
+        <AccountRepos account={account} demo={this.props.demo} />
       </div>
     );
   }

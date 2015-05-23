@@ -7,6 +7,8 @@ class App extends React.Component {
   }
   route() {
     var query = this.props.query;
+    var userPromise;
+    var demo = null;
 
     if(query['code']) {
       return Q({
@@ -16,36 +18,43 @@ class App extends React.Component {
     }
 
     if(query['demo']) {
+      demo = ''+query['demo'];
       this.gitHub = new GitHub();
-      return this.gitHub.user(''+query['demo'])
-        .then((account) => {
-          return Q({
-            frame: true,
-            view: ()=><Demo account={account} />,
+      userPromise = this.gitHub.user(demo);
+
+      if(! query['repo']) {
+        return userPromise
+          .then((account) => {
+            return Q({
+              frame: true,
+              view: ()=><Demo demo={demo} account={account} />,
+            });
           });
+      }
+    }
+
+    else {
+      this.authToken = localStorage.getItem('jekyllcms-github-token');
+      if(! this.authToken) {
+        return Q({
+          frame: true,
+          view: ()=><Authorize />,
         });
+      }
+
+      this.gitHub = new GitHub(this.authToken);
+      userPromise = this.gitHub.user()
+        .catch((resp) => {
+          if(resp.status == 401) {
+            localStorage.removeItem('jekyllcms-github-token');
+            window.location.href = '/';
+            return Q();
+          }
+        })
+        .catch(errorHandler("loading user information"));
     }
 
-    this.authToken = localStorage.getItem('jekyllcms-github-token');
-    if(! this.authToken) {
-      return Q({
-        frame: true,
-        view: ()=><Authorize />,
-      });
-    }
-
-    this.gitHub = new GitHub(this.authToken);
-
-    return this.gitHub.user()
-      .catch((resp) => {
-        if(resp.status == 401) {
-          localStorage.removeItem('jekyllcms-github-token');
-          window.location.href = '/';
-          return Q();
-        }
-      })
-      .catch(errorHandler("loading user information"))
-      .then((user) => {
+    return userPromise.then((user) => {
         if(query['repo']) {
           return this.gitHub.repo(''+query['repo'])
             .then((repo) => {
@@ -76,7 +85,13 @@ class App extends React.Component {
               else {
                 return {
                   frame: true,
-                  view: ()=><Site ref="site" repo={repo} branchName={branchName} />,
+                  view: ()=>
+                    <Site
+                      ref="site"
+                      repo={repo}
+                      branchName={branchName}
+                      demo={demo}
+                      />,
                 };
               }
             })
@@ -110,11 +125,15 @@ class App extends React.Component {
             <div className="modal-dialog" ref="modalDialog">
             </div>
           </div>
-          <ErrorBox ref="errorBox" />
         </div>
-      )
+      );
     }
-    return view;
+    return (
+      <div>
+        {view}
+        <ErrorBox ref="errorBox" />
+      </div>
+    );
   }
   componentDidMount() {
     $(React.findDOMNode(this.refs.modal)).on('hidden.bs.modal', () => {

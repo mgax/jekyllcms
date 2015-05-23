@@ -55,8 +55,13 @@ class Site extends React.Component {
   }
   ensureEmailIsVerified() {
     var shouldVerifyEmail = () => {
-      return this.props.repo.gh.emailIsVerified()
-        .then((isVerified) => ! isVerified);
+      if(this.props.demo) {
+        return Q(false);
+      }
+      else {
+        return this.props.repo.gh.emailIsVerified()
+          .then((isVerified) => ! isVerified);
+      }
     }
 
     shouldVerifyEmail().then((shouldVerify) => {

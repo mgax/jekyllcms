@@ -3,8 +3,10 @@
 class Repo extends React.Component {
   render() {
     var repo = this.props.repo;
-    var url = '/?' + (this.props.demo ? 'demo' : 'repo')
-            + '=' + repo.meta.full_name;
+    var url = '/?repo=' + repo.meta.full_name;
+    if(this.props.demo) {
+      url += '&demo=' + this.props.demo;
+    }
     return (
       <a className="buttonlink" href={url}>
         <h3>{repo.meta.name}</h3>
