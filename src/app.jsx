@@ -81,8 +81,10 @@ class App extends React.Component {
   }
   componentWillMount() {
     this.config = this.props.config;
-    this.route().then((state) =>
-      this.setState(state));
+    this.route()
+      .then((state) =>
+        this.setState(state))
+      .catch(errorHandler("loading main view"));
   }
   render() {
     var view = (this.state.view || (()=>null))();
