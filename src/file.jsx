@@ -79,7 +79,7 @@ class File {
     }
 
     var getContent = (this.isNew()
-      ? Q(`---\ntitle: ${JSON.stringify(this.initialTitle)}\n---\n`)
+      ? Q(encode_utf8(`---\ntitle: ${JSON.stringify(this.initialTitle)}\n---\n`))
       : this.ghFile.getContent());
     return getContent
       .then((content) => parse(decode_utf8(content)));
