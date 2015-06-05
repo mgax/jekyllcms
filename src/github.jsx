@@ -65,9 +65,8 @@ class GitHubBranch {
   }
 
   files() {
-    var t = new Date().getTime();
-    var url = '/git/trees/' + this.name + '?recursive=1&t=' + t;
-    return this.repo.api({url: url})
+    var url = '/git/trees/' + this.name + '?recursive=1';
+    return this.repo.api({url: url, t: true})
       .then((resp) =>
         resp.tree
           .filter((i) => i.type == 'blob')
@@ -92,8 +91,7 @@ class GitHubRepo {
   }
 
   branches() {
-    var t = new Date().getTime();
-    return this.api({url: '/branches?t=' + t}).then((resp) =>
+    return this.api({url: '/branches', t: true}).then((resp) =>
       resp.map((b) =>
         new GitHubBranch(this, b.name)));
   }
@@ -175,6 +173,11 @@ class GitHub {
     if(options.url.indexOf(apiUrl) < 0) {
       options.url = apiUrl + options.url;
     }
+    if(options.t) {
+      var t = new Date().getTime();
+      var sep = options.url.match(/\?/) ? '&' : '?';
+      options.url += sep + 't=' + t;
+    }
     if(this.token) {
       options.headers = {Authorization: 'token ' + this.token};
     }
@@ -182,23 +185,20 @@ class GitHub {
   }
 
   repo(fullName) {
-    var t = new Date().getTime();
-    return this.api({url: '/repos/' + fullName + '?t=' + t})
+    return this.api({url: '/repos/' + fullName, t: true})
       .then((meta) =>
         new GitHubRepo(this, meta));
   }
 
   user(login) {
-    var t = new Date().getTime();
-    var url = (login ? '/users/' + login : '/user') + '?t=' + t;
-    return this.api({url: url})
+    var url = (login ? '/users/' + login : '/user');
+    return this.api({url: url, t: true})
       .then((meta) =>
         new GitHubUser(this, meta));
   }
 
   emailIsVerified() {
-    var t = new Date().getTime();
-    return this.api({url: '/user/emails?t=' + t}).then((resp) =>
+    return this.api({url: '/user/emails', t: true}).then((resp) =>
       resp.filter((i) => i.verified).length > 0);
   }
 }
