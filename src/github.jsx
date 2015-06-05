@@ -127,7 +127,10 @@ class GitHubAccount {
   repos() {
     var size = 100;
     var fetch = (n, rv) =>
-      this.gh.api({url: this.meta.repos_url + '?per_page='+size+'&page='+n})
+      this.gh.api({
+          url: this.meta.repos_url + '?per_page='+size+'&page='+n,
+          t: true,
+        })
         .then((resp) => {
           rv = rv.concat(resp);
           if(resp.length < size) { return rv; }
@@ -151,7 +154,7 @@ class GitHubUser {
   }
 
   orgs() {
-    return this.gh.api({url: this.meta.organizations_url})
+    return this.gh.api({url: this.meta.organizations_url, t: true})
       .then((resp) =>
         resp.map((acc) =>
           new GitHubAccount(this.gh, acc)));
