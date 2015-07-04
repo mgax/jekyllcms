@@ -3,6 +3,19 @@
 class NewSiteModal extends React.Component {
   render() {
     return (
+      <div className="modal-content">
+        <div className="modal-header"></div>
+        <div className="modal-body">
+          <p className="bg-warning">
+            There seems to be no GitHub Pages website in
+            the <code>{this.props.fullName}</code> repository. We'd gladly
+            create one for you, but due to a bug, it's not currently
+            possible. Please create one by hand.
+          </p>
+        </div>
+      </div>
+    );
+    return (
       <form className="modal-content" onSubmit={this.handleSubmit.bind(this)}>
         <div className="modal-header">
           <button type="button" className="close"
