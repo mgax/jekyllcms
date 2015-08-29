@@ -90,3 +90,12 @@ function generateUnique(build, exists) {
   }
   throw new Error("Counld not generate unique name, stopping at " + value);
 }
+
+function waitFor(condition, callback) {
+  var interval = setInterval(() => {
+    if(condition()) {
+      clearInterval(interval);
+      callback();
+    }
+  }, 100);
+}

@@ -74,18 +74,36 @@ class CKImageBrowser extends React.Component {
         );
       }
     };
+    var contents = <p>Loading files...</p>;
     if(this.state.media) {
-      return (
+      contents = (
         <ul className="list-inline ckMediaBrowser">
           {this.state.media.map(imageLi)}
         </ul>
       );
     }
-    else {
-      return <p>Loading files...</p>;
-    }
+    return (
+      <div>
+        <div ref="dropbox"></div>
+        {contents}
+      </div>
+    )
+  }
+  componentWillMount() {
+    $('head').append('<script src="https://www.dropbox.com/' +
+      'static/api/2/dropins.js" id="dropboxjs" data-app-key="' +
+      app.config.dropboxKey + '"></script>');
   }
   componentDidMount() {
+    waitFor(() => !! window.Dropbox, () => {
+      var button = Dropbox.createChooseButton({
+        success: (files) => {
+          var url = files[0].link.split('?')[0] + '?raw=1';
+          this.chooseImage(url);
+        }
+      });
+      React.findDOMNode(this.refs.dropbox).appendChild(button);
+    });
     var branch = this.props.repo.branch(this.props.branchName);
     branch.files()
       .then((tree) => {
@@ -98,6 +116,9 @@ class CKImageBrowser extends React.Component {
     evt.preventDefault();
     var site = window.opener.app.refs.site;
     var url = this.props.siteUrl + '/' + path;
+    this.chooseImage(url);
+  }
+  chooseImage(url) {
     window.opener.CKEDITOR.tools.callFunction(this.props.funcNum, url);
     window.close();
   }
