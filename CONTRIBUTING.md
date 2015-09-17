@@ -1,4 +1,9 @@
 # Hacking on JekyllCMS
+
+Check out the [Trello board](https://trello.com/b/F1UQejYU/jekyllcms), that's
+where we keep track of things to do. The green label means "beginner-friendly
+task" and red means "high-value task".
+
 1. Install npm dependencies
   ```
   $ npm install
