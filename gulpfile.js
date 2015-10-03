@@ -4,6 +4,18 @@ var babel = require('gulp-babel')
 var concat = require('gulp-concat')
 var sourcemaps = require('gulp-sourcemaps')
 var Handlebars = require('handlebars')
+var https = require('https')
+var qs = require('querystring')
+var express = require('express')
+
+var env = function(name, defaultValue) {
+  var value = process.env[name]
+  if(! value) {
+    if(defaultValue !== undefined) { return defaultValue }
+    throw(new Error("Missing " + name + " env variable"))
+  }
+  return value
+}
 
 gulp.task('js', function() {
   return gulp.src('src/*.jsx')
@@ -25,6 +37,58 @@ gulp.task('build', ['js'], function() {
 
 gulp.task('devel', ['build'], function() {
   gulp.watch('src/*.jsx', ['build'])
+  server()
 })
 
 gulp.task('default', ['build'])
+
+
+function server() {
+  var app = express()
+
+  function authenticate(code, cb) {
+    var data = qs.stringify({
+      client_id: env('GITHUB_OAUTH_KEY'),
+      client_secret: env('GITHUB_OAUTH_SECRET'),
+      code: code
+    })
+
+    var reqOptions = {
+      host: 'github.com',
+      port: 443,
+      path: '/login/oauth/access_token',
+      method: 'POST',
+      headers: {'content-length': data.length}
+    }
+
+    var body = ''
+    var req = https.request(reqOptions, function(res) {
+      res.setEncoding('utf8')
+      res.on('data', function (chunk) { body += chunk; })
+      res.on('end', function() {
+        cb(null, qs.parse(body).access_token)
+      })
+    })
+
+    req.write(data)
+    req.end()
+    req.on('error', function(e) { cb(e.message); })
+  }
+
+  app.get('/authenticate/:code', function(req, res) {
+    console.log('authenticating code:' + req.params.code)
+    authenticate(req.params.code, function(err, token) {
+      var result = err || !token ? {'error': 'bad_code'} : {'token': token}
+      console.log(result)
+      res.json(result)
+    })
+  })
+
+  app.use(express.static('build'))
+
+  var port = +env('PORT', 9999)
+
+  app.listen(port, null, function (err) {
+    console.log('Gatekeeper, at your service: http://localhost:' + port)
+  })
+}
