@@ -16,9 +16,9 @@ task" and red means "high-value task".
    [Developer applications](https://github.com/settings/developers), click
    "Register new application", and fill in the details:
 
-  * *Application name*: "JekyllCMS development"
-  * *Homepage URL*: "http://localhost:5000/"
-  * *Authorization callback URL*: "http://localhost:5000/"
+  * *Application name*: `JekyllCMS development`
+  * *Homepage URL*: `http://localhost:5000/`
+  * *Authorization callback URL*: `http://localhost:5000/`
 
 3. Copy the file `example-devel` to `devel` and set `GITHUB_OAUTH_KEY` and
    `GITHUB_OAUTH_SECRET` from the GitHub application you just created.
