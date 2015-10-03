@@ -4,28 +4,24 @@ Check out the [Trello board](https://trello.com/b/F1UQejYU/jekyllcms), that's
 where we keep track of things to do. The green label means "beginner-friendly
 task" and red means "high-value task".
 
-1. Install npm dependencies
+1. Clone repo and install npm dependencies
   ```
+  $ git clone https://github.com/mgax/jekyllcms.git
+  $ cd jekyllcms
   $ npm install
   $ npm install -g gulp
   ```
 
-2. Install and configure [Gatekeeper](https://github.com/prose/gatekeeper)
+2. Create GitHub Application - go to
+   [Developer applications](https://github.com/settings/developers), click
+   "Register new application", and fill in the details:
 
-3. Create a configuration file for JekyllCMS in `build/config.json` that
-   includes the GitHub OAuth client ID:
-  ```json
-  {
-    "url": "http://localhost:8000",
-    "gatekeeper": "http://localhost:9999",
-    "clientId": "55555555555555555555"
-  }
-  ```
+  * *Application name*: "JekyllCMS development"
+  * *Homepage URL*: "http://localhost:5000/"
+  * *Authorization callback URL*: "http://localhost:5000/"
 
-4. Build the project (`gulp build`) or auto-build on file changes (`gulp
-   devel`).
+3. Copy the file `example-devel` to `devel` and set `GITHUB_OAUTH_KEY` and
+   `GITHUB_OAUTH_SECRET` from the GitHub application you just created.
 
-5. Start up a web server to serve the app:
-  ```
-  $ python -m SimpleHTTPServer
-  ```
+4. Run the project (`./devel`) and open it in your web browser
+   (`http://localhost:5000/`)
