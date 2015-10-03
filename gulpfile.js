@@ -94,6 +94,15 @@ function server() {
   var app = express()
   app.use(authMiddleware())
   app.use(express.static('build'))
+  app.get('/config.json', function(req, res) {
+    res.json({
+      "url": env('APP_URL'),
+      "gatekeeper": env('APP_URL'),
+      "clientId": env('GITHUB_OAUTH_KEY'),
+      "dropboxKey": env('DROPBOX_KEY', ''),
+    })
+  })
+
   var port = +env('PORT', 9999)
   app.listen(port, null, function (err) {
     console.log('Gatekeeper, at your service: http://localhost:' + port)
