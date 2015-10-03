@@ -43,7 +43,9 @@ gulp.task('devel', ['build'], function() {
 gulp.task('default', ['build'])
 
 
-function server() {
+function authMiddleware() {
+  // github oauth (code from github.com/prose/gatekeeper)
+
   var app = express()
 
   function authenticate(code, cb) {
@@ -84,10 +86,15 @@ function server() {
     })
   })
 
+  return app
+}
+
+
+function server() {
+  var app = express()
+  app.use(authMiddleware())
   app.use(express.static('build'))
-
   var port = +env('PORT', 9999)
-
   app.listen(port, null, function (err) {
     console.log('Gatekeeper, at your service: http://localhost:' + port)
   })
