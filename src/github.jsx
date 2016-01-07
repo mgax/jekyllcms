@@ -115,6 +115,15 @@ class GitHubRepo {
 
     return putFiles(fileList);
   }
+
+  getDefaultBranchName() {
+    return (
+      this.meta.name == this.meta.owner.login + '.github.com' ||
+      this.meta.name == this.meta.owner.login + '.github.io'
+        ? 'master'
+        : 'gh-pages'
+    );
+  }
 }
 
 
@@ -165,10 +174,23 @@ class GitHubUser {
   }
 }
 
-
 class GitHub {
   constructor(token) {
     this.token = token;
+  }
+
+  static create(demo) {
+    var gitHub = null;
+    if(demo) {
+      return new GitHub();
+    }
+    else {
+      let authToken = localStorage.getItem('jekyllcms-github-token');
+      if(! authToken) {
+        return null;
+      }
+      return new GitHub(authToken);// todo: add catch handlers
+    }
   }
 
   api(options) {
@@ -198,6 +220,11 @@ class GitHub {
     return this.api({url: url, t: true})
       .then((meta) =>
         new GitHubUser(this, meta));
+  }
+
+  authenticatedUserLogin() {
+    return this.api({url: '/user', t: true})
+      .then((meta) => meta.login);
   }
 
   emailIsVerified() {

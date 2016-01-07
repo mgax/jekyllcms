@@ -7,9 +7,9 @@ class Authorize extends React.Component {
   }
   render() {
     var authUrl = 'https://github.com/login/oauth/authorize' +
-      '?client_id=' + encodeURIComponent(app.config.clientId) +
+      '?client_id=' + encodeURIComponent(__app_config.clientId) +
       '&scope=user:email,public_repo' +
-      '&redirect_uri=' + encodeURIComponent(app.config.url);
+      '&redirect_uri=' + encodeURIComponent(__app_config.url);
     return (
       <div className="row">
         <div className="col-sm-4 col-sm-offset-4 well authbox">
@@ -53,7 +53,7 @@ class Authorize extends React.Component {
   handleBrowse(evt) {
     evt.preventDefault();
     var login = React.findDOMNode(this.refs.account).value;
-    window.location.href = '/?demo=' + encodeURIComponent(login);
+    window.location.href = '/' + encodeURIComponent(login) + '?demo=on';
   }
 }
 
@@ -62,7 +62,7 @@ class AuthCallback extends React.Component {
     return <p>Saving authorization token...</p>;
   }
   componentDidMount() {
-    $.get(app.config.gatekeeper + '/authenticate/' + this.props.code, (resp) => {
+    $.get(__app_config.gatekeeper + '/authenticate/' + this.props.code, (resp) => {
       if(resp.token) {
         localStorage.setItem('jekyllcms-github-token', resp.token);
         window.location.href = '/';

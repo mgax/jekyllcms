@@ -7,12 +7,15 @@ var Handlebars = require('handlebars')
 var https = require('https')
 var qs = require('querystring')
 var express = require('express')
+var path = require('path')
 
 var env = function(name, defaultValue) {
   var value = process.env[name]
-  if(! value) {
-    if(defaultValue !== undefined) { return defaultValue }
-    throw(new Error("Missing " + name + " env variable"))
+  if (!value) {
+    if (defaultValue !== undefined) {
+      return defaultValue
+    }
+    throw (new Error("Missing " + name + " env variable"))
   }
   return value
 }
@@ -28,9 +31,13 @@ gulp.task('js', function() {
 
 gulp.task('build', ['js'], function() {
   var template = function(name) {
-    return Handlebars.compile(fs.readFileSync(name, {encoding: 'utf-8'}))
+    return Handlebars.compile(fs.readFileSync(name, {
+      encoding: 'utf-8'
+    }))
   }
-  var index_html = template('src/index.html')({t: (new Date()).getTime()})
+  var index_html = template('src/index.html')({
+    t: (new Date()).getTime()
+  })
   fs.writeFileSync('build/index.html', index_html)
   fs.writeFileSync('build/style.css', fs.readFileSync('src/style.css'))
 })
@@ -60,13 +67,17 @@ function authMiddleware() {
       port: 443,
       path: '/login/oauth/access_token',
       method: 'POST',
-      headers: {'content-length': data.length}
+      headers: {
+        'content-length': data.length
+      }
     }
 
     var body = ''
     var req = https.request(reqOptions, function(res) {
       res.setEncoding('utf8')
-      res.on('data', function (chunk) { body += chunk; })
+      res.on('data', function(chunk) {
+        body += chunk;
+      })
       res.on('end', function() {
         cb(null, qs.parse(body).access_token)
       })
@@ -74,13 +85,19 @@ function authMiddleware() {
 
     req.write(data)
     req.end()
-    req.on('error', function(e) { cb(e.message); })
+    req.on('error', function(e) {
+      cb(e.message);
+    })
   }
 
   app.get('/authenticate/:code', function(req, res) {
     console.log('authenticating code:' + req.params.code)
     authenticate(req.params.code, function(err, token) {
-      var result = err || !token ? {'error': 'bad_code'} : {'token': token}
+      var result = err || !token ? {
+        'error': 'bad_code'
+      } : {
+        'token': token
+      }
       console.log(result)
       res.json(result)
     })
@@ -103,8 +120,12 @@ function server() {
     })
   })
 
+  app.get('*', function(request, response) {
+    response.sendFile(path.resolve(__dirname, 'build', 'index.html'))
+  })
+
   var port = +env('PORT', 9999)
-  app.listen(port, null, function (err) {
+  app.listen(port, null, function(err) {
     console.log('Gatekeeper, at your service: http://localhost:' + port)
   })
 }

@@ -2,16 +2,18 @@
 
 class Repo extends React.Component {
   render() {
+    var Link = ReactRouter.Link;
     var repo = this.props.repo;
-    var url = '/?repo=' + repo.meta.full_name;
+    var url = '/' + repo.meta.full_name;
+    var query = {};
     if(this.props.demo) {
-      url += '&demo=' + this.props.demo;
+      query.demo = 'on';
     }
     return (
-      <a className="buttonlink" href={url}>
+      <Link className="buttonlink" to={{ pathname: url, query: query}} >
         <h3>{repo.meta.name}</h3>
         <p>{repo.meta.description}</p>
-      </a>
+      </Link>
     );
   }
 }
@@ -142,5 +144,52 @@ class Home extends React.Component {
   }
   handleOpen(account) {
     this.setState({account: account});
+  }
+}
+
+function getUserPromise(demo, userName) {
+  var gitHub = GitHub.create(demo);
+  if (!gitHub) {
+    return Q.reject('not authenticated');
+  }
+  return demo ? gitHub.user(userName) : gitHub.user()
+    .catch((resp) => {
+      if(resp.status == 401) {
+        localStorage.removeItem('jekyllcms-github-token');``
+        window.location.href = '/';
+        return Q();
+      }
+    })
+    .catch(errorHandler("loading user information"));
+}
+
+class HomeWrapper extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {};
+  }
+  componentDidMount() {
+    let {query} = this.props.location;
+    let {userName} = this.props.params;
+    let userPromise = getUserPromise(query.demo, userName);
+    return userPromise
+      .then((account) => {
+        this.setState({
+          account: account
+        });
+      })
+      .catch((err) => this.props.history.pushState(null, `/`));
+  }
+  render() {
+    let {query} = this.props.location;
+    let {userName} = this.props.params;
+    let account = this.state.account;
+    if (!account) {
+      return false
+    }
+    if(query.demo) {
+      return <Demo demo={userName} account={account} />;
+    }
+    return <Home user={account} />
   }
 }

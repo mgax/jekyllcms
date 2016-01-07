@@ -30,9 +30,9 @@ class CKEditor extends React.Component {
     var node = React.findDOMNode(this.refs.ck);
     $(node).text(this.toHtml(content));
 
-    var imageBrowserUrl = window.location.href
-      + '&ckImageBrowser=on'
-      + '&siteUrl=' + encodeURIComponent(this.getSiteUrl());
+    var imageBrowserUrl = window.location.pathname + '/ckImageBrowser'
+      + window.location.search + (window.location.search ? '&' : '?')
+      + 'siteUrl=' + encodeURIComponent(this.getSiteUrl());
     var options = {
       allowedContent: true,
       filebrowserImageBrowseUrl: imageBrowserUrl,
@@ -92,7 +92,7 @@ class CKImageBrowser extends React.Component {
   componentWillMount() {
     $('head').append('<script src="https://www.dropbox.com/' +
       'static/api/2/dropins.js" id="dropboxjs" data-app-key="' +
-      app.config.dropboxKey + '"></script>');
+      __app_config.dropboxKey + '"></script>');
   }
   componentDidMount() {
     waitFor(() => !! window.Dropbox, () => {
@@ -121,5 +121,43 @@ class CKImageBrowser extends React.Component {
   chooseImage(url) {
     window.opener.CKEDITOR.tools.callFunction(this.props.funcNum, url);
     window.close();
+  }
+}
+
+class CKImageBrowserWrapper extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {};
+  }
+  componentDidMount() {
+    let {query} = this.props.location;
+    let {userName, repoName} = this.props.params;
+    let gitHub = GitHub.create(query.demo);
+    return gitHub.repo(userName + '/' + repoName)
+      .then((repo) => {
+        this.setState({
+          repo: repo,
+          branchName: query['branch'] ? query['branch'] : repo.getDefaultBranchName()
+        });
+      })
+      .catch(errorHandler("loading repository"));
+  }
+  render() {
+    let {query} = this.props.location;
+    let {branchName, repo} = this.state;
+    if (!branchName) {
+      return false
+    }
+    console.log(this.state, branchName, repo, query);
+    return (
+      <div>
+        <CKImageBrowser
+          repo={repo}
+          branchName={branchName}
+          siteUrl={''+query['siteUrl']}
+          funcNum={+query['CKEditorFuncNum']}
+        />
+        <ErrorBox ref="errorBox" />
+      </div>);
   }
 }
