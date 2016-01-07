@@ -7,10 +7,11 @@ var Handlebars = require('handlebars')
 var https = require('https')
 var qs = require('querystring')
 var express = require('express')
+var path = require('path')
 
 var env = function(name, defaultValue) {
   var value = process.env[name]
-  if(! value) {
+  if(!value) {
     if(defaultValue !== undefined) { return defaultValue }
     throw(new Error("Missing " + name + " env variable"))
   }
@@ -66,7 +67,7 @@ function authMiddleware() {
     var body = ''
     var req = https.request(reqOptions, function(res) {
       res.setEncoding('utf8')
-      res.on('data', function (chunk) { body += chunk; })
+      res.on('data', function(chunk) { body += chunk; })
       res.on('end', function() {
         cb(null, qs.parse(body).access_token)
       })
@@ -103,8 +104,12 @@ function server() {
     })
   })
 
+  app.get('*', function(request, response) {
+    response.sendFile(path.resolve(__dirname, 'build', 'index.html'))
+  })
+
   var port = +env('PORT', 9999)
-  app.listen(port, null, function (err) {
+  app.listen(port, null, function(err) {
     console.log('Gatekeeper, at your service: http://localhost:' + port)
   })
 }

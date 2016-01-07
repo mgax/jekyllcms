@@ -167,3 +167,37 @@ class Site extends React.Component {
     );
   }
 }
+
+class SiteWrapper extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {};
+  }
+  componentDidMount() {
+    let {query} = this.props.location;
+    let {userName, repoName} = this.props.params;
+    let gitHub = GitHub.create(query.demo);
+    return gitHub.repo(userName + '/' + repoName)
+      .then((repo) => {
+        this.setState({
+          repo: repo,
+          branchName: query['branch'] ? query['branch'] : repo.getDefaultBranchName()
+        });
+      })
+      .catch(errorHandler("loading repository"));
+  }
+  render() {
+    let {query} = this.props.location;
+    let {userName} = this.props.params;
+    let {branchName, repo} = this.state;
+    if (!branchName) {
+      return false
+    }
+    return <Site
+      ref="site"
+      repo={repo}
+      branchName={branchName}
+      demo={query.demo}
+      />;
+  }
+}

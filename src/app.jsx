@@ -5,117 +5,33 @@ class App extends React.Component {
     super(props);
     this.state = {view: null};
   }
-  route() {
-    var query = this.props.query;
-    var userPromise;
-    var demo = null;
-
-    if(query['code']) {
-      return Q({
-        frame: true,
-        view: ()=><AuthCallback code={''+query['code']} />,
-      });
-    }
-
-    if(query['demo']) {
-      demo = ''+query['demo'];
-      this.gitHub = new GitHub();
-      userPromise = this.gitHub.user(demo);
-
-      if(! query['repo']) {
-        return userPromise
-          .then((account) => {
-            return Q({
-              frame: true,
-              view: ()=><Demo demo={demo} account={account} />,
-            });
-          });
-      }
-    }
-
-    else {
-      this.authToken = localStorage.getItem('jekyllcms-github-token');
-      if(! this.authToken) {
-        return Q({
-          frame: true,
-          view: ()=><Authorize />,
-        });
-      }
-
-      this.gitHub = new GitHub(this.authToken);
-      userPromise = this.gitHub.user()
-        .catch((resp) => {
-          if(resp.status == 401) {
-            localStorage.removeItem('jekyllcms-github-token');
-            window.location.href = '/';
-            return Q();
-          }
-        })
-        .catch(errorHandler("loading user information"));
-    }
-
-    return userPromise.then((user) => {
-        if(query['repo']) {
-          return this.gitHub.repo(''+query['repo'])
-            .then((repo) => {
-              var branchName;
-              if(query['branch']) {
-                branchName = ''+query['branch'];
-              }
-              else {
-                branchName = (
-                  repo.meta.name == repo.meta.owner.login + '.github.com' ||
-                  repo.meta.name == repo.meta.owner.login + '.github.io'
-                    ? 'master'
-                    : 'gh-pages'
-                );
-              }
-              if(query['ckImageBrowser']) {
-                return {
-                  frame: false,
-                  view: ()=>
-                    <CKImageBrowser
-                      repo={repo}
-                      branchName={branchName}
-                      siteUrl={''+query['siteUrl']}
-                      funcNum={+query['CKEditorFuncNum']}
-                      />,
-                };
-              }
-              else {
-                return {
-                  frame: true,
-                  view: ()=>
-                    <Site
-                      ref="site"
-                      repo={repo}
-                      branchName={branchName}
-                      demo={demo}
-                      />,
-                };
-              }
-            })
-            .catch(errorHandler("loading repository"));
-        }
-        else {
-          return {
-            frame: true,
-            view: ()=><Home user={user} />,
-          };
-        }
-      });
-  }
   componentWillMount() {
-    this.config = this.props.config;
-    this.route()
-      .then((state) =>
-        this.setState(state))
-      .catch(errorHandler("loading main view"));
+    window.app = this;
   }
   render() {
-    var view = (this.state.view || (()=>null))();
-    if(this.state.frame) {
-      view = (
+    var view = this.props.children;
+    let { query } = this.props.location;
+
+    if(query.code) {
+        view = <AuthCallback code={''+query['code']} />;
+    } else {
+      this.authToken = localStorage.getItem('jekyllcms-github-token');
+      if(!this.authToken & !query.demo){
+          view = <Authorize />;
+      }
+    }
+
+    if (!view) {
+      let github = GitHub.create();
+      if (github) {
+        github.authenticatedUserLogin().then((userName) => {
+          this.props.history.pushState(null, '/' + userName);
+        });
+      }
+    }
+
+    return (
+      <div>
         <div>
           <Navbar auth={!! this.authToken} />
           <div className="container">
@@ -126,11 +42,6 @@ class App extends React.Component {
             </div>
           </div>
         </div>
-      );
-    }
-    return (
-      <div>
-        {view}
         <ErrorBox ref="errorBox" />
       </div>
     );
@@ -152,13 +63,24 @@ class App extends React.Component {
   }
 }
 
-$.get('config.json', (config) => {
+$.get('/config.json', (config) => {
+  let Router = ReactRouter.Router;
+  let Route = ReactRouter.Route;
+  let browserHistory = ReactRouter.browserHistory;
+
   var query = parseQuery(window.location.search);
   if(config.piwik && ! query['code']) {
     trackPiwik(config.piwik);
   }
-  window.app = React.render(
-    <App config={config} query={query} />,
+  window.__app_config = config;
+  React.render(
+    <Router history={browserHistory}>
+      <Route path="/" component={App}>
+        <Route path=":userName" component={HomeWrapper}/>
+        <Route path=":userName/:repoName" component={SiteWrapper}/>
+      </Route>
+      <Route path="/:userName/:repoName/ckImageBrowser" component={CKImageBrowserWrapper}/>
+    </Router>,
     document.querySelector('body')
   );
 });
