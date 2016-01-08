@@ -64,8 +64,9 @@ class App extends React.Component {
 }
 
 $.get('config.json', (config) => {
-  let Router = ReactRouter.Router,
-    Route = ReactRouter.Route, browserHistory = ReactRouter.browserHistory
+  let Router = ReactRouter.Router;
+  let Route = ReactRouter.Route;
+  let browserHistory = ReactRouter.browserHistory;
 
   var query = parseQuery(window.location.search);
   if(config.piwik && ! query['code']) {
