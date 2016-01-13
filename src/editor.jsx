@@ -65,7 +65,7 @@ class SaveButton extends React.Component {
       })
       .catch((e) => {
         this.setState({state: 'error'});
-        reportError(e, "saving file");
+        reportError(e, 'saving file', 'you may not be authorized');
       });
   }
 }
@@ -94,7 +94,7 @@ class DeleteButton extends React.Component {
         .then(() => {
           this.props.onDelete();
         })
-        .catch(errorHandler("deleting file"));
+        .catch(errorHandler('deleting file', 'you may not be authorized'));
     }
     else {
       this.props.onDelete();
