@@ -152,7 +152,7 @@ function getUserPromise(demo, userName) {
   if (!gitHub) {
     return Q.reject('not authenticated');
   }
-  return demo ? gitHub.user(userName) : gitHub.user()
+  return gitHub.user(userName)
     .catch((resp) => {
       if(resp.status == 401) {
         localStorage.removeItem('jekyllcms-github-token');``
