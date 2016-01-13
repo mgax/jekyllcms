@@ -63,7 +63,7 @@ class App extends React.Component {
   }
 }
 
-$.get('config.json', (config) => {
+$.get('/config.json', (config) => {
   let Router = ReactRouter.Router;
   let Route = ReactRouter.Route;
   let browserHistory = ReactRouter.browserHistory;
