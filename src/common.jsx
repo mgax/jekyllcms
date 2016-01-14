@@ -16,14 +16,14 @@ function decode_utf8(s) {
   return decodeURIComponent(escape(s));
 }
 
-function reportError(e, action) {
+function reportError(e, action, customCause) {
   var message = "Error";
   if(action) {
     message += " while " + action;
   }
 
   if(e.readyState !== null) { // ajax error
-    var cause = (e.responseJSON && e.responseJSON.message);
+    var cause = customCause || (e.responseJSON && e.responseJSON.message);
     if(cause) {
       message = message + ": " + cause;
     }
@@ -33,9 +33,9 @@ function reportError(e, action) {
   app.reportError(message);
 }
 
-function errorHandler(action) {
+function errorHandler(action, customCause) {
   return function(e) {
-    reportError(e, action);
+    reportError(e, action, customCause);
   }
 }
 
